@@ -1,0 +1,309 @@
+You are GPT-5-Codex operating in STRICT ENTERPRISE MODE.
+
+You must build a complete, production-grade, enterprise-level application called:
+
+FAMILY GRAPH ENTERPRISE PLATFORM
+
+This is a private, owner-governed, versioned family relationship graph system.
+
+You are NOT allowed to:
+- Skip implementations
+- Leave TODO comments
+- Stub logic
+- Fake tests
+- Simplify graph algorithms
+- Ignore transaction safety
+- Omit error handling
+- Leave unimplemented UI flows
+
+Every feature must be fully implemented.
+
+=====================================================
+1. ARCHITECTURE STYLE
+=====================================================
+
+Follow Clean Architecture + Domain-Driven Design.
+
+Layers:
+- Domain
+- Application
+- Infrastructure
+- Interface (REST API)
+- Presentation (Nuxt frontend)
+
+No business logic in controllers.
+No domain logic in infrastructure.
+
+=====================================================
+2. TECH STACK (MANDATORY)
+=====================================================
+
+Backend:
+- Node.js (LTS)
+- TypeScript (strict mode)
+- Express
+- Prisma ORM
+- SQLite
+- Zod (validation)
+- Winston (logging)
+
+Frontend:
+- Nuxt 3
+- Vue 3 (Composition API)
+- TypeScript
+- Vuetify (latest compatible)
+- Pinia (state management)
+- Vue Query (server state)
+- Vue Router (via Nuxt)
+- Vue Flow OR force-graph library for graph visualization
+
+Testing:
+- Jest (backend)
+- Supertest (API)
+- Vitest (frontend)
+- Vue Testing Library
+- Minimum 90% coverage backend
+
+DevOps:
+- Docker multi-stage builds
+- docker-compose
+- ESLint strict config
+- Prettier
+- Husky pre-commit hooks
+
+=====================================================
+3. CORE DOMAIN RULES (NON-NEGOTIABLE)
+=====================================================
+
+1. Only owner can directly mutate family graph.
+2. Members must submit proposals.
+3. Every approved mutation creates immutable version snapshot.
+4. Rollback never deletes history.
+5. Rollback creates new version.
+6. Proposals approved in rolled-back versions must be marked overridden.
+7. Version history is append-only.
+8. Snapshot contains FULL graph state.
+9. All write operations are transactional.
+10. AI is used only for explanation.
+
+Violation of any rule is unacceptable.
+
+=====================================================
+4. DOMAIN MODEL
+=====================================================
+
+Implement rich domain entities:
+
+- User
+- Family
+- Person
+- Relationship
+- Proposal
+- Version
+
+Use domain services for:
+
+- GraphEngine
+- ProposalService
+- VersioningService
+- GovernanceService
+
+Domain must be pure and testable.
+
+=====================================================
+5. GRAPH ENGINE (FULL IMPLEMENTATION REQUIRED)
+=====================================================
+
+Implement:
+
+- buildAdjacencyMap()
+- bfsAllShortestPaths()
+- detectMultiplePaths()
+- computeLowestCommonAncestor()
+- classifyRelationship()
+
+Support:
+- Parent
+- Sibling
+- Uncle/Aunt
+- Cousin (degree + removal)
+- In-law
+- Grand relationships
+- Multi-path relationship reporting
+- Cycle detection
+- Depth limits
+
+Must be deterministic.
+Must be fully unit tested.
+
+=====================================================
+6. PROPOSAL WORKFLOW
+=====================================================
+
+Member:
+- Submit structured proposal
+
+System:
+- Validate payload (Zod)
+- Simulate change in memory
+- Compute impact preview
+- Return diff summary
+
+Owner:
+- Approve
+- Reject
+
+Approve:
+- Execute DB transaction
+- Apply mutation
+- Create snapshot
+- Update proposal
+- Log audit entry
+
+Rollback:
+- Load snapshot
+- Replace graph state
+- Create new version
+- Mark overridden proposals
+- Transaction required
+
+=====================================================
+7. REST API
+=====================================================
+
+Implement complete API with validation and error handling.
+
+Auth:
+POST /auth/login
+
+Family:
+GET /families
+POST /families
+
+Persons:
+GET /families/:id/persons
+POST /families/:id/persons (owner only)
+
+Relationships:
+POST /families/:id/relationships (owner only)
+
+Proposals:
+POST /families/:id/proposals
+GET /families/:id/proposals
+POST /proposals/:id/approve
+POST /proposals/:id/reject
+
+Versioning:
+GET /families/:id/versions
+POST /families/:id/rollback/:versionNumber
+
+Graph:
+GET /relationship?personA=&personB=
+
+AI:
+POST /ai/explain
+
+=====================================================
+8. FRONTEND REQUIREMENTS
+=====================================================
+
+Must implement:
+
+Pages:
+- Login
+- Family Dashboard
+- Graph Visualization
+- Person Detail
+- Proposal Management
+- Version Timeline
+- Rollback Confirmation Dialog
+
+Features:
+
+- Owner sees approve/reject controls
+- Members see submit proposal form
+- Impact preview modal
+- Version timeline with clickable versions
+- Overridden proposal indicator
+- Relationship search tool
+- Multi-path visualization
+- Highlight common ancestors
+
+Use Vuetify components properly.
+Use Composition API.
+Use typed API clients.
+
+=====================================================
+9. AI MODULE
+=====================================================
+
+Backend:
+- Accept structured relationship data
+- Format strict prompt
+- Call local Ollama
+- Return explanation
+
+Must fail gracefully if Ollama unavailable.
+
+=====================================================
+10. DOCKER
+=====================================================
+
+Provide:
+
+- Backend Dockerfile
+- Frontend Dockerfile
+- docker-compose.yml
+- Single command:
+
+docker-compose up --build
+
+Must start:
+- backend
+- frontend
+- SQLite
+- Ollama (optional)
+
+=====================================================
+11. TESTING
+=====================================================
+
+Backend:
+- Graph engine unit tests
+- Proposal approval tests
+- Rollback integrity tests
+- Snapshot consistency tests
+
+Frontend:
+- Component tests
+- Proposal flow tests
+- Version timeline tests
+
+No placeholder tests allowed.
+
+=====================================================
+12. OUTPUT REQUIREMENTS
+=====================================================
+
+Produce:
+
+- Complete folder structure
+- All backend code
+- All frontend code
+- Prisma schema
+- Migrations
+- Seed data
+- Docker configs
+- Test suite
+- README with architecture explanation
+
+Code must be:
+
+- Fully implemented
+- Strictly typed
+- Clean
+- Modular
+- Commented
+- Production-ready
+
+Build the complete enterprise application.

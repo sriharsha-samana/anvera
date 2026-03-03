@@ -1,0 +1,197 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+enum UserRole {
+  OWNER
+  MEMBER
+}
+
+enum ProposalType {
+  ADD_PERSON
+  ADD_RELATIONSHIP
+}
+
+enum ProposalStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}
+
+enum RelationshipType {
+  PARENT
+  SPOUSE
+  SIBLING
+  INLAW
+}
+
+enum VersionSourceType {
+  MANUAL_EDIT
+  PROPOSAL
+  ROLLBACK
+}
+
+model User {
+  id            String         @id @default(cuid())
+  username      String         @unique
+  email         String?        @unique
+  phone         String?        @unique
+  givenName     String?
+  familyName    String?
+  gender        String?
+  dateOfBirth   String?
+  placeOfBirth  String?
+  occupation    String?
+  notes         String?
+  profilePictureUrl String?
+  identityId     String?        @unique
+  identity       PersonIdentity? @relation(fields: [identityId], references: [id])
+  passwordHash  String
+  role          UserRole
+  ownedFamilies Family[]       @relation("OwnerFamilies")
+  memberships   FamilyMember[]
+  proposals     Proposal[]     @relation("ProposalCreator")
+  reviews       Proposal[]     @relation("ProposalReviewer")
+  versions      FamilyVersion[]
+  audits        AuditLog[]
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
+}
+
+model PersonIdentity {
+  id               String   @id @default(cuid())
+  email            String?  @unique
+  phone            String?  @unique
+  givenName        String?
+  familyName       String?
+  gender           String
+  dateOfBirth      String?
+  placeOfBirth     String?
+  occupation       String?
+  notes            String?
+  profilePictureUrl String?
+  user             User?
+  persons          Person[]
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+}
+
+model Family {
+  id            String         @id @default(cuid())
+  name          String
+  ownerId       String
+  owner         User           @relation("OwnerFamilies", fields: [ownerId], references: [id])
+  members       FamilyMember[]
+  persons       Person[]
+  relationships Relationship[]
+  proposals     Proposal[]
+  versions      FamilyVersion[]
+  auditLogs     AuditLog[]
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
+}
+
+model FamilyMember {
+  id        String   @id @default(cuid())
+  familyId  String
+  userId    String
+  family    Family   @relation(fields: [familyId], references: [id])
+  user      User     @relation(fields: [userId], references: [id])
+  joinedAt  DateTime @default(now())
+
+  @@unique([familyId, userId])
+}
+
+model Person {
+  id          String         @id @default(cuid())
+  familyId    String
+  identityId  String
+  name        String
+  givenName   String?
+  familyName  String?
+  gender      String
+  dateOfBirth String?
+  email       String?
+  phone       String?
+  profilePictureUrl String?
+  metadataJson String
+  family      Family          @relation(fields: [familyId], references: [id])
+  identity    PersonIdentity  @relation(fields: [identityId], references: [id])
+  outgoing    Relationship[]  @relation("RelationshipFrom")
+  incoming    Relationship[]  @relation("RelationshipTo")
+  createdAt   DateTime        @default(now())
+  updatedAt   DateTime        @updatedAt
+
+  @@unique([familyId, identityId])
+}
+
+model Relationship {
+  id            String           @id @default(cuid())
+  familyId      String
+  fromPersonId  String
+  toPersonId    String
+  type          RelationshipType
+  metadataJson  String
+  family        Family           @relation(fields: [familyId], references: [id])
+  fromPerson    Person           @relation("RelationshipFrom", fields: [fromPersonId], references: [id])
+  toPerson      Person           @relation("RelationshipTo", fields: [toPersonId], references: [id])
+  createdAt     DateTime         @default(now())
+
+  @@index([familyId])
+}
+
+model Proposal {
+  id                          String         @id @default(cuid())
+  familyId                    String
+  type                        ProposalType
+  payloadJson                 String
+  previewJson                 String
+  status                      ProposalStatus @default(PENDING)
+  appliedVersionNumber        Int?
+  overriddenByVersionNumber   Int?
+  createdById                 String
+  reviewedById                String?
+  reviewReason                String?
+  family                      Family         @relation(fields: [familyId], references: [id])
+  createdBy                   User           @relation("ProposalCreator", fields: [createdById], references: [id])
+  reviewedBy                  User?          @relation("ProposalReviewer", fields: [reviewedById], references: [id])
+  createdAt                   DateTime       @default(now())
+  updatedAt                   DateTime       @updatedAt
+
+  @@index([familyId, status])
+}
+
+model FamilyVersion {
+  id             String            @id @default(cuid())
+  familyId       String
+  versionNumber  Int
+  snapshotJson   String
+  createdById    String
+  sourceType     VersionSourceType
+  sourceId       String?
+  message        String
+  rollbackFromVersion Int?
+  family         Family             @relation(fields: [familyId], references: [id])
+  createdBy      User               @relation(fields: [createdById], references: [id])
+  createdAt      DateTime           @default(now())
+
+  @@unique([familyId, versionNumber])
+}
+
+model AuditLog {
+  id         String   @id @default(cuid())
+  familyId   String
+  actorId    String
+  action     String
+  metadataJson String
+  family     Family   @relation(fields: [familyId], references: [id])
+  actor      User     @relation(fields: [actorId], references: [id])
+  createdAt  DateTime @default(now())
+
+  @@index([familyId])
+}

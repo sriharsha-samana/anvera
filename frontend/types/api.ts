@@ -1,0 +1,78 @@
+export type UserRole = 'OWNER' | 'MEMBER';
+
+export type Family = {
+  id: string;
+  name: string;
+  ownerId: string;
+  myRole?: UserRole;
+};
+
+export type Person = {
+  id: string;
+  familyId: string;
+  name: string;
+  givenName?: string | null;
+  familyName?: string | null;
+  gender: 'male' | 'female' | 'other' | 'unknown' | string;
+  dateOfBirth?: string | null;
+  email?: string | null;
+  phone?: string | null;
+  profilePictureUrl?: string | null;
+  metadataJson: string;
+};
+
+export type Proposal = {
+  id: string;
+  familyId: string;
+  type: 'ADD_PERSON' | 'ADD_RELATIONSHIP';
+  payloadJson: string;
+  previewJson: string;
+  status: 'PENDING' | 'APPROVED' | 'REJECTED';
+  appliedVersionNumber?: number | null;
+  overriddenByVersionNumber?: number | null;
+  createdAt: string;
+};
+
+export type FamilyVersion = {
+  id: string;
+  familyId: string;
+  versionNumber: number;
+  message: string;
+  sourceType: 'MANUAL_EDIT' | 'PROPOSAL' | 'ROLLBACK';
+  rollbackFromVersion?: number | null;
+  createdAt: string;
+};
+
+export type RelationshipResult = {
+  label: string;
+  degree?: number;
+  removal?: number;
+  commonAncestorId?: string;
+  paths: string[][];
+  multiplePaths: boolean;
+  cycleDetected: boolean;
+};
+
+export type AiRelationshipAskResponse = {
+  answer: string;
+  aiAvailable: boolean;
+  resolved: {
+    subject: {
+      id: string;
+      name: string;
+    };
+    object: {
+      id: string;
+      name: string;
+      isMe: boolean;
+    };
+  };
+  relationship: RelationshipResult & {
+    pathsByName: string[][];
+  };
+  relatedPeople?: Array<{
+    id: string;
+    name: string;
+    relationLabel: string;
+  }>;
+};

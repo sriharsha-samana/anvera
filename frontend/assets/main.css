@@ -1,0 +1,64 @@
+:root {
+  --fg-primary: #111827;
+  --fg-muted: #6b7280;
+  --bg-surface: #f4f8fc;
+  --panel: #ffffff;
+  --accent: #0b7285;
+}
+
+html,
+body,
+#__nuxt {
+  margin: 0;
+  min-height: 100%;
+  font-family: 'Avenir Next', 'Nunito Sans', 'Segoe UI', sans-serif;
+  background:
+    radial-gradient(1200px 700px at 10% -10%, #d7eef7 0%, transparent 60%),
+    radial-gradient(1200px 700px at 100% 0%, #dfe8ff 0%, transparent 55%),
+    var(--bg-surface);
+}
+
+.app-header {
+  border-bottom: 1px solid #e5e7eb;
+  backdrop-filter: blur(8px);
+  background: rgb(255 255 255 / 85%) !important;
+}
+
+
+.page-shell {
+  max-width: 1240px;
+  margin: 0 auto;
+  padding: 16px 12px 28px;
+}
+
+.page-title {
+  font-size: 28px;
+  line-height: 1.15;
+  font-weight: 800;
+  margin: 0;
+  color: var(--fg-primary);
+}
+
+.page-subtitle {
+  margin-top: 8px;
+  color: var(--fg-muted);
+  font-size: 13px;
+}
+
+.surface-card {
+  border-radius: 16px !important;
+  border: 1px solid #e5e7eb;
+  box-shadow: 0 10px 25px rgb(15 23 42 / 6%) !important;
+}
+
+@media (min-width: 960px) {
+  .page-shell {
+    padding: 24px 20px 40px;
+  }
+  .page-title {
+    font-size: 32px;
+  }
+  .page-subtitle {
+    font-size: 14px;
+  }
+}

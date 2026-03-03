@@ -1,0 +1,15 @@
+node_modules
+.env
+coverage
+.nuxt
+.output
+backend/dist
+frontend/.nuxt
+frontend/.output
+frontend/node_modules
+backend/node_modules
+*.log
+backend/prisma/dev.db
+backend/prisma/*.db
+backend/prisma/*.db-journal
+.DS_Store
