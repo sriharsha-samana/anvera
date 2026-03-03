@@ -132,6 +132,14 @@ Services started:
 - sqlite volume service
 - ollama optional profile (`--profile optional`)
 
+## Cloud Deployment
+
+Production VM deployment assets are available in [`deploy/`](./deploy):
+
+- `deploy/docker-compose.cloud.yml` (frontend + backend + Caddy TLS proxy)
+- `deploy/.env.cloud.example` (required environment variables)
+- `deploy/DEPLOY_EC2.md` (step-by-step AWS EC2 guide)
+
 ## Testing
 
 Backend (Jest + Supertest + coverage threshold 90%):

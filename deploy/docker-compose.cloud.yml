@@ -1,0 +1,54 @@
+services:
+  backend:
+    build:
+      context: ..
+      dockerfile: backend/Dockerfile
+    restart: unless-stopped
+    environment:
+      PORT: 4000
+      DATABASE_URL: file:/data/prod.db
+      JWT_SECRET: ${JWT_SECRET}
+      AI_PROVIDER: ${AI_PROVIDER:-openrouter}
+      LLM_API_KEY: ${LLM_API_KEY:-}
+      LLM_BASE_URL: ${LLM_BASE_URL:-}
+      LLM_MODEL: ${LLM_MODEL:-}
+      OPENROUTER_APP_NAME: ${OPENROUTER_APP_NAME:-anvera}
+      OPENROUTER_APP_URL: https://${APP_DOMAIN}
+      GEMINI_API_KEY: ${GEMINI_API_KEY:-}
+      GEMINI_ENDPOINT: ${GEMINI_ENDPOINT:-}
+      OLLAMA_URL: ${OLLAMA_URL:-}
+      OLLAMA_MODEL: ${OLLAMA_MODEL:-}
+    volumes:
+      - sqlite_data:/data
+
+  frontend:
+    build:
+      context: ..
+      dockerfile: frontend/Dockerfile
+    restart: unless-stopped
+    environment:
+      NUXT_PUBLIC_API_BASE_URL: https://${API_DOMAIN}
+    depends_on:
+      - backend
+
+  caddy:
+    image: caddy:2-alpine
+    restart: unless-stopped
+    depends_on:
+      - frontend
+      - backend
+    ports:
+      - '80:80'
+      - '443:443'
+    environment:
+      APP_DOMAIN: ${APP_DOMAIN}
+      API_DOMAIN: ${API_DOMAIN}
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy_data:/data
+      - caddy_config:/config
+
+volumes:
+  sqlite_data:
+  caddy_data:
+  caddy_config:
