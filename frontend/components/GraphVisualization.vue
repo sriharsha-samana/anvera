@@ -1,20 +1,13 @@
 <template>
-  <v-card title="Family Graph Visualization" class="mb-4">
+  <v-card class="mb-4" variant="flat">
     <v-card-text>
-      <div v-if="focusSummary" class="focus-summary">
-        <div class="summary-title">Focused Person: {{ focusSummary.name }}</div>
-        <div class="summary-row"><strong>Parents:</strong> {{ formatNames(focusSummary.parents) }}</div>
-        <div class="summary-row"><strong>Siblings:</strong> {{ formatNames(focusSummary.siblings) }}</div>
-        <div class="summary-row"><strong>Spouse:</strong> {{ formatNames(focusSummary.spouses) }}</div>
-        <div class="summary-row"><strong>Children:</strong> {{ formatNames(focusSummary.children) }}</div>
-      </div>
-
       <div class="legend">
         <span class="legend-item self">Self</span>
         <span class="legend-item parent">Parent</span>
         <span class="legend-item sibling">Sibling</span>
         <span class="legend-item spouse">Spouse</span>
         <span class="legend-item child">Child</span>
+        <span class="legend-item proposed">Proposed Change</span>
       </div>
 
       <div class="tree-wrap">
@@ -23,7 +16,10 @@
             <path
               :d="line.d"
               class="line"
-              :class="[lineClassForPersons(line.personIds), { 'line-dimmed': isLineDimmed(line.personIds) }]"
+              :class="[
+                lineClassForPersons(line.personIds),
+                { 'line-dimmed': isLineDimmed(line.personIds), 'line-proposed': isLineProposed(line) },
+              ]"
             />
           </g>
         </svg>
@@ -33,7 +29,11 @@
           :key="node.id"
           class="tree-node"
           :class="[
-            { 'ancestor-node': node.containsHighlighted, 'node-dimmed': isNodeDimmed(node.personIds) },
+            {
+              'ancestor-node': node.containsHighlighted,
+              'node-dimmed': isNodeDimmed(node.personIds),
+              'proposed-node': isNodeProposed(node.personIds),
+            },
             nodeClassForPersons(node.personIds),
           ]"
           :style="{
@@ -43,13 +43,36 @@
             height: `${node.height}px`,
           }"
         >
-          <template v-if="node.kind === 'couple'">
-            <div class="node-title">{{ node.label }}</div>
-            <div class="node-subtitle">{{ node.coupleSource === 'inferred' ? 'Couple (inferred)' : 'Couple' }}</div>
+          <template v-if="node.kind === 'single'">
+            <MemberIdentity
+              v-if="node.members[0]"
+              :person-id="node.members[0].id"
+              :name="node.members[0].name"
+              :avatar-url="node.members[0].avatarUrl"
+              :subtitle="node.members[0].line1"
+              size="sm"
+              clickable
+              @select="onSelectPerson"
+            />
+            <div v-if="node.members[0]?.line2" class="node-subtitle">{{ node.members[0].line2 }}</div>
           </template>
+
           <template v-else>
-            <div class="node-title">{{ node.label }}</div>
-            <div v-for="line in node.detailLines" :key="`${node.id}-${line}`" class="node-subtitle">{{ line }}</div>
+            <div class="couple-members">
+              <div v-for="member in node.members" :key="`${node.id}-${member.id}`" class="couple-member-block">
+                <MemberIdentity
+                  :person-id="member.id"
+                  :name="member.name"
+                  :avatar-url="member.avatarUrl"
+                  :subtitle="member.line1"
+                  size="sm"
+                  clickable
+                  @select="onSelectPerson"
+                />
+                <div v-if="member.line2" class="node-subtitle couple-subtitle">{{ member.line2 }}</div>
+              </div>
+            </div>
+            <div class="couple-meta">{{ node.coupleSource === 'inferred' ? 'Couple (inferred)' : 'Couple' }}</div>
           </template>
         </div>
       </div>
@@ -62,12 +85,18 @@ import type { Person } from '@/types/api';
 
 type CoupleSource = 'explicit' | 'inferred';
 
+type NodeMember = {
+  id: string;
+  name: string;
+  avatarUrl: string | null;
+  line1?: string;
+  line2?: string;
+};
+
 type RenderNode = {
   id: string;
   kind: 'single' | 'couple';
-  label: string;
-  personId: string;
-  detailLines: string[];
+  members: NodeMember[];
   personIds: string[];
   x: number;
   y: number;
@@ -81,6 +110,7 @@ type RenderLine = {
   id: string;
   d: string;
   personIds: string[];
+  edgeKey?: string;
 };
 
 type CoupleEdge = {
@@ -94,16 +124,22 @@ const props = defineProps<{
   relationships: Array<{ id: string; fromPersonId: string; toPersonId: string; type: string }>;
   highlightAncestorId?: string;
   focusPersonId?: string;
+  proposedPersonIds?: string[];
+  proposedRelationshipKeys?: string[];
+}>();
+
+const emit = defineEmits<{
+  (e: 'select-person', personId: string): void;
 }>();
 
 const viewportWidth = ref(1200);
 const isNarrow = computed(() => viewportWidth.value < 760);
-const singleNodeWidth = computed(() => (isNarrow.value ? 176 : 240));
-const singleNodeHeight = computed(() => (isNarrow.value ? 84 : 92));
-const coupleNodeWidth = computed(() => (isNarrow.value ? 208 : 270));
-const coupleNodeHeight = computed(() => (isNarrow.value ? 56 : 64));
+const singleNodeWidth = computed(() => (isNarrow.value ? 220 : 272));
+const singleNodeHeight = computed(() => (isNarrow.value ? 122 : 136));
+const coupleNodeWidth = computed(() => (isNarrow.value ? 250 : 320));
+const coupleNodeHeight = computed(() => (isNarrow.value ? 132 : 150));
 const hGap = computed(() => (isNarrow.value ? 18 : 40));
-const vGap = computed(() => (isNarrow.value ? 84 : 110));
+const vGap = computed(() => (isNarrow.value ? 84 : 118));
 const padding = computed(() => (isNarrow.value ? 16 : 30));
 
 const syncViewport = (): void => {
@@ -121,7 +157,36 @@ onBeforeUnmount(() => {
   window.removeEventListener('resize', syncViewport);
 });
 
+const parseMetadata = (raw: string | null | undefined): Record<string, unknown> => {
+  if (!raw) return {};
+  try {
+    return JSON.parse(raw) as Record<string, unknown>;
+  } catch {
+    return {};
+  }
+};
+
+const resolveAvatarUrl = (person: Person): string | null => {
+  const direct = person.profilePictureUrl?.trim();
+  if (direct) return direct;
+  const metadata = parseMetadata(person.metadataJson);
+  const fromData = typeof metadata.profilePictureDataUrl === 'string' ? metadata.profilePictureDataUrl.trim() : '';
+  if (fromData) return fromData;
+  const fromUrl = typeof metadata.profilePictureUrl === 'string' ? metadata.profilePictureUrl.trim() : '';
+  return fromUrl || null;
+};
+
 const personMap = computed(() => new Map(props.persons.map((p) => [p.id, p])));
+const proposedPersonIdSet = computed(() => new Set(props.proposedPersonIds ?? []));
+const proposedRelationshipKeySet = computed(() => new Set(props.proposedRelationshipKeys ?? []));
+
+const relationshipKey = (type: string, fromPersonId: string, toPersonId: string): string => {
+  if (type === 'SPOUSE' || type === 'SIBLING' || type === 'INLAW') {
+    const [a, b] = [fromPersonId, toPersonId].sort((x, y) => x.localeCompare(y));
+    return `${type}:${a}:${b}`;
+  }
+  return `${type}:${fromPersonId}:${toPersonId}`;
+};
 
 const parentEdges = computed(() =>
   props.relationships
@@ -173,15 +238,6 @@ const coupleEdges = computed<CoupleEdge[]>(() => {
   return [...merged.values()].sort((x, y) => `${x.a}:${x.b}`.localeCompare(`${y.a}:${y.b}`));
 });
 
-const parseMetadata = (raw: string | null | undefined): Record<string, unknown> => {
-  if (!raw) return {};
-  try {
-    return JSON.parse(raw) as Record<string, unknown>;
-  } catch {
-    return {};
-  }
-};
-
 const formatGender = (value: string): string => {
   const normalized = value.trim().toLowerCase();
   if (!normalized) return 'Unknown';
@@ -195,7 +251,7 @@ const formatDob = (value: string | null | undefined): string => {
   return date.toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric', timeZone: 'UTC' });
 };
 
-const buildPersonDetailLines = (person: Person): string[] => {
+const buildPersonDetailLines = (person: Person): { line1: string; line2: string } => {
   const metadata = parseMetadata(person.metadataJson);
   const line1Parts: string[] = [formatGender(person.gender)];
   const dob = formatDob(person.dateOfBirth);
@@ -207,7 +263,7 @@ const buildPersonDetailLines = (person: Person): string[] => {
   const placeOfBirth = typeof metadata.placeOfBirth === 'string' ? metadata.placeOfBirth.trim() : '';
   const line2 = email || phone || occupation || placeOfBirth || 'Profile details pending';
 
-  return [line1Parts.join(' • '), line2];
+  return { line1: line1Parts.join(' • '), line2 };
 };
 
 const baseGenerationByPerson = computed(() => {
@@ -348,26 +404,6 @@ const focusNeighborhood = computed(() => {
   return union;
 });
 
-const focusSummary = computed(() => {
-  const focusId = props.focusPersonId;
-  if (!focusId) return null;
-  const focusPerson = personMap.value.get(focusId);
-  if (!focusPerson) return null;
-
-  const toNames = (ids: Set<string>) =>
-    [...ids]
-      .map((id) => personMap.value.get(id)?.name ?? id)
-      .sort((a, b) => a.localeCompare(b));
-
-  return {
-    name: focusPerson.name,
-    parents: toNames(focusRelations.value.parents),
-    siblings: toNames(focusRelations.value.siblings),
-    spouses: toNames(focusRelations.value.spouses),
-    children: toNames(focusRelations.value.children),
-  };
-});
-
 const layout = computed(() => {
   const byGeneration = new Map<number, string[]>();
   for (const person of props.persons) {
@@ -408,13 +444,16 @@ const layout = computed(() => {
         const a = personMap.value.get(pair.a);
         const b = personMap.value.get(pair.b);
         if (a && b) {
+          const aDetail = buildPersonDetailLines(a);
+          const bDetail = buildPersonDetailLines(b);
           const id = `couple:${pair.a}:${pair.b}`;
           rowNodes.push({
             id,
             kind: 'couple',
-            label: `${a.name} ♥ ${b.name}`,
-            personId: `${pair.a},${pair.b}`,
-            detailLines: [pair.source === 'inferred' ? 'Couple (inferred)' : 'Couple'],
+            members: [
+              { id: a.id, name: a.name, avatarUrl: resolveAvatarUrl(a), line1: aDetail.line1, line2: aDetail.line2 },
+              { id: b.id, name: b.name, avatarUrl: resolveAvatarUrl(b), line1: bDetail.line1, line2: bDetail.line2 },
+            ],
             personIds: [pair.a, pair.b],
             x: 0,
             y: 0,
@@ -433,13 +472,20 @@ const layout = computed(() => {
 
       const person = personMap.value.get(personId);
       if (!person) continue;
+      const detail = buildPersonDetailLines(person);
       const id = `single:${personId}`;
       rowNodes.push({
         id,
         kind: 'single',
-        label: person.name,
-        personId,
-        detailLines: buildPersonDetailLines(person),
+        members: [
+          {
+            id: person.id,
+            name: person.name,
+            avatarUrl: resolveAvatarUrl(person),
+            line1: detail.line1,
+            line2: detail.line2,
+          },
+        ],
         personIds: [personId],
         x: 0,
         y: 0,
@@ -475,6 +521,7 @@ const layout = computed(() => {
       id: `couple-line:${node.id}`,
       d: `M ${node.x + 16} ${node.y + node.height / 2} L ${node.x + node.width - 16} ${node.y + node.height / 2}`,
       personIds: [...node.personIds],
+      edgeKey: node.coupleSource === 'explicit' ? relationshipKey('SPOUSE', node.personIds[0], node.personIds[1]) : undefined,
     });
   }
 
@@ -490,15 +537,18 @@ const layout = computed(() => {
     const end = anchorTop(cNode);
     const midY = start.y + (end.y - start.y) / 2;
     const d = `M ${start.x} ${start.y} L ${start.x} ${midY} L ${end.x} ${midY} L ${end.x} ${end.y}`;
-    lines.push({ id: `parent:${rel.parent}:${rel.child}`, d, personIds: [rel.parent, rel.child] });
+    lines.push({
+      id: `parent:${rel.parent}:${rel.child}`,
+      d,
+      personIds: [rel.parent, rel.child],
+      edgeKey: relationshipKey('PARENT', rel.parent, rel.child),
+    });
   }
 
   const width = Math.max(isNarrow.value ? 1080 : 1600, ...nodes.map((n) => n.x + n.width + padding.value));
   const height = Math.max(isNarrow.value ? 430 : 500, ...nodes.map((n) => n.y + n.height + padding.value));
   return { nodes, lines, width, height };
 });
-
-const formatNames = (items: string[]): string => (items.length > 0 ? items.join(', ') : 'None');
 
 const hasAny = (personIds: string[], set: Set<string>): boolean => personIds.some((id) => set.has(id));
 
@@ -530,27 +580,177 @@ const isLineDimmed = (personIds: string[]): boolean => {
   if (!props.focusPersonId) return false;
   return !personIds.some((id) => focusNeighborhood.value.has(id));
 };
+
+const isNodeProposed = (personIds: string[]): boolean => {
+  if (personIds.some((id) => proposedPersonIdSet.value.has(id))) return true;
+  const a = personIds[0];
+  const b = personIds[1];
+  if (a && b) {
+    for (const type of ['SPOUSE', 'SIBLING', 'INLAW']) {
+      if (proposedRelationshipKeySet.value.has(relationshipKey(type, a, b))) return true;
+    }
+  }
+  return false;
+};
+
+const isLineProposed = (line: RenderLine): boolean =>
+  Boolean(line.edgeKey && proposedRelationshipKeySet.value.has(line.edgeKey));
+
+const truncateForNode = (value: string, maxChars: number): string => {
+  if (value.length <= maxChars) return value;
+  return `${value.slice(0, Math.max(0, maxChars - 1)).trimEnd()}…`;
+};
+
+const escapeXml = (value: string): string =>
+  value
+    .replaceAll('&', '&amp;')
+    .replaceAll('<', '&lt;')
+    .replaceAll('>', '&gt;')
+    .replaceAll('"', '&quot;')
+    .replaceAll("'", '&apos;');
+
+const getLineVisual = (line: RenderLine): { stroke: string; opacity: number; strokeWidth: number; dasharray: string } => {
+  const personIds = line.personIds;
+  const lineClass = lineClassForPersons(personIds);
+  let stroke = '#7c8b99';
+  let strokeWidth = 1.6;
+  let dasharray = '0';
+  if (lineClass === 'line-parent') stroke = '#15803d';
+  if (lineClass === 'line-sibling') stroke = '#b45309';
+  if (lineClass === 'line-spouse') stroke = '#be185d';
+  if (lineClass === 'line-child') stroke = '#0369a1';
+  if (isLineProposed(line)) {
+    stroke = '#fb923c';
+    strokeWidth = 2.2;
+    dasharray = '6 4';
+  }
+  const opacity = isLineDimmed(personIds) ? 0.16 : 1;
+  return { stroke, opacity, strokeWidth, dasharray };
+};
+
+const getNodeVisual = (node: RenderNode): { fill: string; stroke: string; opacity: number } => {
+  let fill = '#ffffff';
+  let stroke = '#0b7285';
+
+  if (node.containsHighlighted) {
+    fill = '#fff4e6';
+    stroke = '#ff922b';
+  }
+  if (isNodeProposed(node.personIds)) {
+    fill = '#fff7ed';
+    stroke = '#fb923c';
+  }
+
+  const nodeClass = nodeClassForPersons(node.personIds);
+  if (nodeClass === 'focus-self') stroke = '#1d4ed8';
+  if (nodeClass === 'focus-parent') stroke = '#15803d';
+  if (nodeClass === 'focus-sibling') stroke = '#b45309';
+  if (nodeClass === 'focus-spouse') stroke = '#be185d';
+  if (nodeClass === 'focus-child') stroke = '#0369a1';
+
+  const opacity = isNodeDimmed(node.personIds) ? 0.2 : 1;
+  return { fill, stroke, opacity };
+};
+
+const downloadAsImage = async (fileName = 'family-graph.png'): Promise<void> => {
+  if (!import.meta.client) return;
+
+  const svgWidth = layout.value.width;
+  const svgHeight = layout.value.height;
+  if (svgWidth <= 0 || svgHeight <= 0) return;
+
+  const svgParts: string[] = [];
+  svgParts.push(
+    `<svg xmlns="http://www.w3.org/2000/svg" width="${svgWidth}" height="${svgHeight}" viewBox="0 0 ${svgWidth} ${svgHeight}">`,
+  );
+  svgParts.push('<defs>');
+  svgParts.push(
+    '<linearGradient id="bg-grad" x1="0%" y1="0%" x2="0%" y2="100%"><stop offset="0%" stop-color="#f8fbff"/><stop offset="100%" stop-color="#eef6fa"/></linearGradient>',
+  );
+  svgParts.push('</defs>');
+  svgParts.push(`<rect x="0" y="0" width="${svgWidth}" height="${svgHeight}" fill="url(#bg-grad)"/>`);
+
+  for (const line of layout.value.lines) {
+    const style = getLineVisual(line);
+    svgParts.push(
+      `<path d="${escapeXml(line.d)}" fill="none" stroke="${style.stroke}" stroke-width="${style.strokeWidth}" stroke-dasharray="${style.dasharray}" opacity="${style.opacity}"/>`,
+    );
+  }
+
+  for (const node of layout.value.nodes) {
+    const style = getNodeVisual(node);
+    svgParts.push(`<g opacity="${style.opacity}">`);
+    svgParts.push(
+      `<rect x="${node.x}" y="${node.y}" width="${node.width}" height="${node.height}" rx="10" ry="10" fill="${style.fill}" stroke="${style.stroke}" stroke-width="1.2"/>`,
+    );
+
+    const title = node.members.map((member) => member.name).join(' + ');
+    svgParts.push(
+      `<text x="${node.x + 10}" y="${node.y + 22}" font-family="Arial, sans-serif" font-size="13" font-weight="700" fill="#1f2937">${escapeXml(truncateForNode(title, 42))}</text>`,
+    );
+
+    let subtitleY = node.y + 40;
+    const subtitles =
+      node.kind === 'couple'
+        ? [node.coupleSource === 'inferred' ? 'Couple (inferred)' : 'Couple']
+        : [node.members[0]?.line1 ?? '', node.members[0]?.line2 ?? ''];
+
+    for (const subtitle of subtitles.filter(Boolean)) {
+      svgParts.push(
+        `<text x="${node.x + 10}" y="${subtitleY}" font-family="Arial, sans-serif" font-size="11" fill="#6b7280">${escapeXml(truncateForNode(subtitle, 56))}</text>`,
+      );
+      subtitleY += 13;
+    }
+    svgParts.push('</g>');
+  }
+
+  svgParts.push('</svg>');
+  const svgMarkup = svgParts.join('');
+  const blob = new Blob([svgMarkup], { type: 'image/svg+xml;charset=utf-8' });
+  const objectUrl = URL.createObjectURL(blob);
+
+  try {
+    const image = await new Promise<HTMLImageElement>((resolve, reject) => {
+      const img = new Image();
+      img.onload = () => resolve(img);
+      img.onerror = () => reject(new Error('Could not render graph export image'));
+      img.src = objectUrl;
+    });
+
+    const scale = 2;
+    const canvas = document.createElement('canvas');
+    canvas.width = Math.round(svgWidth * scale);
+    canvas.height = Math.round(svgHeight * scale);
+    const context = canvas.getContext('2d');
+    if (!context) throw new Error('Canvas context unavailable for graph export');
+
+    context.scale(scale, scale);
+    context.drawImage(image, 0, 0, svgWidth, svgHeight);
+
+    const pngUrl = canvas.toDataURL('image/png');
+    const anchor = document.createElement('a');
+    anchor.href = pngUrl;
+    anchor.download = fileName;
+    document.body.append(anchor);
+    anchor.click();
+    anchor.remove();
+  } finally {
+    URL.revokeObjectURL(objectUrl);
+  }
+};
+
+const onSelectPerson = (personId: string): void => {
+  emit('select-person', personId);
+};
+
+defineExpose<{
+  downloadAsImage: (fileName?: string) => Promise<void>;
+}>({
+  downloadAsImage,
+});
 </script>
 
 <style scoped>
-.focus-summary {
-  border: 1px solid #bfd7e6;
-  background: #f4fbff;
-  border-radius: 10px;
-  padding: 10px 12px;
-  margin-bottom: 10px;
-}
-
-.summary-title {
-  font-weight: 700;
-  margin-bottom: 4px;
-}
-
-.summary-row {
-  font-size: 13px;
-  color: #334155;
-}
-
 .legend {
   display: flex;
   flex-wrap: wrap;
@@ -584,6 +784,11 @@ const isLineDimmed = (personIds: string[]): boolean => {
 
 .legend-item.child {
   border-color: #0369a1;
+}
+
+.legend-item.proposed {
+  border-color: #fb923c;
+  background: #fff7ed;
 }
 
 .tree-wrap {
@@ -629,15 +834,22 @@ const isLineDimmed = (personIds: string[]): boolean => {
   stroke: #0369a1;
 }
 
+.line-proposed {
+  stroke: #fb923c;
+  stroke-width: 2.2;
+  stroke-dasharray: 6 4;
+}
+
 .tree-node {
   position: absolute;
   border: 1px solid #0b7285;
   border-radius: 10px;
   background: #fff;
-  padding: 8px 10px;
+  padding: 9px 10px;
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  justify-content: flex-start;
+  gap: 8px;
   box-shadow: 0 1px 2px rgb(0 0 0 / 7%);
   transition: opacity 140ms ease;
 }
@@ -649,6 +861,12 @@ const isLineDimmed = (personIds: string[]): boolean => {
 .ancestor-node {
   border-color: #ff922b;
   background: #fff4e6;
+}
+
+.proposed-node {
+  border-color: #fb923c;
+  background: #fff7ed;
+  box-shadow: 0 0 0 2px rgb(251 146 60 / 16%);
 }
 
 .focus-self {
@@ -672,31 +890,41 @@ const isLineDimmed = (personIds: string[]): boolean => {
   border-color: #0369a1;
 }
 
-.node-title {
-  font-weight: 700;
-  font-size: 14px;
-  line-height: 1.2;
-  color: #1f2937;
-}
-
 .node-subtitle {
   font-size: 11px;
-  color: #6b7280;
-  margin-top: 4px;
+  color: #64748b;
+  margin-left: 36px;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 }
 
+.couple-members {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.couple-member-block {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.couple-meta {
+  font-size: 11px;
+  color: #6b7280;
+  border-top: 1px dashed #cbd5e1;
+  padding-top: 5px;
+}
+
+.couple-subtitle {
+  margin-left: 36px;
+}
+
 @media (max-width: 900px) {
   .tree-wrap {
     min-height: 420px;
-  }
-  .node-title {
-    font-size: 12px;
-  }
-  .node-subtitle {
-    font-size: 10px;
   }
 }
 
@@ -704,12 +932,6 @@ const isLineDimmed = (personIds: string[]): boolean => {
   .tree-wrap {
     min-height: 360px;
     padding: 4px;
-  }
-  .focus-summary {
-    padding: 8px 10px;
-  }
-  .summary-row {
-    font-size: 12px;
   }
 }
 </style>

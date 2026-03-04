@@ -171,13 +171,17 @@ export class FamilyService {
         OR: [{ ownerId: userId }, { members: { some: { userId } } }],
       },
       include: {
-        owner: { select: { id: true, username: true } },
+        owner: { select: { id: true, username: true, givenName: true, familyName: true } },
       },
       orderBy: { createdAt: 'desc' },
     });
 
     return families.map((family) => ({
       ...family,
+      ownerName:
+        `${family.owner?.givenName ?? ''} ${family.owner?.familyName ?? ''}`.trim() ||
+        family.owner?.username ||
+        family.ownerId,
       myRole: family.ownerId === userId ? UserRole.OWNER : UserRole.MEMBER,
     }));
   }

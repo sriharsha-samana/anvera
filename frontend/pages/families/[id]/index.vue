@@ -3,7 +3,12 @@
     <div class="d-flex flex-wrap align-center justify-space-between mb-4">
       <div>
         <h1 class="page-title">Family Overview</h1>
-        <p class="text-subtitle-1 font-weight-medium mb-1">{{ activeFamily?.name ?? 'Family' }}</p>
+        <div class="d-flex flex-wrap align-center ga-2 mb-1">
+          <p class="text-subtitle-1 font-weight-medium mb-0">{{ activeFamily?.name ?? 'Family' }}</p>
+          <v-chip size="small" color="primary" variant="tonal">
+            Owner: {{ activeFamily?.ownerName || activeFamily?.owner?.username || activeFamily?.ownerId || 'Unknown' }}
+          </v-chip>
+        </div>
         <p class="page-subtitle">Manage people, relationships, and quick kinship lookup in one place.</p>
         <p v-if="!isFamilyOwner" class="text-caption text-medium-emphasis mt-1">
           Read-only view: only this family's owner can edit or delete members/relationships.
@@ -11,58 +16,130 @@
       </div>
       <div class="d-flex ga-2 family-top-actions">
         <v-btn variant="outlined" @click="goProposals">Proposals</v-btn>
-        <v-btn variant="outlined" @click="goVersions">Timeline</v-btn>
+        <v-btn variant="outlined" @click="goVersions">History</v-btn>
         <v-btn variant="outlined" @click="goDanger">Settings</v-btn>
       </div>
     </div>
 
     <v-card class="surface-card mb-4" variant="flat" title="Family Graph">
       <v-card-text>
-        <v-row>
+        <v-row align="center">
           <v-col cols="12" md="8">
-            <v-select
-              v-model="focusPersonId"
-              :items="focusOptions"
-              item-title="title"
-              item-value="value"
-              label="Focus on person"
-              clearable
-              density="comfortable"
-              hint="Shows selected person and 2-hop neighborhood; everything else is dimmed."
-              persistent-hint
-            />
+            <div class="d-flex align-start ga-1">
+              <v-select
+                v-model="focusPersonId"
+                :items="focusOptions"
+                item-title="title"
+                item-value="value"
+                label="Focus on person"
+                clearable
+                density="comfortable"
+                hint="Shows selected person and 2-hop neighborhood; everything else is dimmed."
+                persistent-hint
+                class="flex-grow-1"
+              />
+              <v-tooltip text="Show focused person details">
+                <template #activator="{ props: tipProps }">
+                  <v-btn
+                    v-bind="tipProps"
+                    variant="text"
+                    icon="mdi-help-circle-outline"
+                    size="small"
+                    class="mt-2"
+                    :disabled="!focusSummary"
+                    @click="showFocusHelp"
+                  />
+                </template>
+              </v-tooltip>
+            </div>
+          </v-col>
+          <v-col cols="12" md="4" class="d-flex justify-md-end ga-2 align-center">
+            <v-btn
+              variant="outlined"
+              prepend-icon="mdi-download"
+              :disabled="persons.length === 0 || downloadingGraph"
+              :loading="downloadingGraph"
+              @click="downloadGraphImage"
+            >
+              Download Image
+            </v-btn>
           </v-col>
         </v-row>
         <GraphVisualization
+          ref="graphVisualizationRef"
           :persons="persons"
           :relationships="relationships"
           :focus-person-id="focusPersonId ?? undefined"
+          @select-person="openPerson"
         />
       </v-card-text>
     </v-card>
 
     <v-card class="surface-card mb-4" title="People" variant="flat">
       <v-card-text>
-        <div class="d-flex justify-end mb-3">
-          <v-btn color="primary" :disabled="!isFamilyOwner" @click="goAddPerson">Add Member</v-btn>
+        <div class="d-flex flex-wrap align-center justify-space-between mb-3 ga-2">
+          <div class="d-flex flex-wrap ga-2 align-center">
+            <v-select
+              v-model="peopleGroupBy"
+              :items="peopleGroupByOptions"
+              item-title="title"
+              item-value="value"
+              label="Group by"
+              density="comfortable"
+              hide-details
+              style="max-width: 220px"
+            />
+            <v-text-field
+              v-model="peopleSearch"
+              label="Search people"
+              density="comfortable"
+              prepend-inner-icon="mdi-magnify"
+              hide-details
+              style="max-width: 320px"
+            />
+          </div>
+          <div class="d-flex ga-2">
+            <v-btn
+              variant="outlined"
+              prepend-icon="mdi-microsoft-excel"
+              :disabled="peopleRows.length === 0"
+              @click="exportPeopleExcel"
+            >
+              Export Excel
+            </v-btn>
+            <v-btn color="primary" :disabled="!isFamilyOwner" @click="goAddPerson">Add Member</v-btn>
+          </div>
         </div>
         <div class="table-scroll">
-        <v-table density="comfortable">
-          <thead>
-            <tr>
-              <th>Name</th>
-              <th class="text-right">Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr v-for="person in persons" :key="person.id" class="row-click" @click="openPerson(person.id)">
-              <td>{{ person.name }}</td>
-              <td class="text-right">
+          <v-data-table
+            :headers="peopleHeaders"
+            :items="peopleRows"
+            :search="peopleSearch"
+            :items-per-page="10"
+            :sort-by="[{ key: 'name', order: 'asc' }]"
+            :group-by="peopleGroupBy === 'none' ? [] : [{ key: peopleGroupBy, order: 'asc' }]"
+            class="bg-transparent"
+            density="comfortable"
+          >
+            <template #item.name="{ item }">
+              <MemberIdentity
+                v-if="item?.id"
+                :person-id="item.id"
+                :name="item.name"
+                :avatar-url="item.avatarUrl"
+                size="sm"
+                clickable
+                @select="openPerson"
+              />
+              <span v-else class="text-medium-emphasis">-</span>
+            </template>
+            <template #item.actions="{ item }">
+              <div v-if="item?.id" class="text-right">
                 <v-btn
                   size="small"
                   variant="text"
                   :disabled="!isFamilyOwner"
-                  @click.stop="startEditPerson(person)"
+                  @click.stop="startEditPersonById(item.id)"
                 >
                   Edit
                 </v-btn>
@@ -71,68 +148,99 @@
                   color="error"
                   variant="text"
                   :disabled="!isFamilyOwner"
-                  @click.stop="removePerson(person.id)"
+                  @click.stop="removePerson(item.id)"
                 >
                   Delete
                 </v-btn>
-              </td>
-            </tr>
-          </tbody>
-        </v-table>
+              </div>
+            </template>
+          </v-data-table>
         </div>
       </v-card-text>
     </v-card>
 
     <v-card class="surface-card mb-4" title="Relationships" variant="flat">
       <v-card-text>
-        <v-row>
-          <v-col cols="12" md="5">
+        <div class="d-flex flex-wrap ga-2 align-center justify-space-between mb-3">
+          <div class="d-flex flex-wrap ga-2 align-center">
             <v-select
-              v-model="newRelationshipFrom"
-              :items="personOptions"
-              item-title="label"
+              v-model="relationshipsGroupBy"
+              :items="relationshipsGroupByOptions"
+              item-title="title"
               item-value="value"
-              label="From"
+              label="Group by"
               density="comfortable"
+              hide-details
+              style="max-width: 220px"
             />
-          </v-col>
-          <v-col cols="12" md="5">
-            <v-select
-              v-model="newRelationshipTo"
-              :items="personOptions"
-              item-title="label"
-              item-value="value"
-              label="To"
+            <v-text-field
+              v-model="relationshipsSearch"
+              label="Search relationships"
               density="comfortable"
+              prepend-inner-icon="mdi-magnify"
+              hide-details
+              style="max-width: 360px"
             />
-          </v-col>
-          <v-col cols="12" md="2">
-            <v-select v-model="newRelationshipType" :items="relationshipTypes" label="Type" density="comfortable" />
-          </v-col>
-        </v-row>
-        <v-btn color="primary" :disabled="!isFamilyOwner" @click="addRelationship">Add Relationship</v-btn>
+          </div>
+          <div class="d-flex ga-2">
+            <v-btn
+              variant="outlined"
+              prepend-icon="mdi-microsoft-excel"
+              :disabled="relationshipRows.length === 0"
+              @click="exportRelationshipsExcel"
+            >
+              Export Excel
+            </v-btn>
+            <v-btn color="primary" :disabled="!isFamilyOwner" @click="addRelationshipDialog = true">Add Relationship</v-btn>
+          </div>
+        </div>
 
         <div class="table-scroll mt-4">
-        <v-table density="comfortable">
-          <thead>
-            <tr>
-              <th>From</th>
-              <th>To</th>
-              <th>Type</th>
-              <th class="text-right">Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr v-for="rel in readableRelationships" :key="rel.id">
-              <td>{{ rel.fromName }}</td>
-              <td>{{ rel.toName }}</td>
-              <td><v-chip size="small" variant="tonal">{{ rel.type }}</v-chip></td>
-              <td class="text-right">
+          <v-data-table
+            :headers="relationshipHeaders"
+            :items="relationshipRows"
+            :search="relationshipsSearch"
+            :items-per-page="10"
+            :sort-by="[{ key: 'from', order: 'asc' }]"
+            :group-by="relationshipsGroupBy === 'none' ? [] : [{ key: relationshipsGroupBy, order: 'asc' }]"
+            class="bg-transparent"
+            density="comfortable"
+          >
+            <template #item.from="{ item }">
+              <MemberIdentity
+                v-if="item?.fromPersonId"
+                :person-id="item.fromPersonId"
+                :name="item.from"
+                :avatar-url="item.fromAvatarUrl"
+                size="sm"
+                clickable
+                @select="openPerson"
+              />
+              <span v-else class="text-medium-emphasis">-</span>
+            </template>
+            <template #item.to="{ item }">
+              <MemberIdentity
+                v-if="item?.toPersonId"
+                :person-id="item.toPersonId"
+                :name="item.to"
+                :avatar-url="item.toAvatarUrl"
+                size="sm"
+                clickable
+                @select="openPerson"
+              />
+              <span v-else class="text-medium-emphasis">-</span>
+            </template>
+            <template #item.type="{ item }">
+              <v-chip v-if="item?.type" size="small" variant="tonal">{{ item.type }}</v-chip>
+              <span v-else class="text-medium-emphasis">-</span>
+            </template>
+            <template #item.actions="{ item }">
+              <div v-if="item?.id" class="text-right">
                 <v-btn
                   size="small"
                   variant="text"
                   :disabled="!isFamilyOwner"
-                  @click="startEditRelationship(rel.id)"
+                  @click="startEditRelationship(item.id)"
                 >
                   Edit
                 </v-btn>
@@ -141,21 +249,74 @@
                   color="error"
                   variant="text"
                   :disabled="!isFamilyOwner"
-                  @click="removeRelationship(rel.id)"
+                  @click="removeRelationship(item.id)"
                 >
                   Delete
                 </v-btn>
-              </td>
-            </tr>
-          </tbody>
-        </v-table>
+              </div>
+            </template>
+          </v-data-table>
         </div>
       </v-card-text>
     </v-card>
 
     <v-alert v-if="operationError" type="error" variant="tonal" class="mb-4">{{ operationError }}</v-alert>
 
-    <RelationshipAiAssistant :family-id="familyId" :persons="persons" />
+    <v-dialog v-model="addRelationshipDialog" max-width="620">
+      <v-card title="Add Relationship">
+        <v-card-text>
+          <v-row>
+            <v-col cols="12" md="5">
+              <v-select
+                v-model="newRelationshipFrom"
+                :items="personOptions"
+                item-title="label"
+                item-value="value"
+                label="From"
+                density="comfortable"
+              />
+            </v-col>
+            <v-col cols="12" md="5">
+              <v-select
+                v-model="newRelationshipTo"
+                :items="personOptions"
+                item-title="label"
+                item-value="value"
+                label="To"
+                density="comfortable"
+              />
+            </v-col>
+            <v-col cols="12" md="2">
+              <v-select v-model="newRelationshipType" :items="relationshipTypes" label="Type" density="comfortable" />
+            </v-col>
+          </v-row>
+        </v-card-text>
+        <v-card-actions>
+          <v-spacer />
+          <v-btn variant="text" @click="addRelationshipDialog = false">Cancel</v-btn>
+          <v-btn color="primary" :disabled="!isFamilyOwner" @click="addRelationship">Add</v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
+
+    <v-dialog v-model="focusHelpDialog" max-width="560">
+      <v-card title="Focused Person Details">
+        <v-card-text v-if="focusSummary">
+          <div class="summary-title mb-2">{{ focusSummary.name }}</div>
+          <div class="summary-row"><strong>Parents:</strong> {{ formatFocusNames(focusSummary.parents) }}</div>
+          <div class="summary-row"><strong>Siblings:</strong> {{ formatFocusNames(focusSummary.siblings) }}</div>
+          <div class="summary-row"><strong>Spouse:</strong> {{ formatFocusNames(focusSummary.spouses) }}</div>
+          <div class="summary-row"><strong>Children:</strong> {{ formatFocusNames(focusSummary.children) }}</div>
+        </v-card-text>
+        <v-card-text v-else>
+          Select a focused person first to view contextual relationship details.
+        </v-card-text>
+        <v-card-actions>
+          <v-spacer />
+          <v-btn variant="text" @click="focusHelpDialog = false">Close</v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
 
     <v-dialog v-model="editPersonDialog" max-width="520">
       <v-card title="Edit Person">
@@ -256,6 +417,7 @@
 
 <script setup lang="ts">
 import { useQuery } from '@tanstack/vue-query';
+import * as XLSX from 'xlsx';
 import type { Family, Person } from '@/types/api';
 
 type RelationshipRow = {
@@ -265,12 +427,26 @@ type RelationshipRow = {
   type: 'PARENT' | 'SPOUSE' | 'SIBLING' | 'INLAW';
 };
 
+type GraphVisualizationHandle = {
+  downloadAsImage: (fileName?: string) => Promise<void>;
+};
+
+type FocusSummary = {
+  name: string;
+  parents: string[];
+  siblings: string[];
+  spouses: string[];
+  children: string[];
+};
+
 const route = useRoute();
 const router = useRouter();
 const familyId = route.params.id as string;
 const { client, authStore } = useApi();
 authStore.restore();
 const operationError = ref('');
+const graphVisualizationRef = ref<GraphVisualizationHandle | null>(null);
+const downloadingGraph = ref(false);
 
 const { data, refetch } = useQuery({
   queryKey: ['persons', familyId],
@@ -295,6 +471,7 @@ const isFamilyOwner = computed(() => {
 const newRelationshipFrom = ref('');
 const newRelationshipTo = ref('');
 const newRelationshipType = ref<'PARENT' | 'SPOUSE' | 'SIBLING' | 'INLAW'>('PARENT');
+const addRelationshipDialog = ref(false);
 const relationshipTypes: Array<'PARENT' | 'SPOUSE' | 'SIBLING' | 'INLAW'> = ['PARENT', 'SPOUSE', 'SIBLING', 'INLAW'];
 const genderOptions: Array<'male' | 'female' | 'other' | 'unknown'> = ['male', 'female', 'other', 'unknown'];
 const editPersonDialog = ref(false);
@@ -317,12 +494,11 @@ const editRelationshipFrom = ref('');
 const editRelationshipTo = ref('');
 const editRelationshipType = ref<'PARENT' | 'SPOUSE' | 'SIBLING' | 'INLAW'>('PARENT');
 const focusPersonId = ref<string | null>(null);
-
-const personNameMap = computed(() => {
-  const map = new Map<string, string>();
-  for (const person of persons.value) map.set(person.id, person.name);
-  return map;
-});
+const focusHelpDialog = ref(false);
+const peopleSearch = ref('');
+const relationshipsSearch = ref('');
+const peopleGroupBy = ref<'none' | 'gender' | 'emailDomain' | 'familyName'>('none');
+const relationshipsGroupBy = ref<'none' | 'type' | 'from' | 'to'>('none');
 
 const personOptions = computed(() =>
   persons.value.map((p) => ({ label: p.name, value: p.id })),
@@ -336,14 +512,31 @@ const focusOptions = computed(() =>
     .sort((a, b) => a.title.localeCompare(b.title)),
 );
 
-const readableRelationships = computed(() =>
-  relationships.value.map((r) => ({
-    id: r.id,
-    fromName: personNameMap.value.get(r.fromPersonId) ?? 'Unknown member',
-    toName: personNameMap.value.get(r.toPersonId) ?? 'Unknown member',
-    type: r.type,
-  })),
-);
+const peopleHeaders = [
+  { title: 'Member', key: 'name', sortable: true },
+  { title: 'Actions', key: 'actions', sortable: false, align: 'end' as const },
+];
+
+const relationshipHeaders = [
+  { title: 'From', key: 'from', sortable: true },
+  { title: 'To', key: 'to', sortable: true },
+  { title: 'Type', key: 'type', sortable: true },
+  { title: 'Actions', key: 'actions', sortable: false, align: 'end' as const },
+];
+
+const peopleGroupByOptions = [
+  { title: 'None', value: 'none' as const },
+  { title: 'Gender', value: 'gender' as const },
+  { title: 'Email Domain', value: 'emailDomain' as const },
+  { title: 'Family Name', value: 'familyName' as const },
+];
+
+const relationshipsGroupByOptions = [
+  { title: 'None', value: 'none' as const },
+  { title: 'Type', value: 'type' as const },
+  { title: 'From', value: 'from' as const },
+  { title: 'To', value: 'to' as const },
+];
 
 const isValidEmail = (value: string): boolean => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
 const normalizePhone = (value: string): string => value.replace(/[\s\-()]/g, '');
@@ -364,6 +557,113 @@ const parseMetadata = (raw: string | null | undefined): Record<string, unknown> 
     return {};
   }
 };
+const getProfilePictureUrl = (person: Person): string | null => {
+  const direct = person.profilePictureUrl?.trim();
+  if (direct) return direct;
+  const metadata = parseMetadata(person.metadataJson);
+  const fromData = typeof metadata.profilePictureDataUrl === 'string' ? metadata.profilePictureDataUrl.trim() : '';
+  if (fromData) return fromData;
+  const fromUrl = typeof metadata.profilePictureUrl === 'string' ? metadata.profilePictureUrl.trim() : '';
+  return fromUrl || null;
+};
+
+const personMap = computed(() => {
+  const map = new Map<string, Person>();
+  for (const person of persons.value) map.set(person.id, person);
+  return map;
+});
+
+const peopleRows = computed(() =>
+  persons.value.map((person) => ({
+    id: person.id,
+    name: person.name,
+    avatarUrl: getProfilePictureUrl(person),
+    gender: person.gender || 'unknown',
+    emailDomain: (person.email?.split('@')[1] ?? 'unknown').toLowerCase(),
+    familyName: person.familyName?.trim() || 'Unknown',
+    raw: person,
+  })),
+);
+
+const relationshipRows = computed(() =>
+  relationships.value.map((rel) => {
+    const from = personMap.value.get(rel.fromPersonId);
+    const to = personMap.value.get(rel.toPersonId);
+    return {
+      id: rel.id,
+      fromPersonId: rel.fromPersonId,
+      toPersonId: rel.toPersonId,
+      from: from?.name ?? 'Unknown member',
+      to: to?.name ?? 'Unknown member',
+      fromAvatarUrl: from ? getProfilePictureUrl(from) : null,
+      toAvatarUrl: to ? getProfilePictureUrl(to) : null,
+      type: rel.type,
+    };
+  }),
+);
+
+const focusSummary = computed<FocusSummary | null>(() => {
+  const focusId = focusPersonId.value;
+  if (!focusId) return null;
+  const focusPerson = personMap.value.get(focusId);
+  if (!focusPerson) return null;
+
+  const parents = new Set<string>();
+  const siblings = new Set<string>();
+  const spouses = new Set<string>();
+  const children = new Set<string>();
+  const parentByChild = new Map<string, string[]>();
+
+  for (const rel of relationships.value) {
+    if (rel.type === 'PARENT') {
+      const arr = parentByChild.get(rel.toPersonId) ?? [];
+      arr.push(rel.fromPersonId);
+      parentByChild.set(rel.toPersonId, arr);
+      if (rel.toPersonId === focusId) parents.add(rel.fromPersonId);
+      if (rel.fromPersonId === focusId) children.add(rel.toPersonId);
+    } else if (rel.type === 'SPOUSE') {
+      if (rel.fromPersonId === focusId) spouses.add(rel.toPersonId);
+      if (rel.toPersonId === focusId) spouses.add(rel.fromPersonId);
+    } else if (rel.type === 'SIBLING') {
+      if (rel.fromPersonId === focusId) siblings.add(rel.toPersonId);
+      if (rel.toPersonId === focusId) siblings.add(rel.fromPersonId);
+    }
+  }
+
+  for (const parentId of parents) {
+    for (const rel of relationships.value) {
+      if (rel.type === 'PARENT' && rel.fromPersonId === parentId && rel.toPersonId !== focusId) {
+        siblings.add(rel.toPersonId);
+      }
+    }
+  }
+
+  for (const childId of children) {
+    const childParents = parentByChild.get(childId) ?? [];
+    for (const parentId of childParents) {
+      if (parentId !== focusId) spouses.add(parentId);
+    }
+  }
+
+  const toNames = (ids: Set<string>): string[] =>
+    [...ids]
+      .map((id) => personMap.value.get(id)?.name ?? id)
+      .sort((a, b) => a.localeCompare(b));
+
+  return {
+    name: focusPerson.name,
+    parents: toNames(parents),
+    siblings: toNames(siblings),
+    spouses: toNames(spouses),
+    children: toNames(children),
+  };
+});
+
+const showFocusHelp = (): void => {
+  focusHelpDialog.value = true;
+};
+
+const formatFocusNames = (items: string[]): string => (items.length > 0 ? items.join(', ') : 'None');
 const normalizeOptional = (value: string): string | undefined => {
   const trimmed = value.trim();
   return trimmed.length > 0 ? trimmed : undefined;
@@ -461,6 +761,14 @@ watch(
 );
 
 const addRelationship = async (): Promise<void> => {
+  if (!newRelationshipFrom.value || !newRelationshipTo.value) {
+    operationError.value = 'Please select both From and To members.';
+    return;
+  }
+  if (newRelationshipFrom.value === newRelationshipTo.value) {
+    operationError.value = 'From and To cannot be the same person.';
+    return;
+  }
   try {
     operationError.value = '';
     await client.post(`/families/${familyId}/relationships`, {
@@ -468,6 +776,10 @@ const addRelationship = async (): Promise<void> => {
       toPersonId: newRelationshipTo.value,
       type: newRelationshipType.value,
     });
+    addRelationshipDialog.value = false;
+    newRelationshipFrom.value = '';
+    newRelationshipTo.value = '';
+    newRelationshipType.value = 'PARENT';
     await refetchRelationships();
   } catch (error: unknown) {
     operationError.value =
@@ -496,6 +808,12 @@ const startEditPerson = (person: Person): void => {
     (typeof metadata.profilePictureDataUrl === 'string' ? metadata.profilePictureDataUrl : '') ||
     (typeof metadata.profilePictureUrl === 'string' ? metadata.profilePictureUrl : '');
   editPersonDialog.value = true;
+};
+
+const startEditPersonById = (personId: string): void => {
+  const person = persons.value.find((entry) => entry.id === personId);
+  if (!person) return;
+  startEditPerson(person);
 };
 
 const savePersonEdit = async (): Promise<void> => {
@@ -617,18 +935,116 @@ const goDanger = async (): Promise<void> => {
 const openPerson = async (personId: string): Promise<void> => {
   await router.push(`/families/${familyId}/persons/${personId}`);
 };
+
+const toFileSlug = (value: string): string =>
+  value
+    .trim()
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-+|-+$/g, '') || 'family';
+
+const exportWorkbook = (sheetName: string, rows: Array<Record<string, string>>, fileNamePrefix: string): void => {
+  if (rows.length === 0) {
+    operationError.value = 'No rows available to export.';
+    return;
+  }
+  const workbook = XLSX.utils.book_new();
+  const worksheet = XLSX.utils.json_to_sheet(rows);
+  XLSX.utils.book_append_sheet(workbook, worksheet, sheetName);
+  const iso = new Date().toISOString();
+  const date = iso.slice(0, 10);
+  const time = iso.slice(11, 19).replace(/:/g, '');
+  const familySlug = toFileSlug(activeFamily.value?.name ?? 'family');
+  XLSX.writeFile(workbook, `${familySlug}-${fileNamePrefix}-${date}-${time}.xlsx`);
+};
+
+const exportPeopleExcel = (): void => {
+  operationError.value = '';
+  const columns = [
+    'Name',
+    'GivenName',
+    'FamilyName',
+    'Gender',
+    'Email',
+    'Phone',
+    'DateOfBirth',
+    'PlaceOfBirth',
+    'Occupation',
+    'Notes',
+  ] as const;
+  const rows: Array<Record<(typeof columns)[number], string>> = peopleRows.value.map((row) => {
+    const person = personMap.value.get(row.id);
+    const metadata = parseMetadata(person?.metadataJson);
+    const names = person ? extractNames(person) : { givenName: '', familyName: '' };
+    return {
+      Name: row.name,
+      GivenName: names.givenName,
+      FamilyName: names.familyName,
+      Gender: row.gender,
+      Email: person?.email ?? '',
+      Phone: person?.phone ?? '',
+      DateOfBirth: person?.dateOfBirth ?? '',
+      PlaceOfBirth: typeof metadata.placeOfBirth === 'string' ? metadata.placeOfBirth : '',
+      Occupation: typeof metadata.occupation === 'string' ? metadata.occupation : '',
+      Notes: typeof metadata.notes === 'string' ? metadata.notes : '',
+    };
+  });
+  const normalizedRows = rows.map((row) => {
+    const ordered = {} as Record<string, string>;
+    for (const key of columns) ordered[key] = row[key];
+    return ordered;
+  });
+  exportWorkbook('People', normalizedRows, 'people');
+};
+
+const exportRelationshipsExcel = (): void => {
+  operationError.value = '';
+  const columns = ['From', 'To', 'Type'] as const;
+  const rows: Array<Record<(typeof columns)[number], string>> = relationshipRows.value.map((row) => ({
+    From: row.from,
+    To: row.to,
+    Type: row.type,
+  }));
+  const normalizedRows = rows.map((row) => {
+    const ordered = {} as Record<string, string>;
+    for (const key of columns) ordered[key] = row[key];
+    return ordered;
+  });
+  exportWorkbook('Relationships', normalizedRows, 'relationships');
+};
+
+const downloadGraphImage = async (): Promise<void> => {
+  if (!graphVisualizationRef.value) return;
+  try {
+    operationError.value = '';
+    downloadingGraph.value = true;
+    const date = new Date().toISOString().slice(0, 10);
+    const familySlug = toFileSlug(activeFamily.value?.name ?? 'family');
+    await graphVisualizationRef.value.downloadAsImage(`${familySlug}-graph-${date}.png`);
+  } catch (error: unknown) {
+    operationError.value =
+      (error as Error)?.message?.trim() || 'Could not export graph image. Please try again.';
+  } finally {
+    downloadingGraph.value = false;
+  }
+};
 </script>
 
 <style scoped>
-.row-click {
-  cursor: pointer;
-}
-.row-click:hover {
-  background: #f8fafc;
-}
-
 .table-scroll {
   overflow-x: auto;
+}
+
+.summary-title {
+  font-size: 18px;
+  font-weight: 700;
+  color: #1f2937;
+}
+
+.summary-row {
+  font-size: 14px;
+  color: #334155;
+  margin-top: 4px;
 }
 
 .family-top-actions {

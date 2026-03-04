@@ -144,7 +144,7 @@ export const aiExplainSchema = z.object({
 });
 
 export const aiAskSchema = z.object({
-  familyId: z.string().min(1),
+  familyId: z.string().min(1).optional(),
   question: z.string().min(3).max(240),
   mePersonId: z.string().min(1).optional(),
 });

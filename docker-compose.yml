@@ -22,7 +22,7 @@ services:
       dockerfile: frontend/Dockerfile
     container_name: fg_frontend
     environment:
-      NUXT_PUBLIC_API_BASE_URL: http://localhost:4000
+      NUXT_PUBLIC_API_BASE_URL: http://sriharshas-macbook-air.tail06a0aa.ts.net:4000
     depends_on:
       - backend
     ports:

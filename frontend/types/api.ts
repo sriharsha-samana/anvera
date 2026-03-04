@@ -4,6 +4,13 @@ export type Family = {
   id: string;
   name: string;
   ownerId: string;
+  ownerName?: string;
+  owner?: {
+    id: string;
+    username: string;
+    givenName?: string | null;
+    familyName?: string | null;
+  };
   myRole?: UserRole;
 };
 
@@ -54,6 +61,10 @@ export type RelationshipResult = {
 };
 
 export type AiRelationshipAskResponse = {
+  family: {
+    id: string;
+    name: string;
+  };
   answer: string;
   aiAvailable: boolean;
   resolved: {

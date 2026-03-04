@@ -16,6 +16,8 @@
       </div>
     </div>
 
+    <RelationshipAiAssistant />
+
     <v-row>
       <v-col v-for="family in families" :key="family.id" cols="12" md="6" lg="4">
         <v-card class="surface-card" variant="flat">
@@ -23,6 +25,9 @@
             <v-card-title class="text-h6 font-weight-bold">{{ family.name }}</v-card-title>
           </v-card-item>
           <v-card-text class="pt-0">
+            <div class="text-body-2 text-medium-emphasis mb-2">
+              Owner: <strong>{{ family.ownerName || family.owner?.username || family.ownerId }}</strong>
+            </div>
             <v-chip :color="family.myRole === 'OWNER' ? 'primary' : 'secondary'" variant="tonal" size="small">
               {{ family.myRole === 'OWNER' ? 'You are Owner' : 'You are Member' }}
             </v-chip>

@@ -12,7 +12,14 @@
               <strong>v{{ version.versionNumber }}</strong> - {{ version.message }}
               <div class="text-caption">{{ new Date(version.createdAt).toLocaleString() }}</div>
             </div>
-            <v-btn size="small" class="rollback-btn" @click="$emit('rollback', version.versionNumber)">Rollback</v-btn>
+            <v-btn
+              size="small"
+              class="rollback-btn"
+              :disabled="version.versionNumber === latestVersionNumber"
+              @click="$emit('rollback', version.versionNumber)"
+            >
+              {{ version.versionNumber === latestVersionNumber ? 'Current' : 'Rollback' }}
+            </v-btn>
           </div>
         </v-timeline-item>
       </v-timeline>
@@ -23,7 +30,7 @@
 <script setup lang="ts">
 import type { FamilyVersion } from '@/types/api';
 
-defineProps<{ versions: FamilyVersion[] }>();
+defineProps<{ versions: FamilyVersion[]; latestVersionNumber: number | null }>();
 defineEmits<{ rollback: [versionNumber: number] }>();
 </script>
 

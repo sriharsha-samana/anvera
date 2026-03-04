@@ -28,7 +28,12 @@
       </v-card-text>
     </v-card>
 
-    <GraphVisualization :persons="persons" :relationships="relationships" :focus-person-id="focusPersonId ?? undefined" />
+    <GraphVisualization
+      :persons="persons"
+      :relationships="relationships"
+      :focus-person-id="focusPersonId ?? undefined"
+      @select-person="openPerson"
+    />
 
   </div>
 </template>
@@ -100,5 +105,9 @@ watch(
 
 const goBack = async (): Promise<void> => {
   await router.push(`/families/${familyId}`);
+};
+
+const openPerson = async (personId: string): Promise<void> => {
+  await router.push(`/families/${familyId}/persons/${personId}`);
 };
 </script>

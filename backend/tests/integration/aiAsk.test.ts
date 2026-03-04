@@ -171,4 +171,119 @@ describe('AI relationship question API', () => {
 
     expect(response.body.message).toContain('Please select "I am" person');
   });
+
+  test('supports global assistant mode by resolving family context when familyId is omitted', async () => {
+    const owner = await prisma.user.create({
+      data: {
+        username: 'owner-ai-global',
+        email: 'owner-ai-global@example.com',
+        givenName: 'Owner',
+        familyName: 'Global',
+        gender: 'unknown',
+        passwordHash: await bcrypt.hash('owner123', 10),
+        role: UserRole.OWNER,
+      },
+    });
+
+    const alphaFamily = await prisma.family.create({
+      data: {
+        name: 'Alpha Family',
+        ownerId: owner.id,
+        members: { create: [{ userId: owner.id }] },
+      },
+    });
+    const betaFamily = await prisma.family.create({
+      data: {
+        name: 'Beta Family',
+        ownerId: owner.id,
+        members: { create: [{ userId: owner.id }] },
+      },
+    });
+
+    const ownerIdentity = await prisma.personIdentity.create({
+      data: {
+        givenName: 'Global',
+        familyName: 'Owner',
+        gender: 'male',
+        email: owner.email!,
+      },
+    });
+    const rameshIdentity = await prisma.personIdentity.create({
+      data: {
+        givenName: 'Ramesh',
+        familyName: 'Global',
+        gender: 'male',
+        email: 'ramesh.global@example.com',
+      },
+    });
+    const otherIdentity = await prisma.personIdentity.create({
+      data: {
+        givenName: 'Other',
+        familyName: 'Person',
+        gender: 'male',
+        email: 'other.global@example.com',
+      },
+    });
+
+    const meInAlpha = await prisma.person.create({
+      data: {
+        familyId: alphaFamily.id,
+        identityId: ownerIdentity.id,
+        name: 'owner-ai-global',
+        givenName: 'Global',
+        familyName: 'Owner',
+        gender: 'male',
+        email: owner.email,
+        metadataJson: '{}',
+      },
+    });
+    const rameshInAlpha = await prisma.person.create({
+      data: {
+        familyId: alphaFamily.id,
+        identityId: rameshIdentity.id,
+        name: 'Ramesh',
+        givenName: 'Ramesh',
+        familyName: 'Global',
+        gender: 'male',
+        email: 'ramesh.global@example.com',
+        metadataJson: '{}',
+      },
+    });
+    await prisma.person.create({
+      data: {
+        familyId: betaFamily.id,
+        identityId: otherIdentity.id,
+        name: 'Other Person',
+        givenName: 'Other',
+        familyName: 'Person',
+        gender: 'male',
+        email: 'other.global@example.com',
+        metadataJson: '{}',
+      },
+    });
+    await prisma.relationship.create({
+      data: {
+        familyId: alphaFamily.id,
+        fromPersonId: rameshInAlpha.id,
+        toPersonId: meInAlpha.id,
+        type: RelationshipType.PARENT,
+        metadataJson: '{}',
+      },
+    });
+
+    const login = await request(app).post('/auth/login').send({ identifier: 'owner-ai-global', password: 'owner123' }).expect(200);
+
+    const response = await request(app)
+      .post('/ai/ask')
+      .set('Authorization', `Bearer ${login.body.token as string}`)
+      .send({
+        question: 'Who is Ramesh to me?',
+      })
+      .expect(200);
+
+    expect(response.body.family.id).toBe(alphaFamily.id);
+    expect(response.body.family.name).toBe('Alpha Family');
+    expect(response.body.relationship.label).toBe('Parent');
+    expect(response.body.resolved.subject.name).toBe('Ramesh');
+  });
 });

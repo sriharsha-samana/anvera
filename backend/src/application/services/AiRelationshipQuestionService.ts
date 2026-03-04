@@ -6,7 +6,7 @@ import { FamilyService } from './FamilyService';
 import { RelationshipService } from './RelationshipService';
 
 type AskInput = {
-  familyId: string;
+  familyId?: string;
   question: string;
   mePersonId?: string;
 };
@@ -26,6 +26,10 @@ type PersonRef = {
 };
 
 type AskResult = {
+  family: {
+    id: string;
+    name: string;
+  };
   answer: string;
   aiAvailable: boolean;
   resolved: {
@@ -44,18 +48,98 @@ export class AiRelationshipQuestionService {
   private readonly aiExplanationService = new AiExplanationService();
 
   public async ask(userId: string, identity: AuthIdentity, input: AskInput): Promise<AskResult> {
-    await this.familyService.ensureFamilyMembership(input.familyId, userId);
+    const families = input.familyId
+      ? await prisma.family.findMany({
+          where: { id: input.familyId },
+          select: { id: true, name: true },
+        })
+      : await prisma.family.findMany({
+          where: { members: { some: { userId } } },
+          select: { id: true, name: true },
+        });
 
-    const persons = await prisma.person.findMany({
-      where: { familyId: input.familyId },
-      select: { id: true, name: true, gender: true, email: true, phone: true },
-      orderBy: [{ name: 'asc' }, { id: 'asc' }],
+    if (families.length === 0) {
+      throw new AppError('No accessible families found for AI assistant', 404);
+    }
+
+    if (input.familyId) {
+      await this.familyService.ensureFamilyMembership(input.familyId, userId);
+    }
+
+    const contexts = await Promise.all(
+      families.map(async (family) => {
+        const persons = await prisma.person.findMany({
+          where: { familyId: family.id },
+          select: { id: true, name: true, gender: true, email: true, phone: true },
+          orderBy: [{ name: 'asc' }, { id: 'asc' }],
+        });
+        const relationships = await prisma.relationship.findMany({
+          where: { familyId: family.id },
+          select: { id: true, fromPersonId: true, toPersonId: true, type: true, familyId: true, metadataJson: true },
+          orderBy: [{ createdAt: 'asc' }, { id: 'asc' }],
+        });
+
+        return {
+          familyId: family.id,
+          familyName: family.name,
+          persons,
+          relationships,
+          score: this.scoreFamilyRelevance(input.question, persons),
+        };
+      }),
+    );
+
+    const prioritizedContexts = contexts.sort((a, b) => {
+      if (b.score !== a.score) return b.score - a.score;
+      if (b.persons.length !== a.persons.length) return b.persons.length - a.persons.length;
+      return a.familyName.localeCompare(b.familyName);
     });
-    const relationships = await prisma.relationship.findMany({
-      where: { familyId: input.familyId },
-      select: { id: true, fromPersonId: true, toPersonId: true, type: true, familyId: true, metadataJson: true },
-      orderBy: [{ createdAt: 'asc' }, { id: 'asc' }],
-    });
+
+    let lastRecoverableError: AppError | null = null;
+    for (const context of prioritizedContexts) {
+      try {
+        return await this.answerWithinFamilyContext(context, identity, input);
+      } catch (error) {
+        if (error instanceof AppError && error.statusCode >= 400 && error.statusCode < 500) {
+          lastRecoverableError = error;
+          continue;
+        }
+        throw error;
+      }
+    }
+
+    if (lastRecoverableError) throw lastRecoverableError;
+    throw new AppError('Could not answer this question with available family data', 400);
+  }
+
+  private scoreFamilyRelevance(question: string, persons: PersonRef[]): number {
+    if (persons.length === 0) return 0;
+    const normalizedQuestion = this.normalizeText(question);
+    if (!normalizedQuestion) return 0;
+    let score = 0;
+    for (const person of persons) {
+      const normalizedName = this.normalizeText(person.name);
+      if (!normalizedName) continue;
+      if (normalizedQuestion.includes(normalizedName)) score += 8;
+      const tokens = normalizedName.split(' ').filter((token) => token.length >= 2);
+      for (const token of tokens) {
+        if (normalizedQuestion.includes(token)) score += 2;
+      }
+    }
+    return score;
+  }
+
+  private async answerWithinFamilyContext(
+    context: {
+      familyId: string;
+      familyName: string;
+      persons: PersonRef[];
+      relationships: Array<{ id: string; fromPersonId: string; toPersonId: string; type: string }>;
+    },
+    identity: AuthIdentity,
+    input: AskInput,
+  ): Promise<AskResult> {
+    const { familyId, familyName, persons, relationships } = context;
     if (persons.length < 2) {
       throw new AppError('At least two persons are required to answer relationship questions', 400);
     }
@@ -74,6 +158,7 @@ export class AiRelationshipQuestionService {
           : `Your ${selfRoleQuery.label.toLowerCase()} are ${matches.map((m) => m.name).join(', ')}.`;
 
       return {
+        family: { id: familyId, name: familyName },
         answer: summary,
         aiAvailable: true,
         resolved: {
@@ -93,7 +178,7 @@ export class AiRelationshipQuestionService {
 
     const resolved = this.resolveParticipants(input.question, persons, identity, input.mePersonId);
     const relationship = await this.relationshipService.getRelationship(
-      input.familyId,
+      familyId,
       resolved.subject.id,
       resolved.object.id,
     );
@@ -124,6 +209,7 @@ export class AiRelationshipQuestionService {
     }
 
     return {
+      family: { id: familyId, name: familyName },
       answer,
       aiAvailable,
       resolved: {
