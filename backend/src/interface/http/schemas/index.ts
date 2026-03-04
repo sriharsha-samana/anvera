@@ -128,6 +128,31 @@ export const updateRelationshipSchema = z.object({
   metadata: z.record(z.unknown()).optional(),
 });
 
+export const editPersonProposalSchema = z.object({
+  personId: z.string().min(1),
+  name: z.preprocess((v) => normalizeOptionalString(v), z.string().min(2).max(120).optional()),
+  givenName: optionalTrimmedString(60),
+  familyName: optionalTrimmedString(60),
+  gender: z.enum(['male', 'female', 'other', 'unknown']).optional(),
+  dateOfBirth: optionalDateYmd,
+  email: z.preprocess((v) => normalizeOptionalString(v), z.string().email().max(160).optional()),
+  phone: optionalPhoneE164,
+  placeOfBirth: optionalTrimmedString(120),
+  occupation: optionalTrimmedString(120),
+  notes: optionalTrimmedString(500),
+  profilePictureUrl: optionalProfilePicture,
+  profilePictureDataUrl: optionalProfilePicture,
+  metadata: z.record(z.unknown()).optional(),
+});
+
+export const deletePersonProposalSchema = z.object({
+  personId: z.string().min(1),
+});
+
+export const deleteRelationshipProposalSchema = z.object({
+  relationshipId: z.string().min(1),
+});
+
 export const proposalSchema = z.discriminatedUnion('type', [
   z.object({
     type: z.literal(ProposalType.ADD_PERSON),
@@ -140,6 +165,18 @@ export const proposalSchema = z.discriminatedUnion('type', [
   z.object({
     type: z.literal(ProposalType.IMPORT_FROM_FAMILY),
     data: importFromFamilySchema,
+  }),
+  z.object({
+    type: z.literal(ProposalType.EDIT_PERSON),
+    data: editPersonProposalSchema,
+  }),
+  z.object({
+    type: z.literal(ProposalType.DELETE_PERSON),
+    data: deletePersonProposalSchema,
+  }),
+  z.object({
+    type: z.literal(ProposalType.DELETE_RELATIONSHIP),
+    data: deleteRelationshipProposalSchema,
   }),
 ]);
 

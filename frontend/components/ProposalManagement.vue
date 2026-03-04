@@ -78,6 +78,89 @@
         </v-col>
         <v-col cols="12" md="4"><v-select v-model="relationshipType" :items="relationshipTypes" label="Relationship Type" /></v-col>
       </v-row>
+      <v-row v-else-if="type === 'EDIT_PERSON'">
+        <v-col cols="12" md="5">
+          <v-select
+            v-model="editPersonId"
+            :items="personOptions"
+            item-title="label"
+            item-value="value"
+            label="Member to Edit"
+          />
+        </v-col>
+        <v-col cols="12">
+          <div class="text-caption text-medium-emphasis">
+            Add one or more field updates. Unselected fields keep existing values.
+          </div>
+        </v-col>
+        <template v-for="(row, index) in editPersonRows" :key="`edit-row-${index}`">
+          <v-col cols="12" md="4">
+            <v-select
+              v-model="row.field"
+              :items="availableEditPersonFields(index)"
+              item-title="label"
+              item-value="value"
+              label="Field"
+            />
+          </v-col>
+          <v-col cols="12" md="6">
+            <v-select
+              v-if="row.field === 'gender'"
+              v-model="row.value"
+              :items="genderOptions"
+              label="Value"
+              :hint="editPersonCurrentHint(row.field)"
+              persistent-hint
+            />
+            <v-text-field
+              v-else
+              v-model="row.value"
+              label="Value"
+              :placeholder="editPersonFieldPlaceholder(row.field)"
+              :hint="editPersonCurrentHint(row.field)"
+              persistent-hint
+            />
+          </v-col>
+          <v-col cols="12" md="2" class="d-flex align-center">
+            <v-btn
+              variant="text"
+              color="error"
+              :disabled="editPersonRows.length === 1"
+              @click="removeEditPersonRow(index)"
+            >
+              Remove
+            </v-btn>
+          </v-col>
+        </template>
+        <v-col cols="12">
+          <v-btn variant="tonal" size="small" @click="addEditPersonRow">Add Field</v-btn>
+        </v-col>
+      </v-row>
+
+      <v-row v-else-if="type === 'DELETE_PERSON'">
+        <v-col cols="12" md="6">
+          <v-select
+            v-model="deletePersonId"
+            :items="personOptions"
+            item-title="label"
+            item-value="value"
+            label="Member to Delete"
+          />
+        </v-col>
+      </v-row>
+
+      <v-row v-else-if="type === 'DELETE_RELATIONSHIP'">
+        <v-col cols="12" md="6">
+          <v-select
+            v-model="deleteRelationshipId"
+            :items="relationshipOptions"
+            item-title="label"
+            item-value="value"
+            label="Relationship to Delete"
+          />
+        </v-col>
+      </v-row>
+
       <v-row v-else>
         <v-col cols="12" md="8">
           <v-select
@@ -150,13 +233,18 @@
                     <div class="detail-row"><strong>To:</strong> {{ selectedProposalSummary.relationshipDetails.toName }}</div>
                     <div class="detail-row"><strong>Type:</strong> {{ selectedProposalSummary.relationshipDetails.type }}</div>
                   </template>
-                  <template v-else>
+                  <template v-else-if="selectedProposalSummary.type === 'IMPORT_FROM_FAMILY'">
                     <div class="detail-row"><strong>Source Family:</strong> {{ selectedProposalSummary.importDetails.sourceFamilyName }}</div>
                     <div class="detail-row"><strong>Selected Members:</strong> {{ selectedProposalSummary.importDetails.selectedPersonCount }}</div>
                     <div class="detail-row"><strong>Matched Existing:</strong> {{ selectedProposalSummary.importDetails.matchedMembers.length }}</div>
                     <div class="detail-row"><strong>New Members:</strong> {{ selectedProposalSummary.importDetails.newMembers.length }}</div>
                     <div class="detail-row"><strong>New Relationships:</strong> {{ selectedProposalSummary.importDetails.relationshipAdds.length }}</div>
                     <div class="detail-row"><strong>Skipped Relationships:</strong> {{ selectedProposalSummary.importDetails.relationshipSkips.length }}</div>
+                  </template>
+                  <template v-else>
+                    <div class="detail-row">
+                      <strong>Change:</strong> {{ selectedProposalSummary.impacts[0] || selectedProposalSummary.typeLabel }}
+                    </div>
                   </template>
                 </v-card-text>
               </v-card>
@@ -227,7 +315,11 @@
             {{ proposal.type }} - {{ proposal.status }}
           </template>
           <template #subtitle>
-            <span v-if="proposal.overriddenByVersionNumber">Overridden in v{{ proposal.overriddenByVersionNumber }}</span>
+            <span v-if="proposal.status === 'REJECTED' && proposal.reviewReason">
+              Rejected: {{ proposal.reviewReason }}
+            </span>
+            <span v-else-if="proposal.status === 'REJECTED'">Rejected</span>
+            <span v-else-if="proposal.overriddenByVersionNumber">Overridden in v{{ proposal.overriddenByVersionNumber }}</span>
             <span v-else>Created {{ new Date(proposal.createdAt).toLocaleString() }}</span>
           </template>
           <template #append>
@@ -278,6 +370,34 @@ type AddPersonPayload = {
 };
 type AddRelationshipPayload = { fromPersonId: string; toPersonId: string; type: RelationshipType };
 type ImportFromFamilyPayload = { sourceFamilyId: string; selectedPersonIds?: string[]; includeRelationships?: boolean };
+type EditPersonPayload = {
+  personId: string;
+  name?: string;
+  givenName?: string;
+  familyName?: string;
+  gender?: string;
+  dateOfBirth?: string;
+  email?: string;
+  phone?: string;
+  placeOfBirth?: string;
+  occupation?: string;
+  notes?: string;
+  profilePictureDataUrl?: string;
+  profilePictureUrl?: string;
+};
+type DeletePersonPayload = { personId: string };
+type DeleteRelationshipPayload = { relationshipId: string };
+type EditPersonField =
+  | 'givenName'
+  | 'familyName'
+  | 'gender'
+  | 'dateOfBirth'
+  | 'email'
+  | 'phone'
+  | 'placeOfBirth'
+  | 'occupation'
+  | 'notes';
+type EditPersonRow = { field: EditPersonField | null; value: string };
 type PreviewDiff = { addedPersons?: number; addedRelationships?: number; impacts?: string[] };
 type PreviewImpact = { label?: string } | null;
 type ImportPreview = {
@@ -297,9 +417,26 @@ type ImportPreview = {
     proposedRelationshipKeys?: string[];
   };
 };
-type ParsedPreview = { diff?: PreviewDiff; impact?: PreviewImpact; importPreview?: ImportPreview };
+type ParsedPreview = {
+  diff?: PreviewDiff;
+  impact?: PreviewImpact;
+  importPreview?: ImportPreview;
+  simulated?: {
+    persons?: Person[];
+    relationships?: RelationshipEdge[];
+    proposedPersonIds?: string[];
+    proposedRelationshipKeys?: string[];
+  };
+};
 type ProposalSummary = {
-  type: 'ADD_PERSON' | 'ADD_RELATIONSHIP' | 'IMPORT_FROM_FAMILY';
+  type:
+    | 'ADD_PERSON'
+    | 'ADD_RELATIONSHIP'
+    | 'IMPORT_FROM_FAMILY'
+    | 'EDIT_PERSON'
+    | 'DELETE_PERSON'
+    | 'EDIT_RELATIONSHIP'
+    | 'DELETE_RELATIONSHIP';
   typeLabel: string;
   status: string;
   createdAt: string;
@@ -330,11 +467,25 @@ const props = withDefaults(
 );
 const emit = defineEmits<{ approve: [proposalId: string]; reject: [proposalId: string]; submit: [payload: unknown] }>();
 
-const proposalTypes = ['ADD_PERSON', 'ADD_RELATIONSHIP', 'IMPORT_FROM_FAMILY'] as const;
+const proposalTypes = [
+  'ADD_PERSON',
+  'ADD_RELATIONSHIP',
+  'IMPORT_FROM_FAMILY',
+  'EDIT_PERSON',
+  'DELETE_PERSON',
+  'DELETE_RELATIONSHIP',
+] as const;
 const relationshipTypes = ['PARENT', 'SPOUSE', 'SIBLING', 'INLAW'];
 const genderOptions = ['male', 'female', 'other', 'unknown'] as const;
 
-const type = ref<'ADD_PERSON' | 'ADD_RELATIONSHIP' | 'IMPORT_FROM_FAMILY'>('ADD_PERSON');
+const type = ref<
+  | 'ADD_PERSON'
+  | 'ADD_RELATIONSHIP'
+  | 'IMPORT_FROM_FAMILY'
+  | 'EDIT_PERSON'
+  | 'DELETE_PERSON'
+  | 'DELETE_RELATIONSHIP'
+>('ADD_PERSON');
 const personGivenName = ref('');
 const personFamilyName = ref('');
 const personGender = ref<'male' | 'female' | 'other' | 'unknown'>('unknown');
@@ -350,6 +501,10 @@ const personProfilePictureDataUrl = ref('');
 const fromPersonId = ref('');
 const toPersonId = ref('');
 const relationshipType = ref<'PARENT' | 'SPOUSE' | 'SIBLING' | 'INLAW'>('PARENT');
+const editPersonId = ref('');
+const editPersonRows = ref<EditPersonRow[]>([{ field: null, value: '' }]);
+const deletePersonId = ref('');
+const deleteRelationshipId = ref('');
 const importSourceFamilyId = ref('');
 const importIncludeRelationships = ref(true);
 const showPreview = ref(false);
@@ -364,12 +519,72 @@ const personOptions = computed(() =>
     .sort((a, b) => a.label.localeCompare(b.label)),
 );
 const personNameById = computed(() => new Map(props.persons.map((person) => [person.id, person.name])));
+const personById = computed(() => new Map(props.persons.map((person) => [person.id, person])));
+const editPersonFieldOptions: Array<{ label: string; value: EditPersonField }> = [
+  { label: 'Given Name', value: 'givenName' },
+  { label: 'Family Name', value: 'familyName' },
+  { label: 'Gender', value: 'gender' },
+  { label: 'Date of Birth', value: 'dateOfBirth' },
+  { label: 'Email', value: 'email' },
+  { label: 'Phone', value: 'phone' },
+  { label: 'Place of Birth', value: 'placeOfBirth' },
+  { label: 'Occupation', value: 'occupation' },
+  { label: 'Notes', value: 'notes' },
+];
+const relationshipOptions = computed(() =>
+  props.relationships.map((relationship) => ({
+    value: relationship.id,
+    label: `${relationship.type}: ${personNameById.value.get(relationship.fromPersonId) ?? relationship.fromPersonId} -> ${personNameById.value.get(relationship.toPersonId) ?? relationship.toPersonId}`,
+  })),
+);
+const relationshipById = computed(() => new Map(props.relationships.map((relationship) => [relationship.id, relationship])));
 const importSourceFamilyOptions = computed(() =>
   props.families
     .filter((family) => family.id !== props.familyId)
     .map((family) => ({ title: family.name, value: family.id }))
     .sort((a, b) => a.title.localeCompare(b.title)),
 );
+
+const selectedEditPerson = computed(() => (editPersonId.value ? personById.value.get(editPersonId.value) : undefined));
+const availableEditPersonFields = (rowIndex: number): Array<{ label: string; value: EditPersonField }> => {
+  const used = new Set(
+    editPersonRows.value
+      .map((row, index) => (index === rowIndex ? null : row.field))
+      .filter((value): value is EditPersonField => value !== null),
+  );
+  return editPersonFieldOptions.filter((option) => !used.has(option.value));
+};
+const editPersonFieldPlaceholder = (field: EditPersonField | null): string => {
+  if (field === 'dateOfBirth') return 'YYYY-MM-DD';
+  if (field === 'phone') return '+919876543210';
+  if (field === 'email') return 'name@example.com';
+  return 'Enter value';
+};
+const editPersonCurrentHint = (field: EditPersonField | null): string => {
+  if (!field || !selectedEditPerson.value) return '';
+  const current = selectedEditPerson.value;
+  const metadata = parseJson<Record<string, unknown>>(current.metadataJson, {});
+  const valueByField: Record<EditPersonField, string | null | undefined> = {
+    givenName: current.givenName,
+    familyName: current.familyName,
+    gender: current.gender,
+    dateOfBirth: current.dateOfBirth,
+    email: current.email,
+    phone: current.phone,
+    placeOfBirth: typeof metadata.placeOfBirth === 'string' ? metadata.placeOfBirth : undefined,
+    occupation: typeof metadata.occupation === 'string' ? metadata.occupation : undefined,
+    notes: typeof metadata.notes === 'string' ? metadata.notes : undefined,
+  };
+  return `Current: ${valueByField[field] ?? '-'}`;
+};
+const addEditPersonRow = (): void => {
+  if (editPersonRows.value.length >= editPersonFieldOptions.length) return;
+  editPersonRows.value.push({ field: null, value: '' });
+};
+const removeEditPersonRow = (index: number): void => {
+  if (editPersonRows.value.length === 1) return;
+  editPersonRows.value.splice(index, 1);
+};
 
 const isValidEmail = (value: string): boolean => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
 const normalizePhone = (value: string): string => value.replace(/[\s\-()]/g, '');
@@ -493,6 +708,99 @@ const submitProposal = (): void => {
         toPersonId: toPersonId.value.trim(),
         type: relationshipType.value,
       },
+    });
+    return;
+  }
+
+  if (type.value === 'EDIT_PERSON') {
+    if (!editPersonId.value.trim()) {
+      formError.value = 'Please select a member to edit.';
+      return;
+    }
+    const updates: Omit<EditPersonPayload, 'personId'> = {};
+    for (const row of editPersonRows.value) {
+      if (!row.field) continue;
+      const value = row.value.trim();
+      if (!value) {
+        formError.value = `Please provide a value for ${row.field}.`;
+        return;
+      }
+      if (row.field === 'email') {
+        if (!isValidEmail(value)) {
+          formError.value = 'Email must be valid.';
+          return;
+        }
+        updates.email = value.toLowerCase();
+        continue;
+      }
+      if (row.field === 'phone') {
+        if (!isValidPhone(value)) {
+          formError.value = 'Phone must include country code, e.g. +919876543210.';
+          return;
+        }
+        updates.phone = normalizePhone(value);
+        continue;
+      }
+      if (row.field === 'dateOfBirth') {
+        if (isFutureDate(value)) {
+          formError.value = 'Date of birth cannot be in the future.';
+          return;
+        }
+        updates.dateOfBirth = value;
+        continue;
+      }
+      if (row.field === 'gender') {
+        if (!genderOptions.includes(value as (typeof genderOptions)[number])) {
+          formError.value = 'Please select a valid gender.';
+          return;
+        }
+        updates.gender = value;
+        continue;
+      }
+      if ((row.field === 'givenName' || row.field === 'familyName') && value.length < 2) {
+        formError.value = `${row.field} must be at least 2 characters.`;
+        return;
+      }
+      if (row.field === 'givenName') updates.givenName = value;
+      if (row.field === 'familyName') updates.familyName = value;
+      if (row.field === 'placeOfBirth') updates.placeOfBirth = value;
+      if (row.field === 'occupation') updates.occupation = value;
+      if (row.field === 'notes') updates.notes = value;
+    }
+    if (Object.keys(updates).length === 0) {
+      formError.value = 'Select at least one field to update.';
+      return;
+    }
+    emit('submit', {
+      type: 'EDIT_PERSON',
+      data: {
+        personId: editPersonId.value.trim(),
+        ...updates,
+      } satisfies EditPersonPayload,
+    });
+    return;
+  }
+
+  if (type.value === 'DELETE_PERSON') {
+    if (!deletePersonId.value.trim()) {
+      formError.value = 'Please select a member to delete.';
+      return;
+    }
+    emit('submit', {
+      type: 'DELETE_PERSON',
+      data: { personId: deletePersonId.value.trim() } satisfies DeletePersonPayload,
+    });
+    return;
+  }
+
+  if (type.value === 'DELETE_RELATIONSHIP') {
+    if (!deleteRelationshipId.value.trim()) {
+      formError.value = 'Please select a relationship to delete.';
+      return;
+    }
+    emit('submit', {
+      type: 'DELETE_RELATIONSHIP',
+      data: { relationshipId: deleteRelationshipId.value.trim() } satisfies DeleteRelationshipPayload,
     });
     return;
   }
@@ -691,6 +999,41 @@ const buildImportSummary = (
   };
 };
 
+const buildGenericMutationSummary = (
+  proposal: Proposal,
+  parsedPreview: ParsedPreview,
+  typeLabel: string,
+): ProposalSummary => {
+  const diff = parsedPreview.diff ?? {};
+  const simulatedPersons = parsedPreview.simulated?.persons ?? props.persons;
+  const simulatedRelationships = parsedPreview.simulated?.relationships ?? props.relationships;
+  return {
+    type: proposal.type,
+    typeLabel,
+    status: proposal.status,
+    createdAt: proposal.createdAt,
+    diff: { addedPersons: diff.addedPersons ?? 0, addedRelationships: diff.addedRelationships ?? 0 },
+    impacts: diff.impacts?.length ? diff.impacts : [typeLabel],
+    impactLabel: parsedPreview.impact?.label ?? null,
+    simulatedPersons: [...simulatedPersons],
+    simulatedRelationships: [...simulatedRelationships],
+    proposedPersonIds: parsedPreview.simulated?.proposedPersonIds ?? [],
+    proposedRelationshipKeys: parsedPreview.simulated?.proposedRelationshipKeys ?? [],
+    focusPersonId: parsedPreview.simulated?.proposedPersonIds?.[0],
+    personDetails: { name: '-', gender: '-', email: '-', phone: '-', dateOfBirth: '-' },
+    relationshipDetails: { fromName: '-', toName: '-', type: '-' },
+    importDetails: {
+      sourceFamilyName: '-',
+      selectedPersonCount: 0,
+      conflicts: [],
+      matchedMembers: [],
+      newMembers: [],
+      relationshipAdds: [],
+      relationshipSkips: [],
+    },
+  };
+};
+
 const openPreview = (proposal: Proposal): void => {
   const payload = parseJson<AddPersonPayload | AddRelationshipPayload | ImportFromFamilyPayload>(
     proposal.payloadJson,
@@ -705,12 +1048,20 @@ const openPreview = (proposal: Proposal): void => {
       payload as AddRelationshipPayload,
       parsedPreview,
     );
-  } else {
+  } else if (proposal.type === 'IMPORT_FROM_FAMILY') {
     selectedProposalSummary.value = buildImportSummary(
       proposal,
       payload as ImportFromFamilyPayload,
       parsedPreview,
     );
+  } else if (proposal.type === 'EDIT_PERSON') {
+    selectedProposalSummary.value = buildGenericMutationSummary(proposal, parsedPreview, 'Edit Member');
+  } else if (proposal.type === 'DELETE_PERSON') {
+    selectedProposalSummary.value = buildGenericMutationSummary(proposal, parsedPreview, 'Delete Member');
+  } else if (proposal.type === 'EDIT_RELATIONSHIP') {
+    selectedProposalSummary.value = buildGenericMutationSummary(proposal, parsedPreview, 'Edit Relationship');
+  } else {
+    selectedProposalSummary.value = buildGenericMutationSummary(proposal, parsedPreview, 'Delete Relationship');
   }
   showPreview.value = true;
 };
@@ -719,6 +1070,10 @@ const closePreview = (): void => {
   showPreview.value = false;
   selectedProposalSummary.value = null;
 };
+
+watch(editPersonId, () => {
+  editPersonRows.value = [{ field: null, value: '' }];
+});
 
 void props;
 </script>

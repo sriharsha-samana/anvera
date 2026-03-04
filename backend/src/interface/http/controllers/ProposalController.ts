@@ -2,7 +2,15 @@ import type { NextFunction, Request, Response } from 'express';
 import type { ProposalType } from '@prisma/client';
 import { FamilyService } from '../../../application/services/FamilyService';
 import { ProposalWorkflowService } from '../../../application/services/ProposalWorkflowService';
-import type { AddPersonPayload, AddRelationshipPayload, ImportFromFamilyPayload } from '../../../shared/types';
+import type {
+  AddPersonPayload,
+  AddRelationshipPayload,
+  DeletePersonPayload,
+  DeleteRelationshipPayload,
+  EditPersonPayload,
+  EditRelationshipPayload,
+  ImportFromFamilyPayload,
+} from '../../../shared/types';
 
 const proposalService = new ProposalWorkflowService();
 const familyService = new FamilyService();
@@ -12,7 +20,14 @@ const paramAsString = (value: string | string[] | undefined): string =>
 
 type ProposalRequestBody = {
   type: ProposalType;
-  data: AddPersonPayload | AddRelationshipPayload | ImportFromFamilyPayload;
+  data:
+    | AddPersonPayload
+    | AddRelationshipPayload
+    | ImportFromFamilyPayload
+    | EditPersonPayload
+    | DeletePersonPayload
+    | EditRelationshipPayload
+    | DeleteRelationshipPayload;
 };
 
 export const submitProposal = async (req: Request, res: Response, next: NextFunction): Promise<void> => {

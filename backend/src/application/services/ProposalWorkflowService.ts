@@ -16,7 +16,17 @@ import { RelationshipIntegrityService } from '../../domain/services/Relationship
 import { VersioningService } from '../../domain/services/VersioningService';
 import { prisma } from '../../infrastructure/db/prisma';
 import { AppError, ConflictError, NotFoundError } from '../../shared/errors';
-import type { AddPersonPayload, AddRelationshipPayload, ImportFromFamilyPayload, PersonNode, RelationshipEdge } from '../../shared/types';
+import type {
+  AddPersonPayload,
+  AddRelationshipPayload,
+  DeletePersonPayload,
+  DeleteRelationshipPayload,
+  EditPersonPayload,
+  EditRelationshipPayload,
+  ImportFromFamilyPayload,
+  PersonNode,
+  RelationshipEdge,
+} from '../../shared/types';
 import { IdentityConsistencyService } from './IdentityConsistencyService';
 import { SnapshotService } from './SnapshotService';
 
@@ -346,12 +356,129 @@ export class ProposalWorkflowService {
     });
   }
 
+  private async assertUniquePersonIdentity(
+    tx: Prisma.TransactionClient,
+    familyId: string,
+    email: string | undefined,
+    phone: string | undefined,
+    excludePersonId?: string,
+  ): Promise<void> {
+    const conditions: Array<Record<string, unknown>> = [];
+    if (email) conditions.push({ email });
+    if (phone) conditions.push({ phone });
+    if (conditions.length === 0) return;
+
+    const duplicate = await tx.person.findFirst({
+      where: {
+        familyId,
+        OR: conditions as Prisma.PersonWhereInput[],
+        ...(excludePersonId ? { id: { not: excludePersonId } } : {}),
+      },
+      select: { id: true, email: true, phone: true },
+    });
+    if (!duplicate) return;
+    if (email && duplicate.email === email) throw new ConflictError('Email already exists for another person in this family');
+    if (phone && duplicate.phone === phone) throw new ConflictError('Phone already exists for another person in this family');
+  }
+
+  private metadataStringValue(metadata: Record<string, unknown>, key: string): string | undefined {
+    const value = metadata[key];
+    if (typeof value !== 'string') return undefined;
+    const trimmed = value.trim();
+    return trimmed.length > 0 ? trimmed : undefined;
+  }
+
+  private resolveEditPersonPayload(
+    person: Person,
+    payload: EditPersonPayload,
+  ): { mergedPayload: AddPersonPayload; mergedName: string; changedFields: string[] } {
+    const existingMetadata = this.parseMetadata(person.metadataJson);
+    const currentPayload: AddPersonPayload = {
+      name: person.name,
+      givenName: person.givenName ?? undefined,
+      familyName: person.familyName ?? undefined,
+      gender: person.gender,
+      dateOfBirth: person.dateOfBirth ?? undefined,
+      email: person.email ?? undefined,
+      phone: person.phone ?? undefined,
+      placeOfBirth: this.metadataStringValue(existingMetadata, 'placeOfBirth'),
+      occupation: this.metadataStringValue(existingMetadata, 'occupation'),
+      notes: this.metadataStringValue(existingMetadata, 'notes'),
+      profilePictureUrl: person.profilePictureUrl ?? this.metadataStringValue(existingMetadata, 'profilePictureUrl'),
+      metadata: existingMetadata,
+    };
+
+    const mergedPayload: AddPersonPayload = {
+      ...currentPayload,
+      ...(payload.givenName !== undefined ? { givenName: payload.givenName } : {}),
+      ...(payload.familyName !== undefined ? { familyName: payload.familyName } : {}),
+      ...(payload.gender !== undefined ? { gender: payload.gender } : {}),
+      ...(payload.dateOfBirth !== undefined ? { dateOfBirth: payload.dateOfBirth } : {}),
+      ...(payload.email !== undefined ? { email: payload.email } : {}),
+      ...(payload.phone !== undefined ? { phone: payload.phone } : {}),
+      ...(payload.placeOfBirth !== undefined ? { placeOfBirth: payload.placeOfBirth } : {}),
+      ...(payload.occupation !== undefined ? { occupation: payload.occupation } : {}),
+      ...(payload.notes !== undefined ? { notes: payload.notes } : {}),
+      ...(payload.profilePictureUrl !== undefined ? { profilePictureUrl: payload.profilePictureUrl } : {}),
+      ...(payload.profilePictureDataUrl !== undefined ? { profilePictureDataUrl: payload.profilePictureDataUrl } : {}),
+      ...(payload.metadata ? { metadata: { ...existingMetadata, ...payload.metadata } } : {}),
+    };
+
+    const mergedName =
+      payload.name?.trim() ||
+      `${mergedPayload.givenName ?? ''} ${mergedPayload.familyName ?? ''}`.trim() ||
+      person.name;
+    mergedPayload.name = mergedName;
+    if (!mergedPayload.gender) mergedPayload.gender = 'unknown';
+
+    const currentComparable = {
+      name: currentPayload.name ?? '',
+      givenName: currentPayload.givenName ?? '',
+      familyName: currentPayload.familyName ?? '',
+      gender: currentPayload.gender ?? '',
+      dateOfBirth: currentPayload.dateOfBirth ?? '',
+      email: this.normalizeEmail(currentPayload.email) ?? '',
+      phone: this.normalizePhone(currentPayload.phone) ?? '',
+      placeOfBirth: currentPayload.placeOfBirth ?? '',
+      occupation: currentPayload.occupation ?? '',
+      notes: currentPayload.notes ?? '',
+      profilePictureUrl: currentPayload.profilePictureUrl ?? '',
+    };
+    const mergedComparable = {
+      name: mergedName,
+      givenName: mergedPayload.givenName ?? '',
+      familyName: mergedPayload.familyName ?? '',
+      gender: mergedPayload.gender ?? '',
+      dateOfBirth: mergedPayload.dateOfBirth ?? '',
+      email: this.normalizeEmail(mergedPayload.email) ?? '',
+      phone: this.normalizePhone(mergedPayload.phone) ?? '',
+      placeOfBirth: mergedPayload.placeOfBirth ?? '',
+      occupation: mergedPayload.occupation ?? '',
+      notes: mergedPayload.notes ?? '',
+      profilePictureUrl: (mergedPayload.profilePictureDataUrl ?? mergedPayload.profilePictureUrl ?? ''),
+    };
+
+    const changedFields = Object.keys(mergedComparable).filter((field) => {
+      const key = field as keyof typeof mergedComparable;
+      return mergedComparable[key] !== currentComparable[key];
+    });
+
+    return { mergedPayload, mergedName, changedFields };
+  }
+
   public async submitProposal(
     familyId: string,
     createdById: string,
     actorRole: UserRole,
     type: ProposalType,
-    data: AddPersonPayload | AddRelationshipPayload | ImportFromFamilyPayload,
+    data:
+      | AddPersonPayload
+      | AddRelationshipPayload
+      | ImportFromFamilyPayload
+      | EditPersonPayload
+      | DeletePersonPayload
+      | EditRelationshipPayload
+      | DeleteRelationshipPayload,
   ): Promise<Proposal> {
     this.governance.assertProposalAllowed(actorRole);
 
@@ -485,6 +612,173 @@ export class ProposalWorkflowService {
           },
         });
       }
+      if (type === ProposalType.EDIT_PERSON) {
+        const payload = data as EditPersonPayload;
+        const person = await tx.person.findUnique({ where: { id: payload.personId } });
+        if (!person || person.familyId !== familyId) {
+          throw new NotFoundError('Person not found in family');
+        }
+        const resolved = this.resolveEditPersonPayload(person, payload);
+        if (resolved.changedFields.length === 0) {
+          throw new AppError('Select at least one field to update', 400);
+        }
+        const email = this.normalizeEmail(resolved.mergedPayload.email);
+        const phone = this.normalizePhone(resolved.mergedPayload.phone);
+        await this.assertUniquePersonIdentity(tx, familyId, email, phone, payload.personId);
+
+        const impacts = [
+          `Updates member ${person.name} -> ${resolved.mergedName}`,
+          ...resolved.changedFields.map((field) => `Changed ${field}`),
+        ];
+        const simulatedPersons = current.persons.map((entry) =>
+          entry.id === payload.personId
+            ? {
+                ...entry,
+                name: resolved.mergedName,
+                givenName: resolved.mergedPayload.givenName ?? null,
+                familyName: resolved.mergedPayload.familyName ?? null,
+                gender: resolved.mergedPayload.gender ?? 'unknown',
+                dateOfBirth: resolved.mergedPayload.dateOfBirth ?? null,
+                email: email ?? null,
+                phone: phone ?? null,
+                profilePictureUrl:
+                  resolved.mergedPayload.profilePictureDataUrl ??
+                  resolved.mergedPayload.profilePictureUrl ??
+                  null,
+                metadataJson: JSON.stringify(this.buildPersonMetadata(resolved.mergedPayload)),
+              }
+            : entry,
+        );
+        return tx.proposal.create({
+          data: {
+            familyId,
+            type,
+            payloadJson: JSON.stringify({ personId: payload.personId, ...resolved.mergedPayload }),
+            previewJson: JSON.stringify({
+              diff: { addedPersons: 0, addedRelationships: 0, impacts },
+              impact: null,
+              simulated: {
+                persons: simulatedPersons,
+                relationships: current.relationships,
+                proposedPersonIds: [payload.personId],
+                proposedRelationshipKeys: [],
+              },
+            }),
+            createdById,
+          },
+        });
+      }
+      if (type === ProposalType.DELETE_PERSON) {
+        const payload = data as DeletePersonPayload;
+        const person = await tx.person.findUnique({ where: { id: payload.personId } });
+        if (!person || person.familyId !== familyId) {
+          throw new NotFoundError('Person not found in family');
+        }
+        const deletedRelationshipCount = current.relationships.filter(
+          (relationship) => relationship.fromPersonId === payload.personId || relationship.toPersonId === payload.personId,
+        ).length;
+        const impacts = [`Deletes member ${person.name} and ${deletedRelationshipCount} connected relationships`];
+        return tx.proposal.create({
+          data: {
+            familyId,
+            type,
+            payloadJson: JSON.stringify(payload),
+            previewJson: JSON.stringify({
+              diff: { addedPersons: 0, addedRelationships: 0, impacts },
+              impact: null,
+              simulated: {
+                persons: current.persons.filter((entry) => entry.id !== payload.personId),
+                relationships: current.relationships.filter(
+                  (relationship) =>
+                    relationship.fromPersonId !== payload.personId && relationship.toPersonId !== payload.personId,
+                ),
+                proposedPersonIds: [payload.personId],
+                proposedRelationshipKeys: [],
+              },
+            }),
+            createdById,
+          },
+        });
+      }
+      if (type === ProposalType.EDIT_RELATIONSHIP) {
+        const payload = data as EditRelationshipPayload;
+        const relationship = await tx.relationship.findUnique({ where: { id: payload.relationshipId } });
+        if (!relationship || relationship.familyId !== familyId) {
+          throw new NotFoundError('Relationship not found in family');
+        }
+        this.relationshipIntegrity.validateOrThrow(
+          current.persons,
+          current.relationships,
+          {
+            id: payload.relationshipId,
+            familyId,
+            fromPersonId: relationship.fromPersonId,
+            toPersonId: relationship.toPersonId,
+            type: payload.type,
+          },
+          payload.relationshipId,
+        );
+        const impacts = [
+          `Updates relationship ${relationship.type} -> ${payload.type} (${relationship.fromPersonId} -> ${relationship.toPersonId})`,
+        ];
+        const simulatedRelationships = current.relationships.map((entry) =>
+          entry.id === payload.relationshipId
+            ? {
+                ...entry,
+                type: payload.type,
+                metadataJson: JSON.stringify(payload.metadata ?? {}),
+              }
+            : entry,
+        );
+        return tx.proposal.create({
+          data: {
+            familyId,
+            type,
+            payloadJson: JSON.stringify(payload),
+            previewJson: JSON.stringify({
+              diff: { addedPersons: 0, addedRelationships: 0, impacts },
+              impact: null,
+              simulated: {
+                persons: current.persons,
+                relationships: simulatedRelationships,
+                proposedPersonIds: [relationship.fromPersonId, relationship.toPersonId],
+                proposedRelationshipKeys: [
+                  this.relationshipKey(relationship.fromPersonId, relationship.toPersonId, payload.type),
+                ],
+              },
+            }),
+            createdById,
+          },
+        });
+      }
+      if (type === ProposalType.DELETE_RELATIONSHIP) {
+        const payload = data as DeleteRelationshipPayload;
+        const relationship = await tx.relationship.findUnique({ where: { id: payload.relationshipId } });
+        if (!relationship || relationship.familyId !== familyId) {
+          throw new NotFoundError('Relationship not found in family');
+        }
+        const impacts = [`Deletes relationship ${relationship.type}`];
+        return tx.proposal.create({
+          data: {
+            familyId,
+            type,
+            payloadJson: JSON.stringify(payload),
+            previewJson: JSON.stringify({
+              diff: { addedPersons: 0, addedRelationships: 0, impacts },
+              impact: null,
+              simulated: {
+                persons: current.persons,
+                relationships: current.relationships.filter((entry) => entry.id !== payload.relationshipId),
+                proposedPersonIds: [relationship.fromPersonId, relationship.toPersonId],
+                proposedRelationshipKeys: [
+                  this.relationshipKey(relationship.fromPersonId, relationship.toPersonId, relationship.type),
+                ],
+              },
+            }),
+            createdById,
+          },
+        });
+      }
       const simulation = this.proposalDomain.simulateProposal(
         current,
         type,
@@ -532,7 +826,14 @@ export class ProposalWorkflowService {
       if (!family) throw new NotFoundError('Family not found');
       this.governance.assertOwner(reviewerId, family.ownerId);
 
-      const payload = JSON.parse(proposal.payloadJson) as AddPersonPayload | AddRelationshipPayload | ImportFromFamilyPayload;
+      const payload = JSON.parse(proposal.payloadJson) as
+        | AddPersonPayload
+        | AddRelationshipPayload
+        | ImportFromFamilyPayload
+        | EditPersonPayload
+        | DeletePersonPayload
+        | EditRelationshipPayload
+        | DeleteRelationshipPayload;
       if (proposal.type === ProposalType.ADD_PERSON) {
         const personPayload = payload as AddPersonPayload;
         if (!personPayload.email?.trim()) {
@@ -760,6 +1061,121 @@ export class ProposalWorkflowService {
           relationships.push(createdRelationship);
           relSet.add(key);
         }
+      }
+
+      if (proposal.type === ProposalType.EDIT_PERSON) {
+        const personPayload = payload as EditPersonPayload;
+        const person = await tx.person.findUnique({ where: { id: personPayload.personId } });
+        if (!person || person.familyId !== proposal.familyId) {
+          throw new NotFoundError('Person not found in family');
+        }
+        const resolved = this.resolveEditPersonPayload(person, personPayload);
+        if (resolved.changedFields.length === 0) {
+          throw new AppError('Select at least one field to update', 400);
+        }
+        const email = this.normalizeEmail(resolved.mergedPayload.email);
+        const phone = this.normalizePhone(resolved.mergedPayload.phone);
+        await this.assertUniquePersonIdentity(tx, proposal.familyId, email, phone, personPayload.personId);
+
+        const identityResolution = await this.identityConsistency.resolveIdentity(tx, {
+          mode: 'update',
+          familyId: proposal.familyId,
+          email: email ?? null,
+          phone: phone ?? null,
+          givenName: resolved.mergedPayload.givenName ?? null,
+          familyName: resolved.mergedPayload.familyName ?? null,
+          gender: resolved.mergedPayload.gender ?? 'unknown',
+          dateOfBirth: resolved.mergedPayload.dateOfBirth ?? null,
+          placeOfBirth: resolved.mergedPayload.placeOfBirth ?? null,
+          occupation: resolved.mergedPayload.occupation ?? null,
+          notes: resolved.mergedPayload.notes ?? null,
+          profilePictureUrl:
+            resolved.mergedPayload.profilePictureDataUrl ?? resolved.mergedPayload.profilePictureUrl ?? null,
+        });
+        const identity = identityResolution.details;
+        const identityId = await this.identityConsistency.syncIdentityEverywhere(
+          tx,
+          identity,
+          identityResolution.linkedUserId,
+          identityResolution.identityId,
+        );
+        const metadataSeed = JSON.stringify(this.buildPersonMetadata(resolved.mergedPayload));
+        const updatedPerson = await tx.person.update({
+          where: { id: personPayload.personId },
+          data: {
+            identityId,
+            name: resolved.mergedName,
+            givenName: identity.givenName,
+            familyName: identity.familyName,
+            gender: identity.gender,
+            dateOfBirth: identity.dateOfBirth,
+            email: identity.email,
+            phone: identity.phone,
+            profilePictureUrl: identity.profilePictureUrl,
+            metadataJson: this.identityConsistency.buildMetadata(metadataSeed, identity),
+          },
+        });
+        await this.linkFamilyMembershipByPersonIdentity(
+          tx,
+          proposal.familyId,
+          updatedPerson.email ?? undefined,
+          updatedPerson.phone ?? undefined,
+        );
+      }
+
+      if (proposal.type === ProposalType.DELETE_PERSON) {
+        const deletePayload = payload as DeletePersonPayload;
+        const person = await tx.person.findUnique({ where: { id: deletePayload.personId } });
+        if (!person || person.familyId !== proposal.familyId) {
+          throw new NotFoundError('Person not found in family');
+        }
+        await tx.relationship.deleteMany({
+          where: {
+            familyId: proposal.familyId,
+            OR: [{ fromPersonId: deletePayload.personId }, { toPersonId: deletePayload.personId }],
+          },
+        });
+        await tx.person.delete({ where: { id: deletePayload.personId } });
+      }
+
+      if (proposal.type === ProposalType.EDIT_RELATIONSHIP) {
+        const relationshipPayload = payload as EditRelationshipPayload;
+        const relationship = await tx.relationship.findUnique({ where: { id: relationshipPayload.relationshipId } });
+        if (!relationship || relationship.familyId !== proposal.familyId) {
+          throw new NotFoundError('Relationship not found in family');
+        }
+        const [persons, relationships] = await Promise.all([
+          tx.person.findMany({ where: { familyId: proposal.familyId }, orderBy: { id: 'asc' } }),
+          tx.relationship.findMany({ where: { familyId: proposal.familyId }, orderBy: { id: 'asc' } }),
+        ]);
+        this.relationshipIntegrity.validateOrThrow(
+          persons,
+          relationships,
+          {
+            id: relationshipPayload.relationshipId,
+            familyId: proposal.familyId,
+            fromPersonId: relationship.fromPersonId,
+            toPersonId: relationship.toPersonId,
+            type: relationshipPayload.type,
+          },
+          relationshipPayload.relationshipId,
+        );
+        await tx.relationship.update({
+          where: { id: relationshipPayload.relationshipId },
+          data: {
+            type: relationshipPayload.type,
+            metadataJson: JSON.stringify(relationshipPayload.metadata ?? {}),
+          },
+        });
+      }
+
+      if (proposal.type === ProposalType.DELETE_RELATIONSHIP) {
+        const deletePayload = payload as DeleteRelationshipPayload;
+        const relationship = await tx.relationship.findUnique({ where: { id: deletePayload.relationshipId } });
+        if (!relationship || relationship.familyId !== proposal.familyId) {
+          throw new NotFoundError('Relationship not found in family');
+        }
+        await tx.relationship.delete({ where: { id: deletePayload.relationshipId } });
       }
 
       const versionNumber = await this.createVersion(

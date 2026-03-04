@@ -37,12 +37,20 @@ export type Person = {
 export type Proposal = {
   id: string;
   familyId: string;
-  type: 'ADD_PERSON' | 'ADD_RELATIONSHIP' | 'IMPORT_FROM_FAMILY';
+  type:
+    | 'ADD_PERSON'
+    | 'ADD_RELATIONSHIP'
+    | 'IMPORT_FROM_FAMILY'
+    | 'EDIT_PERSON'
+    | 'DELETE_PERSON'
+    | 'EDIT_RELATIONSHIP'
+    | 'DELETE_RELATIONSHIP';
   payloadJson: string;
   previewJson: string;
   status: 'PENDING' | 'APPROVED' | 'REJECTED';
   appliedVersionNumber?: number | null;
   overriddenByVersionNumber?: number | null;
+  reviewReason?: string | null;
   createdAt: string;
 };
 

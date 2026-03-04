@@ -1,0 +1,3 @@
+-- SQLite stores enum values as TEXT.
+-- No physical DDL changes needed; this migration tracks new ProposalType values:
+-- EDIT_PERSON, DELETE_PERSON, EDIT_RELATIONSHIP, DELETE_RELATIONSHIP.

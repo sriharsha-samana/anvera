@@ -58,9 +58,47 @@ export type ImportFromFamilyPayload = {
   includeRelationships?: boolean;
 };
 
+export type EditPersonPayload = {
+  personId: string;
+  name?: string;
+  givenName?: string;
+  familyName?: string;
+  gender?: string;
+  dateOfBirth?: string;
+  email?: string;
+  phone?: string;
+  placeOfBirth?: string;
+  occupation?: string;
+  notes?: string;
+  profilePictureUrl?: string;
+  profilePictureDataUrl?: string;
+  metadata?: Record<string, unknown>;
+};
+
+export type DeletePersonPayload = {
+  personId: string;
+};
+
+export type EditRelationshipPayload = {
+  relationshipId: string;
+  type: RelationshipType;
+  metadata?: Record<string, unknown>;
+};
+
+export type DeleteRelationshipPayload = {
+  relationshipId: string;
+};
+
 export type ProposalPayload = {
   type: ProposalType;
-  data: AddPersonPayload | AddRelationshipPayload | ImportFromFamilyPayload;
+  data:
+    | AddPersonPayload
+    | AddRelationshipPayload
+    | ImportFromFamilyPayload
+    | EditPersonPayload
+    | DeletePersonPayload
+    | EditRelationshipPayload
+    | DeleteRelationshipPayload;
 };
 
 export type RelationshipClassification = {
