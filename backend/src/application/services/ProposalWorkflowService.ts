@@ -1,11 +1,11 @@
 import {
   ProposalStatus,
   ProposalType,
-  UserRole,
   VersionSourceType,
   type Prisma,
   type Proposal,
 } from '@prisma/client';
+import type { UserRole } from '@prisma/client';
 import { GraphEngine } from '../../domain/services/GraphEngine';
 import { GovernanceService } from '../../domain/services/GovernanceService';
 import { ProposalService } from '../../domain/services/ProposalService';

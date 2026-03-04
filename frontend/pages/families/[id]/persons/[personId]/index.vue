@@ -232,10 +232,17 @@ const normalizeOptional = (value: string): string | undefined => {
 const isValidEmail = (value: string): boolean => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
 const normalizePhone = (value: string): string => value.replace(/[\s\-()]/g, '');
 const isValidPhone = (value: string): boolean => /^\+[1-9]\d{7,14}$/.test(normalizePhone(value));
+const toLocalYmd = (date: Date): string => {
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, '0');
+  const day = String(date.getDate()).padStart(2, '0');
+  return `${year}-${month}-${day}`;
+};
 const formatDateValue = (raw: unknown): string => {
   if (!raw) return '';
+  if (Array.isArray(raw)) return formatDateValue(raw[0]);
   if (typeof raw === 'string') return raw.slice(0, 10);
-  if (raw instanceof Date && !Number.isNaN(raw.getTime())) return raw.toISOString().slice(0, 10);
+  if (raw instanceof Date && !Number.isNaN(raw.getTime())) return toLocalYmd(raw);
   return '';
 };
 const isFutureDate = (value: string): boolean => {

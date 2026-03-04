@@ -1,4 +1,4 @@
-import { VersionSourceType } from '@prisma/client';
+import type { VersionSourceType } from '@prisma/client';
 
 export class VersionEntity {
   constructor(

@@ -1,5 +1,5 @@
 import type { NextFunction, Request, Response } from 'express';
-import { ProposalType } from '@prisma/client';
+import type { ProposalType } from '@prisma/client';
 import { FamilyService } from '../../../application/services/FamilyService';
 import { ProposalWorkflowService } from '../../../application/services/ProposalWorkflowService';
 import type { AddPersonPayload, AddRelationshipPayload } from '../../../shared/types';

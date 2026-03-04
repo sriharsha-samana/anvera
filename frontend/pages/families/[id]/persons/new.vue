@@ -25,22 +25,14 @@
             <v-text-field
               v-model="dateOfBirth"
               label="Date of Birth"
-              readonly
+              type="date"
               density="comfortable"
               placeholder="YYYY-MM-DD"
-              @click="dobDialog = true"
+              :max="todayDate"
+              clearable
+              hint="Use calendar or type YYYY-MM-DD"
+              persistent-hint
             />
-            <v-dialog v-model="dobDialog" max-width="360">
-              <v-card title="Select Date of Birth">
-                <v-card-text>
-                  <v-date-picker :model-value="dateOfBirth || null" @update:model-value="onDobPick" />
-                </v-card-text>
-                <v-card-actions>
-                  <v-spacer />
-                  <v-btn variant="text" @click="dobDialog = false">Close</v-btn>
-                </v-card-actions>
-              </v-card>
-            </v-dialog>
           </v-col>
 
           <v-col cols="12" md="4">
@@ -115,7 +107,8 @@ const givenName = ref('');
 const familyName = ref('');
 const gender = ref<'male' | 'female' | 'other' | 'unknown'>('unknown');
 const dateOfBirth = ref('');
-const dobDialog = ref(false);
+const now = new Date();
+const todayDate = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
 const phone = ref('');
 const email = ref('');
 const placeOfBirth = ref('');
@@ -142,12 +135,6 @@ const normalizeOptional = (value: string): string | undefined => {
   const trimmed = value.trim();
   return trimmed.length > 0 ? trimmed : undefined;
 };
-const formatDateValue = (raw: unknown): string => {
-  if (!raw) return '';
-  if (typeof raw === 'string') return raw.slice(0, 10);
-  if (raw instanceof Date && !Number.isNaN(raw.getTime())) return raw.toISOString().slice(0, 10);
-  return '';
-};
 const extractFirstFile = (value: File | File[] | null): File | null => {
   if (!value) return null;
   if (Array.isArray(value)) return value[0] ?? null;
@@ -160,10 +147,6 @@ const fileToDataUrl = async (file: File): Promise<string> =>
     reader.onerror = () => reject(new Error('Failed to read selected image'));
     reader.readAsDataURL(file);
   });
-
-const onDobPick = (value: unknown): void => {
-  dateOfBirth.value = formatDateValue(value);
-};
 
 const onProfilePhotoSelected = async (): Promise<void> => {
   const file = extractFirstFile(photoFile.value);

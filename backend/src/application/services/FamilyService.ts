@@ -1,5 +1,6 @@
 import { randomUUID } from 'crypto';
-import { RelationshipType, UserRole, VersionSourceType, type Prisma } from '@prisma/client';
+import { UserRole, VersionSourceType, type Prisma } from '@prisma/client';
+import type { RelationshipType } from '@prisma/client';
 import { GovernanceService } from '../../domain/services/GovernanceService';
 import { RelationshipIntegrityService } from '../../domain/services/RelationshipIntegrityService';
 import { VersioningService } from '../../domain/services/VersioningService';

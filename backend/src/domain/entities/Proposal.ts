@@ -1,4 +1,5 @@
-import { ProposalStatus, ProposalType } from '@prisma/client';
+import { ProposalStatus } from '@prisma/client';
+import type { ProposalType } from '@prisma/client';
 
 export class ProposalEntity {
   constructor(

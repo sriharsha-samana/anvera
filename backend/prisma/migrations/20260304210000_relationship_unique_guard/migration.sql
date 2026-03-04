@@ -1,0 +1,2 @@
+-- Restored missing migration file to repair migration chain integrity.
+-- Intentionally no-op.
