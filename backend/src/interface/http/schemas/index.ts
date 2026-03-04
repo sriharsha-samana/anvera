@@ -115,6 +115,12 @@ export const addRelationshipSchema = z.object({
   metadata: z.record(z.unknown()).optional(),
 });
 
+export const importFromFamilySchema = z.object({
+  sourceFamilyId: z.string().min(1),
+  selectedPersonIds: z.array(z.string().min(1)).optional(),
+  includeRelationships: z.boolean().optional(),
+});
+
 export const updateRelationshipSchema = z.object({
   fromPersonId: z.string().min(1),
   toPersonId: z.string().min(1),
@@ -130,6 +136,10 @@ export const proposalSchema = z.discriminatedUnion('type', [
   z.object({
     type: z.literal(ProposalType.ADD_RELATIONSHIP),
     data: addRelationshipSchema,
+  }),
+  z.object({
+    type: z.literal(ProposalType.IMPORT_FROM_FAMILY),
+    data: importFromFamilySchema,
   }),
 ]);
 

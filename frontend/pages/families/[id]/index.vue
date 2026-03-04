@@ -31,6 +31,7 @@
                 item-value="value"
                 label="Focus on person"
                 clearable
+                @click:clear="onFocusClear"
                 density="comfortable"
                 hint="Shows selected person and 2-hop neighborhood; everything else is dimmed."
                 persistent-hint
@@ -512,6 +513,7 @@ const editRelationshipFrom = ref('');
 const editRelationshipTo = ref('');
 const editRelationshipType = ref<'PARENT' | 'SPOUSE' | 'SIBLING' | 'INLAW'>('PARENT');
 const focusPersonId = ref<string | null>(null);
+const focusManuallyCleared = ref(false);
 const focusHelpDialog = ref(false);
 const showOwnerDialog = ref(false);
 const peopleSearch = ref('');
@@ -681,6 +683,10 @@ const focusSummary = computed<FocusSummary | null>(() => {
 const showFocusHelp = (): void => {
   focusHelpDialog.value = true;
 };
+const onFocusClear = (): void => {
+  focusManuallyCleared.value = true;
+  focusPersonId.value = null;
+};
 const showOwnerProfile = (): void => {
   showOwnerDialog.value = true;
 };
@@ -764,6 +770,7 @@ const clearEditProfilePhoto = (): void => {
 watch(
   () => [persons.value, authStore.email, authStore.phone, authStore.username, focusPersonId.value] as const,
   () => {
+    if (focusManuallyCleared.value) return;
     if (focusPersonId.value) return;
     const normalizePhoneValue = (value: string): string => value.replace(/[\s\-()]/g, '');
     const authEmail = authStore.email?.trim().toLowerCase();
@@ -790,6 +797,12 @@ watch(
   },
   { immediate: true, deep: true },
 );
+
+watch(focusPersonId, (value) => {
+  if (value) {
+    focusManuallyCleared.value = false;
+  }
+});
 
 const addRelationship = async (): Promise<void> => {
   if (!newRelationshipFrom.value || !newRelationshipTo.value) {

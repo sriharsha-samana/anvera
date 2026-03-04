@@ -52,9 +52,15 @@ export type AddRelationshipPayload = {
   metadata?: Record<string, unknown>;
 };
 
+export type ImportFromFamilyPayload = {
+  sourceFamilyId: string;
+  selectedPersonIds?: string[];
+  includeRelationships?: boolean;
+};
+
 export type ProposalPayload = {
   type: ProposalType;
-  data: AddPersonPayload | AddRelationshipPayload;
+  data: AddPersonPayload | AddRelationshipPayload | ImportFromFamilyPayload;
 };
 
 export type RelationshipClassification = {

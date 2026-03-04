@@ -14,6 +14,7 @@
       :proposals="proposals"
       :persons="persons"
       :relationships="relationships"
+      :families="families"
       :is-owner="isOwner"
       @submit="submitProposal"
       @approve="approve"
@@ -73,6 +74,7 @@ const isOwner = computed(() => activeFamily.value?.myRole === 'OWNER');
 const proposals = computed(() => query.data.value ?? []);
 const persons = computed(() => personsQuery.data.value ?? []);
 const relationships = computed(() => relationshipsQuery.data.value ?? []);
+const families = computed(() => familiesQuery.data.value ?? []);
 
 const submitProposal = async (payload: unknown): Promise<void> => {
   try {

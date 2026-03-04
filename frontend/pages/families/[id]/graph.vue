@@ -19,6 +19,7 @@
               item-value="value"
               label="Focus on person"
               clearable
+              @click:clear="onFocusClear"
               density="comfortable"
               hint="Shows selected person and 2-hop neighborhood; everything else is dimmed."
               persistent-hint
@@ -63,6 +64,7 @@ const relationshipQuery = useQuery({
 const persons = computed(() => personQuery.data.value ?? []);
 const relationships = computed(() => relationshipQuery.data.value ?? []);
 const focusPersonId = ref<string | null>(null);
+const focusManuallyCleared = ref(false);
 
 const focusOptions = computed(() =>
   persons.value
@@ -76,6 +78,7 @@ const focusOptions = computed(() =>
 watch(
   () => [persons.value, authStore.email, authStore.phone, authStore.username, focusPersonId.value] as const,
   () => {
+    if (focusManuallyCleared.value) return;
     if (focusPersonId.value) return;
     const normalizePhone = (value: string): string => value.replace(/[\s\-()]/g, '');
     const authEmail = authStore.email?.trim().toLowerCase();
@@ -102,6 +105,17 @@ watch(
   },
   { immediate: true, deep: true },
 );
+
+const onFocusClear = (): void => {
+  focusManuallyCleared.value = true;
+  focusPersonId.value = null;
+};
+
+watch(focusPersonId, (value) => {
+  if (value) {
+    focusManuallyCleared.value = false;
+  }
+});
 
 const goBack = async (): Promise<void> => {
   await router.push(`/families/${familyId}`);

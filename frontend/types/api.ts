@@ -37,7 +37,7 @@ export type Person = {
 export type Proposal = {
   id: string;
   familyId: string;
-  type: 'ADD_PERSON' | 'ADD_RELATIONSHIP';
+  type: 'ADD_PERSON' | 'ADD_RELATIONSHIP' | 'IMPORT_FROM_FAMILY';
   payloadJson: string;
   previewJson: string;
   status: 'PENDING' | 'APPROVED' | 'REJECTED';

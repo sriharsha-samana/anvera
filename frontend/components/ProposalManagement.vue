@@ -57,7 +57,7 @@
         <v-col cols="12"><v-textarea v-model="personNotes" label="Notes" rows="2" auto-grow /></v-col>
       </v-row>
 
-      <v-row v-else>
+      <v-row v-else-if="type === 'ADD_RELATIONSHIP'">
         <v-col cols="12" md="4">
           <v-select
             v-model="fromPersonId"
@@ -77,6 +77,25 @@
           />
         </v-col>
         <v-col cols="12" md="4"><v-select v-model="relationshipType" :items="relationshipTypes" label="Relationship Type" /></v-col>
+      </v-row>
+      <v-row v-else>
+        <v-col cols="12" md="8">
+          <v-select
+            v-model="importSourceFamilyId"
+            :items="importSourceFamilyOptions"
+            item-title="title"
+            item-value="value"
+            label="Source Family"
+          />
+        </v-col>
+        <v-col cols="12" md="4" class="d-flex align-center">
+          <v-checkbox
+            v-model="importIncludeRelationships"
+            label="Include relationships"
+            color="primary"
+            hide-details
+          />
+        </v-col>
       </v-row>
 
       <v-btn color="primary" @click="submitProposal">Submit Proposal</v-btn>
@@ -126,14 +145,58 @@
                       <strong>Date Of Birth:</strong> {{ selectedProposalSummary.personDetails.dateOfBirth || '-' }}
                     </div>
                   </template>
-                  <template v-else>
+                  <template v-else-if="selectedProposalSummary.type === 'ADD_RELATIONSHIP'">
                     <div class="detail-row"><strong>From:</strong> {{ selectedProposalSummary.relationshipDetails.fromName }}</div>
                     <div class="detail-row"><strong>To:</strong> {{ selectedProposalSummary.relationshipDetails.toName }}</div>
                     <div class="detail-row"><strong>Type:</strong> {{ selectedProposalSummary.relationshipDetails.type }}</div>
                   </template>
+                  <template v-else>
+                    <div class="detail-row"><strong>Source Family:</strong> {{ selectedProposalSummary.importDetails.sourceFamilyName }}</div>
+                    <div class="detail-row"><strong>Selected Members:</strong> {{ selectedProposalSummary.importDetails.selectedPersonCount }}</div>
+                    <div class="detail-row"><strong>Matched Existing:</strong> {{ selectedProposalSummary.importDetails.matchedMembers.length }}</div>
+                    <div class="detail-row"><strong>New Members:</strong> {{ selectedProposalSummary.importDetails.newMembers.length }}</div>
+                    <div class="detail-row"><strong>New Relationships:</strong> {{ selectedProposalSummary.importDetails.relationshipAdds.length }}</div>
+                    <div class="detail-row"><strong>Skipped Relationships:</strong> {{ selectedProposalSummary.importDetails.relationshipSkips.length }}</div>
+                  </template>
                 </v-card-text>
               </v-card>
             </div>
+
+            <v-card
+              v-if="selectedProposalSummary.type === 'IMPORT_FROM_FAMILY'"
+              variant="outlined"
+              class="mt-3"
+            >
+              <v-card-title class="text-subtitle-1">Import Review</v-card-title>
+              <v-card-text>
+                <p v-if="selectedProposalSummary.importDetails.conflicts.length > 0" class="text-error mb-2">
+                  {{ selectedProposalSummary.importDetails.conflicts.join('; ') }}
+                </p>
+                <div class="text-caption text-medium-emphasis mb-2">
+                  Matched members map to existing profiles; new members will be created.
+                </div>
+                <div class="d-flex flex-wrap ga-2">
+                  <v-chip
+                    v-for="member in selectedProposalSummary.importDetails.newMembers.slice(0, 8)"
+                    :key="`new-${member.sourcePersonId}`"
+                    size="small"
+                    color="primary"
+                    variant="tonal"
+                  >
+                    + {{ member.name }}
+                  </v-chip>
+                  <v-chip
+                    v-for="member in selectedProposalSummary.importDetails.matchedMembers.slice(0, 8)"
+                    :key="`match-${member.sourcePersonId}`"
+                    size="small"
+                    color="success"
+                    variant="tonal"
+                  >
+                    {{ member.sourceName }} -> {{ member.targetName }}
+                  </v-chip>
+                </div>
+              </v-card-text>
+            </v-card>
 
             <div class="mt-4">
               <p class="text-subtitle-2 mb-2">Graph If Applied</p>
@@ -195,7 +258,7 @@
 </template>
 
 <script setup lang="ts">
-import type { Person, Proposal } from '@/types/api';
+import type { Family, Person, Proposal } from '@/types/api';
 
 type RelationshipType = 'PARENT' | 'SPOUSE' | 'SIBLING' | 'INLAW';
 type RelationshipEdge = { id: string; fromPersonId: string; toPersonId: string; type: RelationshipType };
@@ -214,11 +277,29 @@ type AddPersonPayload = {
   profilePictureUrl?: string;
 };
 type AddRelationshipPayload = { fromPersonId: string; toPersonId: string; type: RelationshipType };
+type ImportFromFamilyPayload = { sourceFamilyId: string; selectedPersonIds?: string[]; includeRelationships?: boolean };
 type PreviewDiff = { addedPersons?: number; addedRelationships?: number; impacts?: string[] };
 type PreviewImpact = { label?: string } | null;
-type ParsedPreview = { diff?: PreviewDiff; impact?: PreviewImpact };
+type ImportPreview = {
+  sourceFamilyId?: string;
+  sourceFamilyName?: string;
+  selectedPersonCount?: number;
+  includeRelationships?: boolean;
+  conflicts?: string[];
+  matchedMembers?: Array<{ sourcePersonId: string; sourceName: string; targetPersonId: string; targetName: string; reason?: string | null }>;
+  newMembers?: Array<{ sourcePersonId: string; name: string; email?: string | null; phone?: string | null }>;
+  relationshipAdds?: Array<{ fromPersonId: string; toPersonId: string; type: RelationshipType }>;
+  relationshipSkips?: Array<{ fromPersonId: string; toPersonId: string; type: RelationshipType; reason?: string }>;
+  simulated?: {
+    persons?: Person[];
+    relationships?: RelationshipEdge[];
+    proposedPersonIds?: string[];
+    proposedRelationshipKeys?: string[];
+  };
+};
+type ParsedPreview = { diff?: PreviewDiff; impact?: PreviewImpact; importPreview?: ImportPreview };
 type ProposalSummary = {
-  type: 'ADD_PERSON' | 'ADD_RELATIONSHIP';
+  type: 'ADD_PERSON' | 'ADD_RELATIONSHIP' | 'IMPORT_FROM_FAMILY';
   typeLabel: string;
   status: string;
   createdAt: string;
@@ -232,19 +313,28 @@ type ProposalSummary = {
   focusPersonId?: string;
   personDetails: { name: string; gender: string; email: string; phone: string; dateOfBirth: string };
   relationshipDetails: { fromName: string; toName: string; type: string };
+  importDetails: {
+    sourceFamilyName: string;
+    selectedPersonCount: number;
+    conflicts: string[];
+    matchedMembers: Array<{ sourcePersonId: string; sourceName: string; targetName: string }>;
+    newMembers: Array<{ sourcePersonId: string; name: string }>;
+    relationshipAdds: Array<{ fromName: string; toName: string; type: string }>;
+    relationshipSkips: Array<{ fromName: string; toName: string; type: string; reason: string }>;
+  };
 };
 
 const props = withDefaults(
-  defineProps<{ familyId: string; proposals: Proposal[]; isOwner: boolean; persons?: Person[]; relationships?: RelationshipEdge[] }>(),
-  { persons: () => [], relationships: () => [] },
+  defineProps<{ familyId: string; proposals: Proposal[]; isOwner: boolean; persons?: Person[]; relationships?: RelationshipEdge[]; families?: Family[] }>(),
+  { persons: () => [], relationships: () => [], families: () => [] },
 );
 const emit = defineEmits<{ approve: [proposalId: string]; reject: [proposalId: string]; submit: [payload: unknown] }>();
 
-const proposalTypes = ['ADD_PERSON', 'ADD_RELATIONSHIP'];
+const proposalTypes = ['ADD_PERSON', 'ADD_RELATIONSHIP', 'IMPORT_FROM_FAMILY'] as const;
 const relationshipTypes = ['PARENT', 'SPOUSE', 'SIBLING', 'INLAW'];
 const genderOptions = ['male', 'female', 'other', 'unknown'] as const;
 
-const type = ref<'ADD_PERSON' | 'ADD_RELATIONSHIP'>('ADD_PERSON');
+const type = ref<'ADD_PERSON' | 'ADD_RELATIONSHIP' | 'IMPORT_FROM_FAMILY'>('ADD_PERSON');
 const personGivenName = ref('');
 const personFamilyName = ref('');
 const personGender = ref<'male' | 'female' | 'other' | 'unknown'>('unknown');
@@ -260,6 +350,8 @@ const personProfilePictureDataUrl = ref('');
 const fromPersonId = ref('');
 const toPersonId = ref('');
 const relationshipType = ref<'PARENT' | 'SPOUSE' | 'SIBLING' | 'INLAW'>('PARENT');
+const importSourceFamilyId = ref('');
+const importIncludeRelationships = ref(true);
 const showPreview = ref(false);
 const selectedProposalSummary = ref<ProposalSummary | null>(null);
 const formError = ref('');
@@ -272,6 +364,12 @@ const personOptions = computed(() =>
     .sort((a, b) => a.label.localeCompare(b.label)),
 );
 const personNameById = computed(() => new Map(props.persons.map((person) => [person.id, person.name])));
+const importSourceFamilyOptions = computed(() =>
+  props.families
+    .filter((family) => family.id !== props.familyId)
+    .map((family) => ({ title: family.name, value: family.id }))
+    .sort((a, b) => a.title.localeCompare(b.title)),
+);
 
 const isValidEmail = (value: string): boolean => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
 const normalizePhone = (value: string): string => value.replace(/[\s\-()]/g, '');
@@ -378,22 +476,38 @@ const submitProposal = (): void => {
     return;
   }
 
-  if (!fromPersonId.value.trim() || !toPersonId.value.trim()) {
-    formError.value = 'Please select both From Member and To Member.';
+  if (type.value === 'ADD_RELATIONSHIP') {
+    if (!fromPersonId.value.trim() || !toPersonId.value.trim()) {
+      formError.value = 'Please select both From Member and To Member.';
+      return;
+    }
+    if (fromPersonId.value.trim() === toPersonId.value.trim()) {
+      formError.value = 'From Member and To Member must be different people.';
+      return;
+    }
+
+    emit('submit', {
+      type: 'ADD_RELATIONSHIP',
+      data: {
+        fromPersonId: fromPersonId.value.trim(),
+        toPersonId: toPersonId.value.trim(),
+        type: relationshipType.value,
+      },
+    });
     return;
   }
-  if (fromPersonId.value.trim() === toPersonId.value.trim()) {
-    formError.value = 'From Member and To Member must be different people.';
+
+  if (!importSourceFamilyId.value.trim()) {
+    formError.value = 'Please select a source family.';
     return;
   }
 
   emit('submit', {
-    type: 'ADD_RELATIONSHIP',
+    type: 'IMPORT_FROM_FAMILY',
     data: {
-      fromPersonId: fromPersonId.value.trim(),
-      toPersonId: toPersonId.value.trim(),
-      type: relationshipType.value,
-    },
+      sourceFamilyId: importSourceFamilyId.value.trim(),
+      includeRelationships: importIncludeRelationships.value,
+    } satisfies ImportFromFamilyPayload,
   });
 };
 
@@ -459,6 +573,15 @@ const buildAddPersonSummary = (proposal: Proposal, payload: AddPersonPayload, pa
       dateOfBirth: payload.dateOfBirth ?? '',
     },
     relationshipDetails: { fromName: '-', toName: '-', type: '-' },
+    importDetails: {
+      sourceFamilyName: '-',
+      selectedPersonCount: 0,
+      conflicts: [],
+      matchedMembers: [],
+      newMembers: [],
+      relationshipAdds: [],
+      relationshipSkips: [],
+    },
   };
 };
 
@@ -494,18 +617,98 @@ const buildAddRelationshipSummary = (
     focusPersonId: undefined,
     personDetails: { name: '-', gender: '-', email: '-', phone: '-', dateOfBirth: '-' },
     relationshipDetails: { fromName, toName, type: relType },
+    importDetails: {
+      sourceFamilyName: '-',
+      selectedPersonCount: 0,
+      conflicts: [],
+      matchedMembers: [],
+      newMembers: [],
+      relationshipAdds: [],
+      relationshipSkips: [],
+    },
+  };
+};
+
+const buildImportSummary = (
+  proposal: Proposal,
+  payload: ImportFromFamilyPayload,
+  parsedPreview: ParsedPreview,
+): ProposalSummary => {
+  const diff = parsedPreview.diff ?? {};
+  const importPreview = parsedPreview.importPreview ?? {};
+  const simulatedPersons = importPreview.simulated?.persons ?? props.persons;
+  const simulatedRelationships = importPreview.simulated?.relationships ?? props.relationships;
+  const proposedPersonIds = importPreview.simulated?.proposedPersonIds ?? [];
+  const proposedRelationshipKeys = importPreview.simulated?.proposedRelationshipKeys ?? [];
+
+  const resolveName = (personId: string): string =>
+    simulatedPersons.find((person) => person.id === personId)?.name ??
+    personNameById.value.get(personId) ??
+    personId;
+
+  return {
+    type: 'IMPORT_FROM_FAMILY',
+    typeLabel: 'Import Members & Relationships',
+    status: proposal.status,
+    createdAt: proposal.createdAt,
+    diff: { addedPersons: diff.addedPersons ?? 0, addedRelationships: diff.addedRelationships ?? 0 },
+    impacts: diff.impacts?.length
+      ? diff.impacts
+      : [`Import from family ${importPreview.sourceFamilyName ?? payload.sourceFamilyId}`],
+    impactLabel: null,
+    simulatedPersons: [...simulatedPersons],
+    simulatedRelationships: [...simulatedRelationships],
+    proposedPersonIds: [...proposedPersonIds],
+    proposedRelationshipKeys: [...proposedRelationshipKeys],
+    focusPersonId: proposedPersonIds[0],
+    personDetails: { name: '-', gender: '-', email: '-', phone: '-', dateOfBirth: '-' },
+    relationshipDetails: { fromName: '-', toName: '-', type: '-' },
+    importDetails: {
+      sourceFamilyName: importPreview.sourceFamilyName ?? payload.sourceFamilyId,
+      selectedPersonCount: importPreview.selectedPersonCount ?? proposedPersonIds.length,
+      conflicts: importPreview.conflicts ?? [],
+      matchedMembers: (importPreview.matchedMembers ?? []).map((entry) => ({
+        sourcePersonId: entry.sourcePersonId,
+        sourceName: entry.sourceName,
+        targetName: entry.targetName,
+      })),
+      newMembers: (importPreview.newMembers ?? []).map((entry) => ({
+        sourcePersonId: entry.sourcePersonId,
+        name: entry.name,
+      })),
+      relationshipAdds: (importPreview.relationshipAdds ?? []).map((entry) => ({
+        fromName: resolveName(entry.fromPersonId),
+        toName: resolveName(entry.toPersonId),
+        type: entry.type,
+      })),
+      relationshipSkips: (importPreview.relationshipSkips ?? []).map((entry) => ({
+        fromName: resolveName(entry.fromPersonId),
+        toName: resolveName(entry.toPersonId),
+        type: entry.type,
+        reason: entry.reason ?? 'Skipped',
+      })),
+    },
   };
 };
 
 const openPreview = (proposal: Proposal): void => {
-  const payload = parseJson<AddPersonPayload | AddRelationshipPayload>(proposal.payloadJson, {} as AddPersonPayload);
+  const payload = parseJson<AddPersonPayload | AddRelationshipPayload | ImportFromFamilyPayload>(
+    proposal.payloadJson,
+    {} as AddPersonPayload,
+  );
   const parsedPreview = parseJson<ParsedPreview>(proposal.previewJson, {});
   if (proposal.type === 'ADD_PERSON') {
     selectedProposalSummary.value = buildAddPersonSummary(proposal, payload as AddPersonPayload, parsedPreview);
-  } else {
+  } else if (proposal.type === 'ADD_RELATIONSHIP') {
     selectedProposalSummary.value = buildAddRelationshipSummary(
       proposal,
       payload as AddRelationshipPayload,
+      parsedPreview,
+    );
+  } else {
+    selectedProposalSummary.value = buildImportSummary(
+      proposal,
+      payload as ImportFromFamilyPayload,
       parsedPreview,
     );
   }

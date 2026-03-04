@@ -1,0 +1,3 @@
+-- SQLite stores Prisma enums as TEXT in existing tables.
+-- This migration is intentionally a no-op and exists to version
+-- the new ProposalType value IMPORT_FROM_FAMILY in schema.prisma.
