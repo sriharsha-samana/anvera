@@ -25,9 +25,7 @@
             <v-card-title class="text-h6 font-weight-bold">{{ family.name }}</v-card-title>
           </v-card-item>
           <v-card-text class="pt-0">
-            <div class="text-body-2 text-medium-emphasis mb-2">
-              Owner: <strong>{{ family.ownerName || family.owner?.username || family.ownerId }}</strong>
-            </div>
+            <FamilyOwnerBadge :family="family" class="mb-2" />
             <v-chip :color="family.myRole === 'OWNER' ? 'primary' : 'secondary'" variant="tonal" size="small">
               {{ family.myRole === 'OWNER' ? 'You are Owner' : 'You are Member' }}
             </v-chip>

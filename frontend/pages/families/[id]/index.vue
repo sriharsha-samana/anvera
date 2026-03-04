@@ -5,9 +5,7 @@
         <h1 class="page-title">Family Overview</h1>
         <div class="d-flex flex-wrap align-center ga-2 mb-1">
           <p class="text-subtitle-1 font-weight-medium mb-0">{{ activeFamily?.name ?? 'Family' }}</p>
-          <v-chip size="small" color="primary" variant="tonal">
-            Owner: {{ activeFamily?.ownerName || activeFamily?.owner?.username || activeFamily?.ownerId || 'Unknown' }}
-          </v-chip>
+          <FamilyOwnerBadge :family="activeFamily" compact />
         </div>
         <p class="page-subtitle">Manage people, relationships, and quick kinship lookup in one place.</p>
         <p v-if="!isFamilyOwner" class="text-caption text-medium-emphasis mt-1">
