@@ -5,11 +5,17 @@ export type Family = {
   name: string;
   ownerId: string;
   ownerName?: string;
+  totalMembers?: number;
+  createdAt?: string;
   owner?: {
     id: string;
     username: string;
     givenName?: string | null;
     familyName?: string | null;
+    email?: string | null;
+    phone?: string | null;
+    gender?: string | null;
+    dateOfBirth?: string | null;
   };
   myRole?: UserRole;
 };

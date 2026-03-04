@@ -5,7 +5,7 @@
         <h1 class="page-title">Family Overview</h1>
         <div class="d-flex flex-wrap align-center ga-2 mb-1">
           <p class="text-subtitle-1 font-weight-medium mb-0">{{ activeFamily?.name ?? 'Family' }}</p>
-          <FamilyOwnerBadge :family="activeFamily" compact />
+          <FamilyOwnerBadge :family="activeFamily" compact clickable @select-owner="showOwnerProfile" />
         </div>
         <p class="page-subtitle">Manage people, relationships, and quick kinship lookup in one place.</p>
         <p v-if="!isFamilyOwner" class="text-caption text-medium-emphasis mt-1">
@@ -260,6 +260,26 @@
 
     <v-alert v-if="operationError" type="error" variant="tonal" class="mb-4">{{ operationError }}</v-alert>
 
+    <v-dialog v-model="showOwnerDialog" max-width="520">
+      <v-card title="Owner Profile">
+        <v-card-text v-if="activeFamily?.owner">
+          <div class="owner-row"><strong>Name:</strong> {{ activeFamily.ownerName || activeFamily.owner.username }}</div>
+          <div class="owner-row"><strong>Username:</strong> {{ activeFamily.owner.username }}</div>
+          <div class="owner-row"><strong>Email:</strong> {{ activeFamily.owner.email || '-' }}</div>
+          <div class="owner-row"><strong>Phone:</strong> {{ activeFamily.owner.phone || '-' }}</div>
+          <div class="owner-row"><strong>Gender:</strong> {{ activeFamily.owner.gender || '-' }}</div>
+          <div class="owner-row"><strong>Date Of Birth:</strong> {{ activeFamily.owner.dateOfBirth || '-' }}</div>
+        </v-card-text>
+        <v-card-text v-else>
+          Owner profile details are not available.
+        </v-card-text>
+        <v-card-actions>
+          <v-spacer />
+          <v-btn variant="text" @click="showOwnerDialog = false">Close</v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
+
     <v-dialog v-model="addRelationshipDialog" max-width="620">
       <v-card title="Add Relationship">
         <v-card-text>
@@ -493,6 +513,7 @@ const editRelationshipTo = ref('');
 const editRelationshipType = ref<'PARENT' | 'SPOUSE' | 'SIBLING' | 'INLAW'>('PARENT');
 const focusPersonId = ref<string | null>(null);
 const focusHelpDialog = ref(false);
+const showOwnerDialog = ref(false);
 const peopleSearch = ref('');
 const relationshipsSearch = ref('');
 const peopleGroupBy = ref<'none' | 'gender' | 'emailDomain' | 'familyName'>('none');
@@ -659,6 +680,9 @@ const focusSummary = computed<FocusSummary | null>(() => {
 
 const showFocusHelp = (): void => {
   focusHelpDialog.value = true;
+};
+const showOwnerProfile = (): void => {
+  showOwnerDialog.value = true;
 };
 
 const formatFocusNames = (items: string[]): string => (items.length > 0 ? items.join(', ') : 'None');
@@ -1043,6 +1067,12 @@ const downloadGraphImage = async (): Promise<void> => {
   font-size: 14px;
   color: #334155;
   margin-top: 4px;
+}
+
+.owner-row {
+  font-size: 14px;
+  margin-top: 6px;
+  color: #334155;
 }
 
 .family-top-actions {
