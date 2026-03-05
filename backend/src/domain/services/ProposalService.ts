@@ -29,7 +29,9 @@ export class ProposalService {
       ...(payload.occupation ? { occupation: payload.occupation } : {}),
       ...(payload.notes ? { notes: payload.notes } : {}),
       ...(payload.profilePictureUrl ? { profilePictureUrl: payload.profilePictureUrl } : {}),
-      ...(payload.profilePictureDataUrl ? { profilePictureDataUrl: payload.profilePictureDataUrl } : {}),
+      ...(payload.profilePictureDataUrl
+        ? { profilePictureDataUrl: payload.profilePictureDataUrl }
+        : {}),
     };
   }
 
@@ -55,7 +57,8 @@ export class ProposalService {
         dateOfBirth: personPayload.dateOfBirth ?? null,
         email: personPayload.email?.trim().toLowerCase() ?? null,
         phone: personPayload.phone?.replace(/[\s\-()]/g, '') ?? null,
-        profilePictureUrl: personPayload.profilePictureDataUrl ?? personPayload.profilePictureUrl ?? null,
+        profilePictureUrl:
+          personPayload.profilePictureDataUrl ?? personPayload.profilePictureUrl ?? null,
         metadataJson: JSON.stringify(this.buildPersonMetadata(personPayload)),
       });
       impacts.push(`Adds person ${resolvedName}`);
@@ -79,7 +82,9 @@ export class ProposalService {
         type: relPayload.type,
         metadataJson: JSON.stringify(relPayload.metadata ?? {}),
       });
-      impacts.push(`Adds relationship ${relPayload.type} between ${relPayload.fromPersonId} and ${relPayload.toPersonId}`);
+      impacts.push(
+        `Adds relationship ${relPayload.type} between ${relPayload.fromPersonId} and ${relPayload.toPersonId}`,
+      );
       return {
         simulated: { persons, relationships },
         diff: { addedPersons: 0, addedRelationships: 1, impacts },

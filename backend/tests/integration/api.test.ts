@@ -187,8 +187,14 @@ describe('REST API', () => {
       prisma.relationship.findMany({ where: { familyId: clonedFamilyId } }),
       prisma.proposal.findMany({ where: { familyId: sourceFamilyId } }),
       prisma.proposal.findMany({ where: { familyId: clonedFamilyId } }),
-      prisma.familyVersion.findMany({ where: { familyId: sourceFamilyId }, orderBy: { versionNumber: 'asc' } }),
-      prisma.familyVersion.findMany({ where: { familyId: clonedFamilyId }, orderBy: { versionNumber: 'asc' } }),
+      prisma.familyVersion.findMany({
+        where: { familyId: sourceFamilyId },
+        orderBy: { versionNumber: 'asc' },
+      }),
+      prisma.familyVersion.findMany({
+        where: { familyId: clonedFamilyId },
+        orderBy: { versionNumber: 'asc' },
+      }),
       prisma.familyMember.findMany({ where: { familyId: sourceFamilyId } }),
       prisma.familyMember.findMany({ where: { familyId: clonedFamilyId } }),
     ]);
@@ -200,15 +206,21 @@ describe('REST API', () => {
     expect(clonedMembers).toHaveLength(sourceMembers.length);
 
     sourcePersons.forEach((sourcePerson) => {
-      expect(clonedPersons.some((clonedPerson) => clonedPerson.email === sourcePerson.email)).toBe(true);
+      expect(clonedPersons.some((clonedPerson) => clonedPerson.email === sourcePerson.email)).toBe(
+        true,
+      );
       expect(clonedPersons.some((clonedPerson) => clonedPerson.id === sourcePerson.id)).toBe(false);
     });
 
-    const clonedLatestSnapshot = JSON.parse(clonedVersions[clonedVersions.length - 1]!.snapshotJson) as {
+    const clonedLatestSnapshot = JSON.parse(
+      clonedVersions[clonedVersions.length - 1]!.snapshotJson,
+    ) as {
       persons: Array<{ familyId: string; id: string }>;
       relationships: Array<{ familyId: string; fromPersonId: string; toPersonId: string }>;
     };
-    expect(clonedLatestSnapshot.persons.every((person) => person.familyId === clonedFamilyId)).toBe(true);
+    expect(clonedLatestSnapshot.persons.every((person) => person.familyId === clonedFamilyId)).toBe(
+      true,
+    );
     expect(
       clonedLatestSnapshot.relationships.every(
         (relationship) =>
@@ -244,17 +256,31 @@ describe('REST API', () => {
     });
 
     const ownerOneToken = (
-      await request(app).post('/auth/login').send({ identifier: ownerOne.username, password: 'owner123' }).expect(200)
+      await request(app)
+        .post('/auth/login')
+        .send({ identifier: ownerOne.username, password: 'owner123' })
+        .expect(200)
     ).body.token as string;
     const ownerTwoToken = (
-      await request(app).post('/auth/login').send({ identifier: ownerTwo.username, password: 'owner123' }).expect(200)
+      await request(app)
+        .post('/auth/login')
+        .send({ identifier: ownerTwo.username, password: 'owner123' })
+        .expect(200)
     ).body.token as string;
 
     const familyOneId = (
-      await request(app).post('/families').set('Authorization', `Bearer ${ownerOneToken}`).send({ name: 'Family One' }).expect(201)
+      await request(app)
+        .post('/families')
+        .set('Authorization', `Bearer ${ownerOneToken}`)
+        .send({ name: 'Family One' })
+        .expect(201)
     ).body.id as string;
     const familyTwoId = (
-      await request(app).post('/families').set('Authorization', `Bearer ${ownerTwoToken}`).send({ name: 'Family Two' }).expect(201)
+      await request(app)
+        .post('/families')
+        .set('Authorization', `Bearer ${ownerTwoToken}`)
+        .send({ name: 'Family Two' })
+        .expect(201)
     ).body.id as string;
 
     await request(app)
@@ -298,11 +324,18 @@ describe('REST API', () => {
     });
 
     const ownerToken = (
-      await request(app).post('/auth/login').send({ identifier: owner.username, password: 'owner123' }).expect(200)
+      await request(app)
+        .post('/auth/login')
+        .send({ identifier: owner.username, password: 'owner123' })
+        .expect(200)
     ).body.token as string;
 
     const sourceFamilyId = (
-      await request(app).post('/families').set('Authorization', `Bearer ${ownerToken}`).send({ name: 'Source Sync Family' }).expect(201)
+      await request(app)
+        .post('/families')
+        .set('Authorization', `Bearer ${ownerToken}`)
+        .send({ name: 'Source Sync Family' })
+        .expect(201)
     ).body.id as string;
 
     const sourcePersonId = (

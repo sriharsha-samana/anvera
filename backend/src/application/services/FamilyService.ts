@@ -28,7 +28,9 @@ export class FamilyService {
       ...(payload.occupation ? { occupation: payload.occupation } : {}),
       ...(payload.notes ? { notes: payload.notes } : {}),
       ...(payload.profilePictureUrl ? { profilePictureUrl: payload.profilePictureUrl } : {}),
-      ...(payload.profilePictureDataUrl ? { profilePictureDataUrl: payload.profilePictureDataUrl } : {}),
+      ...(payload.profilePictureDataUrl
+        ? { profilePictureDataUrl: payload.profilePictureDataUrl }
+        : {}),
     };
   }
 
@@ -81,8 +83,12 @@ export class FamilyService {
       const targetRelationshipId = sourceRelationshipId
         ? this.mapEntityId(relationshipIdMap, sourceRelationshipId, 'relationship')
         : sourceRelationshipId;
-      const targetFromId = sourceFromId ? this.mapEntityId(personIdMap, sourceFromId, 'person') : sourceFromId;
-      const targetToId = sourceToId ? this.mapEntityId(personIdMap, sourceToId, 'person') : sourceToId;
+      const targetFromId = sourceFromId
+        ? this.mapEntityId(personIdMap, sourceFromId, 'person')
+        : sourceFromId;
+      const targetToId = sourceToId
+        ? this.mapEntityId(personIdMap, sourceToId, 'person')
+        : sourceToId;
 
       return {
         ...relationship,
@@ -111,7 +117,12 @@ export class FamilyService {
     if (sourceType === VersionSourceType.ROLLBACK) {
       return versionIdMap.get(sourceId) ?? sourceId;
     }
-    return personIdMap.get(sourceId) ?? relationshipIdMap.get(sourceId) ?? proposalIdMap.get(sourceId) ?? sourceId;
+    return (
+      personIdMap.get(sourceId) ??
+      relationshipIdMap.get(sourceId) ??
+      proposalIdMap.get(sourceId) ??
+      sourceId
+    );
   }
 
   private async linkFamilyMembershipByPersonIdentity(
@@ -122,8 +133,12 @@ export class FamilyService {
   ): Promise<void> {
     if (!email && !phone) return;
     const [emailUser, phoneUser] = await Promise.all([
-      email ? tx.user.findUnique({ where: { email }, select: { id: true } }) : Promise.resolve(null),
-      phone ? tx.user.findUnique({ where: { phone }, select: { id: true } }) : Promise.resolve(null),
+      email
+        ? tx.user.findUnique({ where: { email }, select: { id: true } })
+        : Promise.resolve(null),
+      phone
+        ? tx.user.findUnique({ where: { phone }, select: { id: true } })
+        : Promise.resolve(null),
     ]);
     if (emailUser && phoneUser && emailUser.id !== phoneUser.id) {
       throw new ConflictError('Provided email and phone map to different existing users');
@@ -270,7 +285,11 @@ export class FamilyService {
     });
   }
 
-  public async cloneFamily(sourceFamilyId: string, actorId: string, requestedName?: string): Promise<unknown> {
+  public async cloneFamily(
+    sourceFamilyId: string,
+    actorId: string,
+    requestedName?: string,
+  ): Promise<unknown> {
     return prisma.$transaction(async (tx) => {
       const sourceFamily = await tx.family.findUnique({ where: { id: sourceFamilyId } });
       if (!sourceFamily) throw new NotFoundError('Family not found');
@@ -284,12 +303,27 @@ export class FamilyService {
       const cloneName = (requestedName?.trim() || `${sourceFamily.name} (Copy)`).slice(0, 120);
 
       const [members, persons, relationships, proposals, versions, audits] = await Promise.all([
-        tx.familyMember.findMany({ where: { familyId: sourceFamilyId }, orderBy: { joinedAt: 'asc' } }),
+        tx.familyMember.findMany({
+          where: { familyId: sourceFamilyId },
+          orderBy: { joinedAt: 'asc' },
+        }),
         tx.person.findMany({ where: { familyId: sourceFamilyId }, orderBy: { createdAt: 'asc' } }),
-        tx.relationship.findMany({ where: { familyId: sourceFamilyId }, orderBy: { createdAt: 'asc' } }),
-        tx.proposal.findMany({ where: { familyId: sourceFamilyId }, orderBy: { createdAt: 'asc' } }),
-        tx.familyVersion.findMany({ where: { familyId: sourceFamilyId }, orderBy: { versionNumber: 'asc' } }),
-        tx.auditLog.findMany({ where: { familyId: sourceFamilyId }, orderBy: { createdAt: 'asc' } }),
+        tx.relationship.findMany({
+          where: { familyId: sourceFamilyId },
+          orderBy: { createdAt: 'asc' },
+        }),
+        tx.proposal.findMany({
+          where: { familyId: sourceFamilyId },
+          orderBy: { createdAt: 'asc' },
+        }),
+        tx.familyVersion.findMany({
+          where: { familyId: sourceFamilyId },
+          orderBy: { versionNumber: 'asc' },
+        }),
+        tx.auditLog.findMany({
+          where: { familyId: sourceFamilyId },
+          orderBy: { createdAt: 'asc' },
+        }),
       ]);
 
       const personIdMap = new Map<string, string>();
@@ -431,7 +465,11 @@ export class FamilyService {
     return prisma.relationship.findMany({ where: { familyId }, orderBy: { createdAt: 'asc' } });
   }
 
-  public async addPerson(familyId: string, actorId: string, payload: AddPersonPayload): Promise<unknown> {
+  public async addPerson(
+    familyId: string,
+    actorId: string,
+    payload: AddPersonPayload,
+  ): Promise<unknown> {
     return prisma.$transaction(async (tx) => {
       const family = await tx.family.findUnique({ where: { id: familyId } });
       if (!family) throw new NotFoundError('Family not found');
@@ -442,7 +480,8 @@ export class FamilyService {
       const email = this.normalizeEmail(payload.email);
       const phone = this.normalizePhone(payload.phone);
       await this.assertUniquePersonIdentity(tx, familyId, email, phone);
-      const resolvedProfilePicture = payload.profilePictureDataUrl ?? payload.profilePictureUrl ?? null;
+      const resolvedProfilePicture =
+        payload.profilePictureDataUrl ?? payload.profilePictureUrl ?? null;
       const identityResolution = await this.identityConsistency.resolveIdentity(tx, {
         mode: 'create',
         familyId,
@@ -481,9 +520,21 @@ export class FamilyService {
           metadataJson: this.identityConsistency.buildMetadata(metadataSeed, identity),
         },
       });
-      await this.linkFamilyMembershipByPersonIdentity(tx, familyId, identity.email ?? undefined, identity.phone ?? undefined);
+      await this.linkFamilyMembershipByPersonIdentity(
+        tx,
+        familyId,
+        identity.email ?? undefined,
+        identity.phone ?? undefined,
+      );
 
-      await this.createVersion(tx, familyId, actorId, VersionSourceType.MANUAL_EDIT, person.id, `Owner added person ${person.name}`);
+      await this.createVersion(
+        tx,
+        familyId,
+        actorId,
+        VersionSourceType.MANUAL_EDIT,
+        person.id,
+        `Owner added person ${person.name}`,
+      );
       return person;
     });
   }
@@ -504,7 +555,12 @@ export class FamilyService {
         tx.person.findMany({ where: { familyId }, orderBy: { id: 'asc' } }),
         tx.relationship.findMany({ where: { familyId }, orderBy: { id: 'asc' } }),
       ]);
-      if (!fromPerson || !toPerson || fromPerson.familyId !== familyId || toPerson.familyId !== familyId) {
+      if (
+        !fromPerson ||
+        !toPerson ||
+        fromPerson.familyId !== familyId ||
+        toPerson.familyId !== familyId
+      ) {
         throw new NotFoundError('Relationship persons not found in family');
       }
       this.relationshipIntegrity.validateOrThrow(persons, relationships, {
@@ -560,7 +616,8 @@ export class FamilyService {
       const email = this.normalizeEmail(payload.email);
       const phone = this.normalizePhone(payload.phone);
       await this.assertUniquePersonIdentity(tx, familyId, email, phone, personId);
-      const resolvedProfilePicture = payload.profilePictureDataUrl ?? payload.profilePictureUrl ?? null;
+      const resolvedProfilePicture =
+        payload.profilePictureDataUrl ?? payload.profilePictureUrl ?? null;
       const identityResolution = await this.identityConsistency.resolveIdentity(tx, {
         mode: 'update',
         familyId,
@@ -599,7 +656,12 @@ export class FamilyService {
           metadataJson: this.identityConsistency.buildMetadata(metadataSeed, identity),
         },
       });
-      await this.linkFamilyMembershipByPersonIdentity(tx, familyId, identity.email ?? undefined, identity.phone ?? undefined);
+      await this.linkFamilyMembershipByPersonIdentity(
+        tx,
+        familyId,
+        identity.email ?? undefined,
+        identity.phone ?? undefined,
+      );
 
       await this.createVersion(
         tx,
@@ -666,7 +728,12 @@ export class FamilyService {
         tx.person.findMany({ where: { familyId }, orderBy: { id: 'asc' } }),
         tx.relationship.findMany({ where: { familyId }, orderBy: { id: 'asc' } }),
       ]);
-      if (!fromPerson || !toPerson || fromPerson.familyId !== familyId || toPerson.familyId !== familyId) {
+      if (
+        !fromPerson ||
+        !toPerson ||
+        fromPerson.familyId !== familyId ||
+        toPerson.familyId !== familyId
+      ) {
         throw new NotFoundError('Relationship persons not found in family');
       }
       this.relationshipIntegrity.validateOrThrow(
@@ -705,7 +772,11 @@ export class FamilyService {
     });
   }
 
-  public async deleteRelationship(familyId: string, relationshipId: string, actorId: string): Promise<void> {
+  public async deleteRelationship(
+    familyId: string,
+    relationshipId: string,
+    actorId: string,
+  ): Promise<void> {
     await prisma.$transaction(async (tx) => {
       const family = await tx.family.findUnique({ where: { id: familyId } });
       if (!family) throw new NotFoundError('Family not found');
@@ -737,8 +808,13 @@ export class FamilyService {
     sourceId: string,
     message: string,
   ): Promise<void> {
-    const versions = await tx.familyVersion.findMany({ where: { familyId }, select: { versionNumber: true } });
-    const nextVersion = this.versioningService.nextVersionNumber(versions.map((v) => v.versionNumber));
+    const versions = await tx.familyVersion.findMany({
+      where: { familyId },
+      select: { versionNumber: true },
+    });
+    const nextVersion = this.versioningService.nextVersionNumber(
+      versions.map((v) => v.versionNumber),
+    );
     const snapshot = await this.snapshotService.getCurrentSnapshot(tx, familyId);
 
     await tx.familyVersion.create({
@@ -763,7 +839,10 @@ export class FamilyService {
     });
   }
 
-  public async ensureFamilyMembership(familyId: string, userId: string): Promise<{ ownerId: string; role: UserRole }> {
+  public async ensureFamilyMembership(
+    familyId: string,
+    userId: string,
+  ): Promise<{ ownerId: string; role: UserRole }> {
     const family = await prisma.family.findUnique({ where: { id: familyId } });
     if (!family) throw new NotFoundError('Family not found');
 

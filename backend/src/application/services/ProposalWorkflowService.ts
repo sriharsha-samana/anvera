@@ -79,7 +79,9 @@ export class ProposalWorkflowService {
       ...(payload.occupation ? { occupation: payload.occupation } : {}),
       ...(payload.notes ? { notes: payload.notes } : {}),
       ...(payload.profilePictureUrl ? { profilePictureUrl: payload.profilePictureUrl } : {}),
-      ...(payload.profilePictureDataUrl ? { profilePictureDataUrl: payload.profilePictureDataUrl } : {}),
+      ...(payload.profilePictureDataUrl
+        ? { profilePictureDataUrl: payload.profilePictureDataUrl }
+        : {}),
     };
   }
 
@@ -104,7 +106,11 @@ export class ProposalWorkflowService {
     }
   }
 
-  private relationshipKey(fromPersonId: string, toPersonId: string, type: RelationshipType): string {
+  private relationshipKey(
+    fromPersonId: string,
+    toPersonId: string,
+    type: RelationshipType,
+  ): string {
     return `${fromPersonId}|${toPersonId}|${type}`;
   }
 
@@ -191,15 +197,21 @@ export class ProposalWorkflowService {
     const sourceFamily = await this.ensureSourceFamilyMembership(tx, sourceFamilyId, requestorId);
     const includeRelationships = payload.includeRelationships !== false;
 
-    const [sourcePersons, sourceRelationships, targetPersons, targetRelationships] = await Promise.all([
-      tx.person.findMany({ where: { familyId: sourceFamilyId }, orderBy: { id: 'asc' } }),
-      tx.relationship.findMany({ where: { familyId: sourceFamilyId }, orderBy: { id: 'asc' } }),
-      tx.person.findMany({ where: { familyId: targetFamilyId }, orderBy: { id: 'asc' } }),
-      tx.relationship.findMany({ where: { familyId: targetFamilyId }, orderBy: { id: 'asc' } }),
-    ]);
+    const [sourcePersons, sourceRelationships, targetPersons, targetRelationships] =
+      await Promise.all([
+        tx.person.findMany({ where: { familyId: sourceFamilyId }, orderBy: { id: 'asc' } }),
+        tx.relationship.findMany({ where: { familyId: sourceFamilyId }, orderBy: { id: 'asc' } }),
+        tx.person.findMany({ where: { familyId: targetFamilyId }, orderBy: { id: 'asc' } }),
+        tx.relationship.findMany({ where: { familyId: targetFamilyId }, orderBy: { id: 'asc' } }),
+      ]);
 
-    const selectedSourcePersonIds = this.uniquePersonSelection(sourcePersons, payload.selectedPersonIds);
-    const selectedSourcePersons = sourcePersons.filter((person) => selectedSourcePersonIds.has(person.id));
+    const selectedSourcePersonIds = this.uniquePersonSelection(
+      sourcePersons,
+      payload.selectedPersonIds,
+    );
+    const selectedSourcePersons = sourcePersons.filter((person) =>
+      selectedSourcePersonIds.has(person.id),
+    );
 
     const emailToTarget = new Map<string, Person>();
     const phoneToTarget = new Map<string, Person>();
@@ -217,8 +229,8 @@ export class ProposalWorkflowService {
     for (const sourcePerson of selectedSourcePersons) {
       const email = this.normalizeEmail(sourcePerson.email ?? undefined);
       const phone = this.normalizePhone(sourcePerson.phone ?? undefined);
-      const byEmail = email ? emailToTarget.get(email) ?? null : null;
-      const byPhone = phone ? phoneToTarget.get(phone) ?? null : null;
+      const byEmail = email ? (emailToTarget.get(email) ?? null) : null;
+      const byPhone = phone ? (phoneToTarget.get(phone) ?? null) : null;
 
       if (byEmail && byPhone && byEmail.id !== byPhone.id) {
         conflicts.push(
@@ -261,7 +273,9 @@ export class ProposalWorkflowService {
 
     const relationshipPlans: ImportRelationshipPlan[] = [];
     const proposedRelationshipKeys = new Set<string>();
-    const simulatedRelationships = targetRelationships.map((relationship) => this.toRelationshipEdge(relationship));
+    const simulatedRelationships = targetRelationships.map((relationship) =>
+      this.toRelationshipEdge(relationship),
+    );
 
     for (const relationship of sourceRelationshipCandidates) {
       const fromTargetId = sourceToSimulatedTargetId.get(relationship.fromPersonId);
@@ -341,8 +355,12 @@ export class ProposalWorkflowService {
   ): Promise<void> {
     if (!email && !phone) return;
     const [emailUser, phoneUser] = await Promise.all([
-      email ? tx.user.findUnique({ where: { email }, select: { id: true } }) : Promise.resolve(null),
-      phone ? tx.user.findUnique({ where: { phone }, select: { id: true } }) : Promise.resolve(null),
+      email
+        ? tx.user.findUnique({ where: { email }, select: { id: true } })
+        : Promise.resolve(null),
+      phone
+        ? tx.user.findUnique({ where: { phone }, select: { id: true } })
+        : Promise.resolve(null),
     ]);
     if (emailUser && phoneUser && emailUser.id !== phoneUser.id) {
       throw new ConflictError('Provided email and phone map to different existing users');
@@ -377,8 +395,10 @@ export class ProposalWorkflowService {
       select: { id: true, email: true, phone: true },
     });
     if (!duplicate) return;
-    if (email && duplicate.email === email) throw new ConflictError('Email already exists for another person in this family');
-    if (phone && duplicate.phone === phone) throw new ConflictError('Phone already exists for another person in this family');
+    if (email && duplicate.email === email)
+      throw new ConflictError('Email already exists for another person in this family');
+    if (phone && duplicate.phone === phone)
+      throw new ConflictError('Phone already exists for another person in this family');
   }
 
   private metadataStringValue(metadata: Record<string, unknown>, key: string): string | undefined {
@@ -404,7 +424,8 @@ export class ProposalWorkflowService {
       placeOfBirth: this.metadataStringValue(existingMetadata, 'placeOfBirth'),
       occupation: this.metadataStringValue(existingMetadata, 'occupation'),
       notes: this.metadataStringValue(existingMetadata, 'notes'),
-      profilePictureUrl: person.profilePictureUrl ?? this.metadataStringValue(existingMetadata, 'profilePictureUrl'),
+      profilePictureUrl:
+        person.profilePictureUrl ?? this.metadataStringValue(existingMetadata, 'profilePictureUrl'),
       metadata: existingMetadata,
     };
 
@@ -419,8 +440,12 @@ export class ProposalWorkflowService {
       ...(payload.placeOfBirth !== undefined ? { placeOfBirth: payload.placeOfBirth } : {}),
       ...(payload.occupation !== undefined ? { occupation: payload.occupation } : {}),
       ...(payload.notes !== undefined ? { notes: payload.notes } : {}),
-      ...(payload.profilePictureUrl !== undefined ? { profilePictureUrl: payload.profilePictureUrl } : {}),
-      ...(payload.profilePictureDataUrl !== undefined ? { profilePictureDataUrl: payload.profilePictureDataUrl } : {}),
+      ...(payload.profilePictureUrl !== undefined
+        ? { profilePictureUrl: payload.profilePictureUrl }
+        : {}),
+      ...(payload.profilePictureDataUrl !== undefined
+        ? { profilePictureDataUrl: payload.profilePictureDataUrl }
+        : {}),
       ...(payload.metadata ? { metadata: { ...existingMetadata, ...payload.metadata } } : {}),
     };
 
@@ -455,7 +480,8 @@ export class ProposalWorkflowService {
       placeOfBirth: mergedPayload.placeOfBirth ?? '',
       occupation: mergedPayload.occupation ?? '',
       notes: mergedPayload.notes ?? '',
-      profilePictureUrl: (mergedPayload.profilePictureDataUrl ?? mergedPayload.profilePictureUrl ?? ''),
+      profilePictureUrl:
+        mergedPayload.profilePictureDataUrl ?? mergedPayload.profilePictureUrl ?? '',
     };
 
     const changedFields = Object.keys(mergedComparable).filter((field) => {
@@ -494,10 +520,7 @@ export class ProposalWorkflowService {
         const duplicate = await tx.person.findFirst({
           where: {
             familyId,
-            OR: [
-              ...(email ? [{ email }] : []),
-              ...(phone ? [{ phone }] : []),
-            ],
+            OR: [...(email ? [{ email }] : []), ...(phone ? [{ phone }] : [])],
           },
           select: { id: true, email: true, phone: true },
         });
@@ -521,7 +544,8 @@ export class ProposalWorkflowService {
           placeOfBirth: personPayload.placeOfBirth ?? null,
           occupation: personPayload.occupation ?? null,
           notes: personPayload.notes ?? null,
-          profilePictureUrl: personPayload.profilePictureDataUrl ?? personPayload.profilePictureUrl ?? null,
+          profilePictureUrl:
+            personPayload.profilePictureDataUrl ?? personPayload.profilePictureUrl ?? null,
         });
       }
       if (type === ProposalType.ADD_RELATIONSHIP) {
@@ -539,14 +563,18 @@ export class ProposalWorkflowService {
         const normalizedPayload: ImportFromFamilyPayload = {
           sourceFamilyId: importPayload.sourceFamilyId,
           includeRelationships: importPayload.includeRelationships !== false,
-          selectedPersonIds: importPayload.selectedPersonIds?.filter((value) => value.trim().length > 0),
+          selectedPersonIds: importPayload.selectedPersonIds?.filter(
+            (value) => value.trim().length > 0,
+          ),
         };
         const plan = await this.buildImportPlan(tx, familyId, createdById, normalizedPayload);
         if (plan.conflicts.length > 0) {
           throw new ConflictError(plan.conflicts.join('; '));
         }
         const addedPersons = plan.personPlans.filter((entry) => !entry.targetPersonId).length;
-        const addedRelationships = plan.relationshipPlans.filter((entry) => !entry.existsAlready).length;
+        const addedRelationships = plan.relationshipPlans.filter(
+          (entry) => !entry.existsAlready,
+        ).length;
         const impacts = [
           `Import source family: ${plan.sourceFamilyName}`,
           `Selected members: ${plan.selectedSourcePersonIds.size}`,
@@ -574,7 +602,9 @@ export class ProposalWorkflowService {
                     sourcePersonId: entry.sourcePerson.id,
                     sourceName: entry.sourcePerson.name,
                     targetPersonId: entry.targetPersonId!,
-                    targetName: current.persons.find((person) => person.id === entry.targetPersonId)?.name ?? entry.targetPersonId,
+                    targetName:
+                      current.persons.find((person) => person.id === entry.targetPersonId)?.name ??
+                      entry.targetPersonId,
                     reason: entry.matchReason,
                   })),
                 newMembers: plan.personPlans
@@ -675,9 +705,13 @@ export class ProposalWorkflowService {
           throw new NotFoundError('Person not found in family');
         }
         const deletedRelationshipCount = current.relationships.filter(
-          (relationship) => relationship.fromPersonId === payload.personId || relationship.toPersonId === payload.personId,
+          (relationship) =>
+            relationship.fromPersonId === payload.personId ||
+            relationship.toPersonId === payload.personId,
         ).length;
-        const impacts = [`Deletes member ${person.name} and ${deletedRelationshipCount} connected relationships`];
+        const impacts = [
+          `Deletes member ${person.name} and ${deletedRelationshipCount} connected relationships`,
+        ];
         return tx.proposal.create({
           data: {
             familyId,
@@ -690,7 +724,8 @@ export class ProposalWorkflowService {
                 persons: current.persons.filter((entry) => entry.id !== payload.personId),
                 relationships: current.relationships.filter(
                   (relationship) =>
-                    relationship.fromPersonId !== payload.personId && relationship.toPersonId !== payload.personId,
+                    relationship.fromPersonId !== payload.personId &&
+                    relationship.toPersonId !== payload.personId,
                 ),
                 proposedPersonIds: [payload.personId],
                 proposedRelationshipKeys: [],
@@ -702,7 +737,9 @@ export class ProposalWorkflowService {
       }
       if (type === ProposalType.EDIT_RELATIONSHIP) {
         const payload = data as EditRelationshipPayload;
-        const relationship = await tx.relationship.findUnique({ where: { id: payload.relationshipId } });
+        const relationship = await tx.relationship.findUnique({
+          where: { id: payload.relationshipId },
+        });
         if (!relationship || relationship.familyId !== familyId) {
           throw new NotFoundError('Relationship not found in family');
         }
@@ -743,7 +780,11 @@ export class ProposalWorkflowService {
                 relationships: simulatedRelationships,
                 proposedPersonIds: [relationship.fromPersonId, relationship.toPersonId],
                 proposedRelationshipKeys: [
-                  this.relationshipKey(relationship.fromPersonId, relationship.toPersonId, payload.type),
+                  this.relationshipKey(
+                    relationship.fromPersonId,
+                    relationship.toPersonId,
+                    payload.type,
+                  ),
                 ],
               },
             }),
@@ -753,7 +794,9 @@ export class ProposalWorkflowService {
       }
       if (type === ProposalType.DELETE_RELATIONSHIP) {
         const payload = data as DeleteRelationshipPayload;
-        const relationship = await tx.relationship.findUnique({ where: { id: payload.relationshipId } });
+        const relationship = await tx.relationship.findUnique({
+          where: { id: payload.relationshipId },
+        });
         if (!relationship || relationship.familyId !== familyId) {
           throw new NotFoundError('Relationship not found in family');
         }
@@ -768,10 +811,16 @@ export class ProposalWorkflowService {
               impact: null,
               simulated: {
                 persons: current.persons,
-                relationships: current.relationships.filter((entry) => entry.id !== payload.relationshipId),
+                relationships: current.relationships.filter(
+                  (entry) => entry.id !== payload.relationshipId,
+                ),
                 proposedPersonIds: [relationship.fromPersonId, relationship.toPersonId],
                 proposedRelationshipKeys: [
-                  this.relationshipKey(relationship.fromPersonId, relationship.toPersonId, relationship.type),
+                  this.relationshipKey(
+                    relationship.fromPersonId,
+                    relationship.toPersonId,
+                    relationship.type,
+                  ),
                 ],
               },
             }),
@@ -844,10 +893,7 @@ export class ProposalWorkflowService {
         const duplicate = await tx.person.findFirst({
           where: {
             familyId: proposal.familyId,
-            OR: [
-              ...(email ? [{ email }] : []),
-              ...(phone ? [{ phone }] : []),
-            ],
+            OR: [...(email ? [{ email }] : []), ...(phone ? [{ phone }] : [])],
           },
           select: { id: true, email: true, phone: true },
         });
@@ -871,7 +917,8 @@ export class ProposalWorkflowService {
           placeOfBirth: personPayload.placeOfBirth ?? null,
           occupation: personPayload.occupation ?? null,
           notes: personPayload.notes ?? null,
-          profilePictureUrl: personPayload.profilePictureDataUrl ?? personPayload.profilePictureUrl ?? null,
+          profilePictureUrl:
+            personPayload.profilePictureDataUrl ?? personPayload.profilePictureUrl ?? null,
         });
         const identity = identityResolution.details;
         const identityId = await this.identityConsistency.syncIdentityEverywhere(
@@ -908,7 +955,10 @@ export class ProposalWorkflowService {
         const relationshipPayload = payload as AddRelationshipPayload;
         const [persons, relationships] = await Promise.all([
           tx.person.findMany({ where: { familyId: proposal.familyId }, orderBy: { id: 'asc' } }),
-          tx.relationship.findMany({ where: { familyId: proposal.familyId }, orderBy: { id: 'asc' } }),
+          tx.relationship.findMany({
+            where: { familyId: proposal.familyId },
+            orderBy: { id: 'asc' },
+          }),
         ]);
         this.relationshipIntegrity.validateOrThrow(persons, relationships, {
           id: '__approved_proposal__',
@@ -949,10 +999,7 @@ export class ProposalWorkflowService {
           const duplicate = await tx.person.findFirst({
             where: {
               familyId: proposal.familyId,
-              OR: [
-                ...(email ? [{ email }] : []),
-                ...(phone ? [{ phone }] : []),
-              ],
+              OR: [...(email ? [{ email }] : []), ...(phone ? [{ phone }] : [])],
             },
             select: { id: true, email: true, phone: true },
           });
@@ -1021,11 +1068,18 @@ export class ProposalWorkflowService {
 
         const [persons, relationships] = await Promise.all([
           tx.person.findMany({ where: { familyId: proposal.familyId }, orderBy: { id: 'asc' } }),
-          tx.relationship.findMany({ where: { familyId: proposal.familyId }, orderBy: { id: 'asc' } }),
+          tx.relationship.findMany({
+            where: { familyId: proposal.familyId },
+            orderBy: { id: 'asc' },
+          }),
         ]);
         const relSet = new Set(
           relationships.map((relationship) =>
-            this.relationshipKey(relationship.fromPersonId, relationship.toPersonId, relationship.type),
+            this.relationshipKey(
+              relationship.fromPersonId,
+              relationship.toPersonId,
+              relationship.type,
+            ),
           ),
         );
 
@@ -1035,7 +1089,11 @@ export class ProposalWorkflowService {
           const toTargetId = sourceToTarget.get(relationshipPlan.sourceRelationship.toPersonId);
           if (!fromTargetId || !toTargetId) continue;
 
-          const key = this.relationshipKey(fromTargetId, toTargetId, relationshipPlan.sourceRelationship.type);
+          const key = this.relationshipKey(
+            fromTargetId,
+            toTargetId,
+            relationshipPlan.sourceRelationship.type,
+          );
           if (relSet.has(key)) continue;
 
           this.relationshipIntegrity.validateOrThrow(persons, relationships, {
@@ -1075,7 +1133,13 @@ export class ProposalWorkflowService {
         }
         const email = this.normalizeEmail(resolved.mergedPayload.email);
         const phone = this.normalizePhone(resolved.mergedPayload.phone);
-        await this.assertUniquePersonIdentity(tx, proposal.familyId, email, phone, personPayload.personId);
+        await this.assertUniquePersonIdentity(
+          tx,
+          proposal.familyId,
+          email,
+          phone,
+          personPayload.personId,
+        );
 
         const identityResolution = await this.identityConsistency.resolveIdentity(tx, {
           mode: 'update',
@@ -1090,7 +1154,9 @@ export class ProposalWorkflowService {
           occupation: resolved.mergedPayload.occupation ?? null,
           notes: resolved.mergedPayload.notes ?? null,
           profilePictureUrl:
-            resolved.mergedPayload.profilePictureDataUrl ?? resolved.mergedPayload.profilePictureUrl ?? null,
+            resolved.mergedPayload.profilePictureDataUrl ??
+            resolved.mergedPayload.profilePictureUrl ??
+            null,
         });
         const identity = identityResolution.details;
         const identityId = await this.identityConsistency.syncIdentityEverywhere(
@@ -1140,13 +1206,18 @@ export class ProposalWorkflowService {
 
       if (proposal.type === ProposalType.EDIT_RELATIONSHIP) {
         const relationshipPayload = payload as EditRelationshipPayload;
-        const relationship = await tx.relationship.findUnique({ where: { id: relationshipPayload.relationshipId } });
+        const relationship = await tx.relationship.findUnique({
+          where: { id: relationshipPayload.relationshipId },
+        });
         if (!relationship || relationship.familyId !== proposal.familyId) {
           throw new NotFoundError('Relationship not found in family');
         }
         const [persons, relationships] = await Promise.all([
           tx.person.findMany({ where: { familyId: proposal.familyId }, orderBy: { id: 'asc' } }),
-          tx.relationship.findMany({ where: { familyId: proposal.familyId }, orderBy: { id: 'asc' } }),
+          tx.relationship.findMany({
+            where: { familyId: proposal.familyId },
+            orderBy: { id: 'asc' },
+          }),
         ]);
         this.relationshipIntegrity.validateOrThrow(
           persons,
@@ -1171,7 +1242,9 @@ export class ProposalWorkflowService {
 
       if (proposal.type === ProposalType.DELETE_RELATIONSHIP) {
         const deletePayload = payload as DeleteRelationshipPayload;
-        const relationship = await tx.relationship.findUnique({ where: { id: deletePayload.relationshipId } });
+        const relationship = await tx.relationship.findUnique({
+          where: { id: deletePayload.relationshipId },
+        });
         if (!relationship || relationship.familyId !== proposal.familyId) {
           throw new NotFoundError('Relationship not found in family');
         }
@@ -1211,7 +1284,11 @@ export class ProposalWorkflowService {
     });
   }
 
-  public async rejectProposal(proposalId: string, reviewerId: string, reason: string): Promise<Proposal> {
+  public async rejectProposal(
+    proposalId: string,
+    reviewerId: string,
+    reason: string,
+  ): Promise<Proposal> {
     return prisma.$transaction(async (tx) => {
       const proposal = await tx.proposal.findUnique({ where: { id: proposalId } });
       if (!proposal) throw new NotFoundError('Proposal not found');
@@ -1253,7 +1330,10 @@ export class ProposalWorkflowService {
     sourceId: string,
     message: string,
   ): Promise<number> {
-    const versions = await tx.familyVersion.findMany({ where: { familyId }, select: { versionNumber: true } });
+    const versions = await tx.familyVersion.findMany({
+      where: { familyId },
+      select: { versionNumber: true },
+    });
     const nextVersion = this.versioning.nextVersionNumber(versions.map((v) => v.versionNumber));
     const snapshot = await this.snapshots.getCurrentSnapshot(tx, familyId);
 

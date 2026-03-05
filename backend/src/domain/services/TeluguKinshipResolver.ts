@@ -31,7 +31,10 @@ type KinshipMapEntry = {
   };
 };
 
-const kinshipMap: Record<string, KinshipMapEntry> = kinshipMapData as Record<string, KinshipMapEntry>;
+const kinshipMap: Record<string, KinshipMapEntry> = kinshipMapData as Record<
+  string,
+  KinshipMapEntry
+>;
 
 const confidenceRank: Record<'high' | 'medium' | 'low', number> = {
   high: 3,
@@ -102,9 +105,7 @@ const pickOrderForCode = (
   personBId: string,
   debug: Record<string, unknown> | undefined,
 ): AgeOrder => {
-  const hops = Array.isArray(debug?.hops)
-    ? (debug?.hops as Array<{ toId: string }>)
-    : [];
+  const hops = Array.isArray(debug?.hops) ? (debug?.hops as Array<{ toId: string }>) : [];
 
   if (code === 'FB' && hops.length >= 2) {
     const father = personById(persons, hops[0].toId);
@@ -161,9 +162,19 @@ export class TeluguKinshipResolver {
 
     const mapEntry = kinshipMap[code] ?? null;
     if (mapEntry) {
-      const order = pickOrderForCode(code, input.persons, input.personAId, input.personBId, build.debug);
+      const order = pickOrderForCode(
+        code,
+        input.persons,
+        input.personAId,
+        input.personBId,
+        build.debug,
+      );
       const te = selectTeValue(mapEntry.te, order);
-      const addressTe = mapEntry.address?.ageAware ? mapEntry.address.ageAware[defaultAgeOrder(input.persons, input.personAId, input.personBId)] ?? mapEntry.address.ageAware.unknown : undefined;
+      const addressTe = mapEntry.address?.ageAware
+        ? (mapEntry.address.ageAware[
+            defaultAgeOrder(input.persons, input.personAId, input.personBId)
+          ] ?? mapEntry.address.ageAware.unknown)
+        : undefined;
 
       const cousinDegree = input.classification.degree;
       const cousinRemoval = input.classification.removal;

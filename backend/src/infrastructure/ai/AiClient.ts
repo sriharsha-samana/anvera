@@ -20,4 +20,3 @@ export interface AiClient {
   explainRelationship(input: ExplainInput): Promise<string>;
   answerRelationshipQuestion(input: QuestionInput): Promise<string>;
 }
-

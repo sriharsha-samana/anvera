@@ -16,7 +16,7 @@ const proposalService = new ProposalWorkflowService();
 const familyService = new FamilyService();
 
 const paramAsString = (value: string | string[] | undefined): string =>
-  Array.isArray(value) ? value[0] ?? '' : (value ?? '');
+  Array.isArray(value) ? (value[0] ?? '') : (value ?? '');
 
 type ProposalRequestBody = {
   type: ProposalType;
@@ -30,7 +30,11 @@ type ProposalRequestBody = {
     | DeleteRelationshipPayload;
 };
 
-export const submitProposal = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+export const submitProposal = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+): Promise<void> => {
   try {
     const familyId = paramAsString(req.params.id);
     const { role } = await familyService.ensureFamilyMembership(familyId, req.auth!.userId);
@@ -48,7 +52,11 @@ export const submitProposal = async (req: Request, res: Response, next: NextFunc
   }
 };
 
-export const listProposals = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+export const listProposals = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+): Promise<void> => {
   try {
     const familyId = paramAsString(req.params.id);
     await familyService.ensureFamilyMembership(familyId, req.auth!.userId);
@@ -59,16 +67,27 @@ export const listProposals = async (req: Request, res: Response, next: NextFunct
   }
 };
 
-export const approveProposal = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+export const approveProposal = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+): Promise<void> => {
   try {
-    const proposal = await proposalService.approveProposal(paramAsString(req.params.id), req.auth!.userId);
+    const proposal = await proposalService.approveProposal(
+      paramAsString(req.params.id),
+      req.auth!.userId,
+    );
     res.json(proposal);
   } catch (error) {
     next(error);
   }
 };
 
-export const rejectProposal = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+export const rejectProposal = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+): Promise<void> => {
   try {
     const proposal = await proposalService.rejectProposal(
       paramAsString(req.params.id),

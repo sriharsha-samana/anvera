@@ -44,7 +44,14 @@ export class RelationshipIntegrityService {
   ): void {
     const existingTypes = new Set<RelationshipType>();
     for (const rel of relationships) {
-      if (!this.isSameUnorderedPair(rel.fromPersonId, rel.toPersonId, candidate.fromPersonId, candidate.toPersonId)) {
+      if (
+        !this.isSameUnorderedPair(
+          rel.fromPersonId,
+          rel.toPersonId,
+          candidate.fromPersonId,
+          candidate.toPersonId,
+        )
+      ) {
         continue;
       }
       existingTypes.add(rel.type);
@@ -68,7 +75,12 @@ export class RelationshipIntegrityService {
       const duplicate = relationships.some(
         (r) =>
           r.type === candidate.type &&
-          this.isSameUnorderedPair(r.fromPersonId, r.toPersonId, candidate.fromPersonId, candidate.toPersonId),
+          this.isSameUnorderedPair(
+            r.fromPersonId,
+            r.toPersonId,
+            candidate.fromPersonId,
+            candidate.toPersonId,
+          ),
       );
       if (duplicate) {
         throw new AppError(`Duplicate ${candidate.type} relationship`, 400);
@@ -128,7 +140,11 @@ export class RelationshipIntegrityService {
     }
   }
 
-  private hasDescendantPath(relationships: RelationshipEdge[], startId: string, targetId: string): boolean {
+  private hasDescendantPath(
+    relationships: RelationshipEdge[],
+    startId: string,
+    targetId: string,
+  ): boolean {
     if (startId === targetId) return true;
     const childrenByParent = new Map<string, string[]>();
     for (const rel of relationships) {

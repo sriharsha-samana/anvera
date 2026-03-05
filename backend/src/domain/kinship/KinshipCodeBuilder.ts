@@ -35,44 +35,61 @@ const genderOf = (person?: PersonNode): NormalizedGender => {
   return 'unknown';
 };
 
-const findPerson = (persons: PersonNode[], personId: string): PersonNode | undefined => persons.find((p) => p.id === personId);
+const findPerson = (persons: PersonNode[], personId: string): PersonNode | undefined =>
+  persons.find((p) => p.id === personId);
 
-const relationFromTo = (relationships: RelationshipEdge[], fromId: string, toId: string): HopType => {
+const relationFromTo = (
+  relationships: RelationshipEdge[],
+  fromId: string,
+  toId: string,
+): HopType => {
   const direct = relationships.find((r) => r.fromPersonId === fromId && r.toPersonId === toId);
   const reverse = relationships.find((r) => r.fromPersonId === toId && r.toPersonId === fromId);
 
   if (direct?.type === 'PARENT') return 'CHILD_DOWN';
   if (reverse?.type === 'PARENT') return 'PARENT_UP';
 
-  const hasType = (type: RelationshipType): boolean => direct?.type === type || reverse?.type === type;
+  const hasType = (type: RelationshipType): boolean =>
+    direct?.type === type || reverse?.type === type;
   if (hasType('SIBLING')) return 'SIBLING';
   if (hasType('SPOUSE')) return 'SPOUSE';
   if (hasType('INLAW')) return 'INLAW';
   return 'UNKNOWN';
 };
 
-const codeFromHop = (hopType: HopType, toGender: NormalizedGender): Pick<HopInfo, 'codeLetter' | 'confidenceHint' | 'descriptiveTePart'> => {
+const codeFromHop = (
+  hopType: HopType,
+  toGender: NormalizedGender,
+): Pick<HopInfo, 'codeLetter' | 'confidenceHint' | 'descriptiveTePart'> => {
   if (hopType === 'PARENT_UP') {
-    if (toGender === 'male') return { codeLetter: 'F', confidenceHint: 'high', descriptiveTePart: 'తండ్రి' };
-    if (toGender === 'female') return { codeLetter: 'M', confidenceHint: 'high', descriptiveTePart: 'తల్లి' };
+    if (toGender === 'male')
+      return { codeLetter: 'F', confidenceHint: 'high', descriptiveTePart: 'తండ్రి' };
+    if (toGender === 'female')
+      return { codeLetter: 'M', confidenceHint: 'high', descriptiveTePart: 'తల్లి' };
     return { codeLetter: 'F', confidenceHint: 'medium', descriptiveTePart: 'తల్లి/తండ్రి' };
   }
 
   if (hopType === 'CHILD_DOWN') {
-    if (toGender === 'male') return { codeLetter: 'S', confidenceHint: 'high', descriptiveTePart: 'కొడుకు' };
-    if (toGender === 'female') return { codeLetter: 'D', confidenceHint: 'high', descriptiveTePart: 'కూతురు' };
+    if (toGender === 'male')
+      return { codeLetter: 'S', confidenceHint: 'high', descriptiveTePart: 'కొడుకు' };
+    if (toGender === 'female')
+      return { codeLetter: 'D', confidenceHint: 'high', descriptiveTePart: 'కూతురు' };
     return { codeLetter: 'S', confidenceHint: 'medium', descriptiveTePart: 'సంతానం' };
   }
 
   if (hopType === 'SIBLING') {
-    if (toGender === 'male') return { codeLetter: 'B', confidenceHint: 'high', descriptiveTePart: 'సోదరుడు' };
-    if (toGender === 'female') return { codeLetter: 'Z', confidenceHint: 'high', descriptiveTePart: 'సోదరి' };
+    if (toGender === 'male')
+      return { codeLetter: 'B', confidenceHint: 'high', descriptiveTePart: 'సోదరుడు' };
+    if (toGender === 'female')
+      return { codeLetter: 'Z', confidenceHint: 'high', descriptiveTePart: 'సోదరి' };
     return { codeLetter: 'B', confidenceHint: 'medium', descriptiveTePart: 'తోబుట్టువు' };
   }
 
   if (hopType === 'SPOUSE') {
-    if (toGender === 'male') return { codeLetter: 'H', confidenceHint: 'high', descriptiveTePart: 'భర్త' };
-    if (toGender === 'female') return { codeLetter: 'W', confidenceHint: 'high', descriptiveTePart: 'భార్య' };
+    if (toGender === 'male')
+      return { codeLetter: 'H', confidenceHint: 'high', descriptiveTePart: 'భర్త' };
+    if (toGender === 'female')
+      return { codeLetter: 'W', confidenceHint: 'high', descriptiveTePart: 'భార్య' };
     return { codeLetter: 'H', confidenceHint: 'medium', descriptiveTePart: 'జీవిత భాగస్వామి' };
   }
 
@@ -83,7 +100,11 @@ const codeFromHop = (hopType: HopType, toGender: NormalizedGender): Pick<HopInfo
   return { codeLetter: 'X', confidenceHint: 'low', descriptiveTePart: 'బంధువు' };
 };
 
-export const buildKinshipCode = ({ primaryPath, persons, relationships }: BuildInput): BuildResult => {
+export const buildKinshipCode = ({
+  primaryPath,
+  persons,
+  relationships,
+}: BuildInput): BuildResult => {
   if (!primaryPath || primaryPath.length === 0) {
     return {
       code: 'UNRELATED',
@@ -113,7 +134,11 @@ export const buildKinshipCode = ({ primaryPath, persons, relationships }: BuildI
   }
 
   const code = hops.map((h) => h.codeLetter).join('');
-  const descriptiveTe = hops.map((h) => h.descriptiveTePart).join(' → ').trim() || 'సంబంధం';
+  const descriptiveTe =
+    hops
+      .map((h) => h.descriptiveTePart)
+      .join(' → ')
+      .trim() || 'సంబంధం';
 
   const confidence: BuildResult['confidence'] = hops.some((h) => h.confidenceHint === 'low')
     ? 'low'

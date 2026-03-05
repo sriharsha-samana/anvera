@@ -67,7 +67,21 @@ export class IdentityConsistencyService {
     }
   }
 
-  private fromIdentity(identity: Pick<PersonIdentity, 'givenName' | 'familyName' | 'gender' | 'dateOfBirth' | 'email' | 'phone' | 'placeOfBirth' | 'occupation' | 'notes' | 'profilePictureUrl'>): IdentityDetails {
+  private fromIdentity(
+    identity: Pick<
+      PersonIdentity,
+      | 'givenName'
+      | 'familyName'
+      | 'gender'
+      | 'dateOfBirth'
+      | 'email'
+      | 'phone'
+      | 'placeOfBirth'
+      | 'occupation'
+      | 'notes'
+      | 'profilePictureUrl'
+    >,
+  ): IdentityDetails {
     return {
       givenName: this.normalizeString(identity.givenName),
       familyName: this.normalizeString(identity.familyName),
@@ -100,7 +114,14 @@ export class IdentityConsistencyService {
   private fieldMismatch(
     field: keyof Pick<
       IdentityDetails,
-      'givenName' | 'familyName' | 'gender' | 'dateOfBirth' | 'placeOfBirth' | 'occupation' | 'notes' | 'profilePictureUrl'
+      | 'givenName'
+      | 'familyName'
+      | 'gender'
+      | 'dateOfBirth'
+      | 'placeOfBirth'
+      | 'occupation'
+      | 'notes'
+      | 'profilePictureUrl'
     >,
     input: IdentityDetails,
     canonical: IdentityDetails,
@@ -114,9 +135,25 @@ export class IdentityConsistencyService {
     const fields: Array<
       keyof Pick<
         IdentityDetails,
-        'givenName' | 'familyName' | 'gender' | 'dateOfBirth' | 'placeOfBirth' | 'occupation' | 'notes' | 'profilePictureUrl'
+        | 'givenName'
+        | 'familyName'
+        | 'gender'
+        | 'dateOfBirth'
+        | 'placeOfBirth'
+        | 'occupation'
+        | 'notes'
+        | 'profilePictureUrl'
       >
-    > = ['givenName', 'familyName', 'gender', 'dateOfBirth', 'placeOfBirth', 'occupation', 'notes', 'profilePictureUrl'];
+    > = [
+      'givenName',
+      'familyName',
+      'gender',
+      'dateOfBirth',
+      'placeOfBirth',
+      'occupation',
+      'notes',
+      'profilePictureUrl',
+    ];
 
     for (const field of fields) {
       if (this.fieldMismatch(field, input, canonical)) {
@@ -127,25 +164,39 @@ export class IdentityConsistencyService {
     }
   }
 
-  private mergeWithCanonical(mode: ResolveMode, input: IdentityDetails, canonical: IdentityDetails): IdentityDetails {
+  private mergeWithCanonical(
+    mode: ResolveMode,
+    input: IdentityDetails,
+    canonical: IdentityDetails,
+  ): IdentityDetails {
     if (mode === 'create') {
       this.ensureNoCreateMismatch(input, canonical);
     }
 
     const preferInput = mode === 'update';
     return {
-      givenName: preferInput ? input.givenName ?? canonical.givenName : canonical.givenName ?? input.givenName,
-      familyName: preferInput ? input.familyName ?? canonical.familyName : canonical.familyName ?? input.familyName,
-      gender: preferInput ? input.gender ?? canonical.gender : canonical.gender ?? input.gender,
-      dateOfBirth: preferInput ? input.dateOfBirth ?? canonical.dateOfBirth : canonical.dateOfBirth ?? input.dateOfBirth,
+      givenName: preferInput
+        ? (input.givenName ?? canonical.givenName)
+        : (canonical.givenName ?? input.givenName),
+      familyName: preferInput
+        ? (input.familyName ?? canonical.familyName)
+        : (canonical.familyName ?? input.familyName),
+      gender: preferInput ? (input.gender ?? canonical.gender) : (canonical.gender ?? input.gender),
+      dateOfBirth: preferInput
+        ? (input.dateOfBirth ?? canonical.dateOfBirth)
+        : (canonical.dateOfBirth ?? input.dateOfBirth),
       email: canonical.email ?? input.email,
       phone: canonical.phone ?? input.phone,
-      placeOfBirth: preferInput ? input.placeOfBirth ?? canonical.placeOfBirth : canonical.placeOfBirth ?? input.placeOfBirth,
-      occupation: preferInput ? input.occupation ?? canonical.occupation : canonical.occupation ?? input.occupation,
-      notes: preferInput ? input.notes ?? canonical.notes : canonical.notes ?? input.notes,
+      placeOfBirth: preferInput
+        ? (input.placeOfBirth ?? canonical.placeOfBirth)
+        : (canonical.placeOfBirth ?? input.placeOfBirth),
+      occupation: preferInput
+        ? (input.occupation ?? canonical.occupation)
+        : (canonical.occupation ?? input.occupation),
+      notes: preferInput ? (input.notes ?? canonical.notes) : (canonical.notes ?? input.notes),
       profilePictureUrl: preferInput
-        ? input.profilePictureUrl ?? canonical.profilePictureUrl
-        : canonical.profilePictureUrl ?? input.profilePictureUrl,
+        ? (input.profilePictureUrl ?? canonical.profilePictureUrl)
+        : (canonical.profilePictureUrl ?? input.profilePictureUrl),
     };
   }
 
@@ -203,7 +254,10 @@ export class IdentityConsistencyService {
     return emailIdentity ?? phoneIdentity;
   }
 
-  public async resolveIdentity(tx: Prisma.TransactionClient, input: ResolveInput): Promise<ResolveResult> {
+  public async resolveIdentity(
+    tx: Prisma.TransactionClient,
+    input: ResolveInput,
+  ): Promise<ResolveResult> {
     void input.familyId;
     const draft: IdentityDetails = {
       givenName: this.normalizeString(input.givenName),
@@ -223,7 +277,11 @@ export class IdentityConsistencyService {
       this.findIdentity(tx, draft.email, draft.phone),
     ]);
 
-    if (linkedUser?.identityId && existingIdentity && linkedUser.identityId !== existingIdentity.id) {
+    if (
+      linkedUser?.identityId &&
+      existingIdentity &&
+      linkedUser.identityId !== existingIdentity.id
+    ) {
       throw new ConflictError('Provided email/phone map to conflicting identity records');
     }
 

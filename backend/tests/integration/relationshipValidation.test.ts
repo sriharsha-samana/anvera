@@ -57,17 +57,35 @@ describe('Relationship validation', () => {
     const a = await request(app)
       .post(`/families/${familyId}/persons`)
       .set('Authorization', `Bearer ${ownerToken}`)
-      .send({ name: 'Alex One', givenName: 'Alex', familyName: 'One', gender: 'male', email: 'alex.valid@example.com' })
+      .send({
+        name: 'Alex One',
+        givenName: 'Alex',
+        familyName: 'One',
+        gender: 'male',
+        email: 'alex.valid@example.com',
+      })
       .expect(201);
     const b = await request(app)
       .post(`/families/${familyId}/persons`)
       .set('Authorization', `Bearer ${ownerToken}`)
-      .send({ name: 'Bella One', givenName: 'Bella', familyName: 'One', gender: 'female', email: 'bella.valid@example.com' })
+      .send({
+        name: 'Bella One',
+        givenName: 'Bella',
+        familyName: 'One',
+        gender: 'female',
+        email: 'bella.valid@example.com',
+      })
       .expect(201);
     const c = await request(app)
       .post(`/families/${familyId}/persons`)
       .set('Authorization', `Bearer ${ownerToken}`)
-      .send({ name: 'Cyrus One', givenName: 'Cyrus', familyName: 'One', gender: 'male', email: 'cyrus.valid@example.com' })
+      .send({
+        name: 'Cyrus One',
+        givenName: 'Cyrus',
+        familyName: 'One',
+        gender: 'male',
+        email: 'cyrus.valid@example.com',
+      })
       .expect(201);
 
     await request(app)

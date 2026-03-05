@@ -13,7 +13,12 @@ const person = (id: string, gender: string, dateOfBirth: string | null): PersonN
   metadataJson: '{}',
 });
 
-const edge = (id: string, fromPersonId: string, toPersonId: string, type: RelationshipEdge['type']): RelationshipEdge => ({
+const edge = (
+  id: string,
+  fromPersonId: string,
+  toPersonId: string,
+  type: RelationshipEdge['type'],
+): RelationshipEdge => ({
   id,
   familyId: 'f1',
   fromPersonId,
@@ -29,7 +34,10 @@ describe('KinshipResolverV2', () => {
       person('father', 'male', '1965-01-01'),
       person('fbrother', 'male', '1968-01-01'),
     ];
-    const relationships = [edge('r1', 'father', 'a', 'PARENT'), edge('r2', 'father', 'fbrother', 'SIBLING')];
+    const relationships = [
+      edge('r1', 'father', 'a', 'PARENT'),
+      edge('r2', 'father', 'fbrother', 'SIBLING'),
+    ];
 
     const result = resolver.resolve({
       personAId: 'a',
@@ -50,7 +58,10 @@ describe('KinshipResolverV2', () => {
       person('mother', 'female', '1968-01-01'),
       person('mb', 'male', '1970-01-01'),
     ];
-    const relationships = [edge('r1', 'mother', 'a', 'PARENT'), edge('r2', 'mother', 'mb', 'SIBLING')];
+    const relationships = [
+      edge('r1', 'mother', 'a', 'PARENT'),
+      edge('r2', 'mother', 'mb', 'SIBLING'),
+    ];
 
     const result = resolver.resolve({
       personAId: 'a',
@@ -91,10 +102,20 @@ describe('KinshipResolverV2', () => {
   });
 
   test('fallback returns descriptive Telugu chain + low confidence when mapping missing/ambiguous', () => {
-    const persons = [person('a', 'unknown', null), person('x', 'unknown', null), person('y', 'unknown', null)];
+    const persons = [
+      person('a', 'unknown', null),
+      person('x', 'unknown', null),
+      person('y', 'unknown', null),
+    ];
     const relationships = [edge('r1', 'a', 'x', 'INLAW'), edge('r2', 'x', 'y', 'INLAW')];
     const primaryPath = ['a', 'x', 'y'];
-    const built = buildKinshipCode({ personAId: 'a', personBId: 'y', persons, relationships, primaryPath });
+    const built = buildKinshipCode({
+      personAId: 'a',
+      personBId: 'y',
+      persons,
+      relationships,
+      primaryPath,
+    });
 
     const result = resolver.resolve({
       personAId: 'a',

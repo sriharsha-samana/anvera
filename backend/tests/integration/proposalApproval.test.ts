@@ -49,21 +49,29 @@ describe('Proposal approval transaction flow', () => {
     });
 
     const workflow = new ProposalWorkflowService();
-    const proposal = await workflow.submitProposal(family.id, member.id, UserRole.MEMBER, ProposalType.ADD_PERSON, {
-      name: 'New Person',
-      givenName: 'New',
-      familyName: 'Person',
-      gender: 'female',
-      email: 'new.person@example.com',
-      metadata: { branch: 'x' },
-    });
+    const proposal = await workflow.submitProposal(
+      family.id,
+      member.id,
+      UserRole.MEMBER,
+      ProposalType.ADD_PERSON,
+      {
+        name: 'New Person',
+        givenName: 'New',
+        familyName: 'Person',
+        gender: 'female',
+        email: 'new.person@example.com',
+        metadata: { branch: 'x' },
+      },
+    );
 
     const approved = await workflow.approveProposal(proposal.id, owner.id);
 
     expect(approved.status).toBe('APPROVED');
     expect(approved.appliedVersionNumber).toBe(2);
 
-    const person = await prisma.person.findFirst({ where: { familyId: family.id, name: 'New Person' } });
+    const person = await prisma.person.findFirst({
+      where: { familyId: family.id, name: 'New Person' },
+    });
     expect(person).toBeTruthy();
 
     const version = await prisma.familyVersion.findUnique({

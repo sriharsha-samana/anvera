@@ -5,7 +5,11 @@ import { RelationshipService } from '../../../application/services/RelationshipS
 const relationshipService = new RelationshipService();
 const familyService = new FamilyService();
 
-export const getRelationship = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+export const getRelationship = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+): Promise<void> => {
   try {
     const familyId = String(req.query.familyId ?? '');
     const personA = String(req.query.personA ?? '');
@@ -14,7 +18,11 @@ export const getRelationship = async (req: Request, res: Response, next: NextFun
     const locale = typeof req.query.locale === 'string' ? req.query.locale : undefined;
     const language = typeof req.query.language === 'string' ? req.query.language : undefined;
     await familyService.ensureFamilyMembership(familyId, req.auth!.userId);
-    const result = await relationshipService.getRelationship(familyId, personA, personB, { culture, locale, language });
+    const result = await relationshipService.getRelationship(familyId, personA, personB, {
+      culture,
+      locale,
+      language,
+    });
     res.json(result);
   } catch (error) {
     next(error);

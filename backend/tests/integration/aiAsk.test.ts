@@ -77,7 +77,10 @@ describe('AI relationship question API', () => {
       },
     });
 
-    const login = await request(app).post('/auth/login').send({ identifier: 'owner-ai', password: 'owner123' }).expect(200);
+    const login = await request(app)
+      .post('/auth/login')
+      .send({ identifier: 'owner-ai', password: 'owner123' })
+      .expect(200);
 
     const response = await request(app)
       .post('/ai/ask')
@@ -158,7 +161,10 @@ describe('AI relationship question API', () => {
       ],
     });
 
-    const login = await request(app).post('/auth/login').send({ identifier: 'owner-ai-2', password: 'owner123' }).expect(200);
+    const login = await request(app)
+      .post('/auth/login')
+      .send({ identifier: 'owner-ai-2', password: 'owner123' })
+      .expect(200);
 
     const response = await request(app)
       .post('/ai/ask')
@@ -271,7 +277,10 @@ describe('AI relationship question API', () => {
       },
     });
 
-    const login = await request(app).post('/auth/login').send({ identifier: 'owner-ai-global', password: 'owner123' }).expect(200);
+    const login = await request(app)
+      .post('/auth/login')
+      .send({ identifier: 'owner-ai-global', password: 'owner123' })
+      .expect(200);
 
     const response = await request(app)
       .post('/ai/ask')

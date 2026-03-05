@@ -26,7 +26,13 @@ export class RelationshipService {
       throw new NotFoundError('One or both persons not found in family');
     }
 
-    const classification = this.graphEngine.classifyRelationship(personA, personB, persons, relationships, 10);
+    const classification = this.graphEngine.classifyRelationship(
+      personA,
+      personB,
+      persons,
+      relationships,
+      10,
+    );
     if (!this.isTeluguRequested(options?.culture, options?.locale, options?.language)) {
       return classification;
     }

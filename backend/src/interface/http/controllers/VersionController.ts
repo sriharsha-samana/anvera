@@ -6,9 +6,13 @@ const versionService = new VersionService();
 const familyService = new FamilyService();
 
 const paramAsString = (value: string | string[] | undefined): string =>
-  Array.isArray(value) ? value[0] ?? '' : (value ?? '');
+  Array.isArray(value) ? (value[0] ?? '') : (value ?? '');
 
-export const listVersions = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+export const listVersions = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+): Promise<void> => {
   try {
     const familyId = paramAsString(req.params.id);
     await familyService.ensureFamilyMembership(familyId, req.auth!.userId);
@@ -19,7 +23,11 @@ export const listVersions = async (req: Request, res: Response, next: NextFuncti
   }
 };
 
-export const rollbackVersion = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+export const rollbackVersion = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+): Promise<void> => {
   try {
     const familyId = paramAsString(req.params.id);
     const created = await versionService.rollbackToVersion(

@@ -2,7 +2,14 @@ import { GraphEngine } from '../../src/domain/services/GraphEngine';
 import type { PersonNode, RelationshipEdge } from '../../src/shared/types';
 
 const persons: PersonNode[] = [
-  { id: 'gp', familyId: 'f1', name: 'Grandparent', gender: 'f', dateOfBirth: null, metadataJson: '{}' },
+  {
+    id: 'gp',
+    familyId: 'f1',
+    name: 'Grandparent',
+    gender: 'f',
+    dateOfBirth: null,
+    metadataJson: '{}',
+  },
   { id: 'p1', familyId: 'f1', name: 'Parent1', gender: 'm', dateOfBirth: null, metadataJson: '{}' },
   { id: 'p2', familyId: 'f1', name: 'Parent2', gender: 'f', dateOfBirth: null, metadataJson: '{}' },
   { id: 'c1', familyId: 'f1', name: 'Child1', gender: 'm', dateOfBirth: null, metadataJson: '{}' },
@@ -11,12 +18,54 @@ const persons: PersonNode[] = [
 ];
 
 const relationships: RelationshipEdge[] = [
-  { id: 'r1', familyId: 'f1', fromPersonId: 'gp', toPersonId: 'p1', type: 'PARENT', metadataJson: '{}' },
-  { id: 'r2', familyId: 'f1', fromPersonId: 'gp', toPersonId: 'p2', type: 'PARENT', metadataJson: '{}' },
-  { id: 'r3', familyId: 'f1', fromPersonId: 'p1', toPersonId: 'c1', type: 'PARENT', metadataJson: '{}' },
-  { id: 'r4', familyId: 'f1', fromPersonId: 'p2', toPersonId: 'c2', type: 'PARENT', metadataJson: '{}' },
-  { id: 'r5', familyId: 'f1', fromPersonId: 'c1', toPersonId: 'sp', type: 'SPOUSE', metadataJson: '{}' },
-  { id: 'r6', familyId: 'f1', fromPersonId: 'p1', toPersonId: 'p2', type: 'SIBLING', metadataJson: '{}' },
+  {
+    id: 'r1',
+    familyId: 'f1',
+    fromPersonId: 'gp',
+    toPersonId: 'p1',
+    type: 'PARENT',
+    metadataJson: '{}',
+  },
+  {
+    id: 'r2',
+    familyId: 'f1',
+    fromPersonId: 'gp',
+    toPersonId: 'p2',
+    type: 'PARENT',
+    metadataJson: '{}',
+  },
+  {
+    id: 'r3',
+    familyId: 'f1',
+    fromPersonId: 'p1',
+    toPersonId: 'c1',
+    type: 'PARENT',
+    metadataJson: '{}',
+  },
+  {
+    id: 'r4',
+    familyId: 'f1',
+    fromPersonId: 'p2',
+    toPersonId: 'c2',
+    type: 'PARENT',
+    metadataJson: '{}',
+  },
+  {
+    id: 'r5',
+    familyId: 'f1',
+    fromPersonId: 'c1',
+    toPersonId: 'sp',
+    type: 'SPOUSE',
+    metadataJson: '{}',
+  },
+  {
+    id: 'r6',
+    familyId: 'f1',
+    fromPersonId: 'p1',
+    toPersonId: 'p2',
+    type: 'SIBLING',
+    metadataJson: '{}',
+  },
 ];
 
 describe('GraphEngine', () => {
@@ -36,7 +85,12 @@ describe('GraphEngine', () => {
   });
 
   test('detectMultiplePaths identifies more than one path', () => {
-    expect(engine.detectMultiplePaths([['a', 'b'], ['a', 'c', 'b']])).toBe(true);
+    expect(
+      engine.detectMultiplePaths([
+        ['a', 'b'],
+        ['a', 'c', 'b'],
+      ]),
+    ).toBe(true);
     expect(engine.detectMultiplePaths([['a', 'b']])).toBe(false);
   });
 
@@ -59,7 +113,14 @@ describe('GraphEngine', () => {
   test('cycle detection flags parent cycles', () => {
     const cyclical: RelationshipEdge[] = [
       ...relationships,
-      { id: 'r7', familyId: 'f1', fromPersonId: 'c1', toPersonId: 'gp', type: 'PARENT', metadataJson: '{}' },
+      {
+        id: 'r7',
+        familyId: 'f1',
+        fromPersonId: 'c1',
+        toPersonId: 'gp',
+        type: 'PARENT',
+        metadataJson: '{}',
+      },
     ];
     const relationship = engine.classifyRelationship('gp', 'c1', persons, cyclical, 8);
     expect(relationship.cycleDetected).toBe(true);

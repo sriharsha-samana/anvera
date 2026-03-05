@@ -75,7 +75,14 @@ export class AiRelationshipQuestionService {
         });
         const relationships = await prisma.relationship.findMany({
           where: { familyId: family.id },
-          select: { id: true, fromPersonId: true, toPersonId: true, type: true, familyId: true, metadataJson: true },
+          select: {
+            id: true,
+            fromPersonId: true,
+            toPersonId: true,
+            type: true,
+            familyId: true,
+            metadataJson: true,
+          },
           orderBy: [{ createdAt: 'asc' }, { id: 'asc' }],
         });
 
@@ -144,11 +151,19 @@ export class AiRelationshipQuestionService {
       throw new AppError('At least two persons are required to answer relationship questions', 400);
     }
 
-    const selfRoleQuery = this.resolveSelfRoleQuery(input.question, persons, identity, input.mePersonId);
+    const selfRoleQuery = this.resolveSelfRoleQuery(
+      input.question,
+      persons,
+      identity,
+      input.mePersonId,
+    );
     if (selfRoleQuery) {
       const matches = selfRoleQuery.resolve(relationships, persons);
       if (matches.length === 0) {
-        throw new AppError(`No ${selfRoleQuery.label.toLowerCase()} found for ${selfRoleQuery.me.name} in this family graph`, 400);
+        throw new AppError(
+          `No ${selfRoleQuery.label.toLowerCase()} found for ${selfRoleQuery.me.name} in this family graph`,
+          400,
+        );
       }
 
       const first = matches[0];
@@ -172,7 +187,11 @@ export class AiRelationshipQuestionService {
           cycleDetected: false,
           pathsByName: [],
         },
-        relatedPeople: matches.map((m) => ({ id: m.id, name: m.name, relationLabel: selfRoleQuery.label })),
+        relatedPeople: matches.map((m) => ({
+          id: m.id,
+          name: m.name,
+          relationLabel: selfRoleQuery.label,
+        })),
       };
     }
 
@@ -185,7 +204,9 @@ export class AiRelationshipQuestionService {
 
     const nameById = new Map(persons.map((p) => [p.id, p.name]));
     const pathsByName = relationship.paths.map((path) => path.map((id) => nameById.get(id) ?? id));
-    const commonAncestorName = relationship.commonAncestorId ? (nameById.get(relationship.commonAncestorId) ?? null) : null;
+    const commonAncestorName = relationship.commonAncestorId
+      ? (nameById.get(relationship.commonAncestorId) ?? null)
+      : null;
 
     let answer: string;
     let aiAvailable = true;
@@ -202,7 +223,12 @@ export class AiRelationshipQuestionService {
     } catch (error) {
       if (error instanceof AppError && error.statusCode === 503) {
         aiAvailable = false;
-        answer = this.buildFallbackAnswer(resolved.subject.name, resolved.object.name, resolved.object.isMe, relationship);
+        answer = this.buildFallbackAnswer(
+          resolved.subject.name,
+          resolved.object.name,
+          resolved.object.isMe,
+          relationship,
+        );
       } else {
         throw error;
       }
@@ -220,7 +246,9 @@ export class AiRelationshipQuestionService {
         ...relationship,
         pathsByName,
       },
-      relatedPeople: [{ id: resolved.subject.id, name: resolved.subject.name, relationLabel: relationship.label }],
+      relatedPeople: [
+        { id: resolved.subject.id, name: resolved.subject.name, relationLabel: relationship.label },
+      ],
     };
   }
 
@@ -260,7 +288,10 @@ export class AiRelationshipQuestionService {
     if (hasMeReference) {
       const target = mentions.find((m) => m.person.id !== me.id)?.person;
       if (!target) {
-        throw new AppError('Could not find target person in question. Mention a family member name.', 400);
+        throw new AppError(
+          'Could not find target person in question. Mention a family member name.',
+          400,
+        );
       }
       return {
         subject: target,
@@ -294,7 +325,10 @@ export class AiRelationshipQuestionService {
       };
     }
 
-    throw new AppError('Could not map question to family members. Try: "Who is Ramesh to me?"', 400);
+    throw new AppError(
+      'Could not map question to family members. Try: "Who is Ramesh to me?"',
+      400,
+    );
   }
 
   private resolveSelfRoleQuery(
@@ -302,13 +336,14 @@ export class AiRelationshipQuestionService {
     persons: PersonRef[],
     identity: AuthIdentity,
     mePersonId?: string,
-  ):
-    | {
-        label: string;
-        me: PersonRef;
-        resolve: (relationships: Array<{ fromPersonId: string; toPersonId: string; type: string }>, people: PersonRef[]) => PersonRef[];
-      }
-    | null {
+  ): {
+    label: string;
+    me: PersonRef;
+    resolve: (
+      relationships: Array<{ fromPersonId: string; toPersonId: string; type: string }>,
+      people: PersonRef[],
+    ) => PersonRef[];
+  } | null {
     const me = this.resolveMe(persons, identity, mePersonId);
     const normalized = this.normalizeText(question);
     const matcher = normalized.match(/^who (?:is|are) my (.+)$/);
@@ -319,11 +354,24 @@ export class AiRelationshipQuestionService {
     const isMale = (p: PersonRef) => (p.gender ?? '').toLowerCase() === 'male';
     const isFemale = (p: PersonRef) => (p.gender ?? '').toLowerCase() === 'female';
 
-    const parentsOf = (id: string, relationships: Array<{ fromPersonId: string; toPersonId: string; type: string }>) =>
-      relationships.filter((r) => r.type === 'PARENT' && r.toPersonId === id).map((r) => r.fromPersonId);
-    const childrenOf = (id: string, relationships: Array<{ fromPersonId: string; toPersonId: string; type: string }>) =>
-      relationships.filter((r) => r.type === 'PARENT' && r.fromPersonId === id).map((r) => r.toPersonId);
-    const spousesOf = (id: string, relationships: Array<{ fromPersonId: string; toPersonId: string; type: string }>) =>
+    const parentsOf = (
+      id: string,
+      relationships: Array<{ fromPersonId: string; toPersonId: string; type: string }>,
+    ) =>
+      relationships
+        .filter((r) => r.type === 'PARENT' && r.toPersonId === id)
+        .map((r) => r.fromPersonId);
+    const childrenOf = (
+      id: string,
+      relationships: Array<{ fromPersonId: string; toPersonId: string; type: string }>,
+    ) =>
+      relationships
+        .filter((r) => r.type === 'PARENT' && r.fromPersonId === id)
+        .map((r) => r.toPersonId);
+    const spousesOf = (
+      id: string,
+      relationships: Array<{ fromPersonId: string; toPersonId: string; type: string }>,
+    ) =>
       relationships
         .filter((r) => r.type === 'SPOUSE' && (r.fromPersonId === id || r.toPersonId === id))
         .map((r) => (r.fromPersonId === id ? r.toPersonId : r.fromPersonId));
@@ -333,7 +381,10 @@ export class AiRelationshipQuestionService {
       return persons.filter((p) => set.has(p.id) && (!filter || filter(p)));
     };
 
-    const siblingsOf = (id: string, relationships: Array<{ fromPersonId: string; toPersonId: string; type: string }>) => {
+    const siblingsOf = (
+      id: string,
+      relationships: Array<{ fromPersonId: string; toPersonId: string; type: string }>,
+    ) => {
       const parentIds = parentsOf(id, relationships);
       const sibIds = new Set<string>();
       for (const parentId of parentIds) {
@@ -407,9 +458,15 @@ export class AiRelationshipQuestionService {
       };
     }
     if (singular === 'grandparent' || singular === 'grandfather' || singular === 'grandmother') {
-      const filter = singular === 'grandfather' ? isMale : singular === 'grandmother' ? isFemale : undefined;
+      const filter =
+        singular === 'grandfather' ? isMale : singular === 'grandmother' ? isFemale : undefined;
       return {
-        label: singular === 'grandparent' ? 'Grandparent' : singular === 'grandfather' ? 'Grandfather' : 'Grandmother',
+        label:
+          singular === 'grandparent'
+            ? 'Grandparent'
+            : singular === 'grandfather'
+              ? 'Grandfather'
+              : 'Grandmother',
         me,
         resolve: (relationships) => {
           const gpIds = new Set<string>();
@@ -456,7 +513,9 @@ export class AiRelationshipQuestionService {
 
     if (identity.phone) {
       const normalizedPhone = identity.phone.replace(/[\s\-()]/g, '');
-      const phoneMatch = persons.find((p) => (p.phone ?? '').replace(/[\s\-()]/g, '') === normalizedPhone);
+      const phoneMatch = persons.find(
+        (p) => (p.phone ?? '').replace(/[\s\-()]/g, '') === normalizedPhone,
+      );
       if (phoneMatch) {
         return phoneMatch;
       }
@@ -508,7 +567,10 @@ export class AiRelationshipQuestionService {
     return ranked[0].person;
   }
 
-  private rankMentions(text: string, persons: PersonRef[]): Array<{ person: PersonRef; score: number }> {
+  private rankMentions(
+    text: string,
+    persons: PersonRef[],
+  ): Array<{ person: PersonRef; score: number }> {
     const normalized = this.normalizeText(text);
     const stopWords = new Set(['who', 'what', 'is', 'to', 'me', 'my', 'myself', 'the', 'a', 'an']);
     const words = normalized.split(/\s+/).filter((w) => w.length >= 3 && !stopWords.has(w));
@@ -566,12 +628,16 @@ export class AiRelationshipQuestionService {
 
         if (isSingleWord && qWords.length === 1) {
           const tokenDistances = tokens.map((t) => this.levenshtein(qWords[0], t));
-          distance = tokenDistances.length > 0 ? Math.min(...tokenDistances) : this.levenshtein(qWords[0], normalizedName);
+          distance =
+            tokenDistances.length > 0
+              ? Math.min(...tokenDistances)
+              : this.levenshtein(qWords[0], normalizedName);
         } else {
           distance = this.levenshtein(q, normalizedName);
         }
 
-        const startsWith = normalizedName.startsWith(q) || tokens.some((t) => t.startsWith(qWords[0] ?? q));
+        const startsWith =
+          normalizedName.startsWith(q) || tokens.some((t) => t.startsWith(qWords[0] ?? q));
         const contains = normalizedName.includes(q);
         const rankingScore = distance - (startsWith ? 1 : 0) - (contains ? 1 : 0);
 
@@ -583,9 +649,7 @@ export class AiRelationshipQuestionService {
       });
 
     const maxDistance = Math.max(3, Math.ceil((q.length || 1) * 0.6));
-    const filtered = scored
-      .filter((item) => item.distance <= maxDistance)
-      .slice(0, 3);
+    const filtered = scored.filter((item) => item.distance <= maxDistance).slice(0, 3);
 
     if (filtered.length > 0) {
       return filtered.map((item) => item.name);
@@ -627,7 +691,8 @@ export class AiRelationshipQuestionService {
 
     const details: string[] = [];
     if (relationship.multiplePaths) details.push('Multiple shortest relationship paths exist.');
-    if (relationship.cycleDetected) details.push('A parental cycle exists in the graph, so verify data quality.');
+    if (relationship.cycleDetected)
+      details.push('A parental cycle exists in the graph, so verify data quality.');
     return details.length > 0 ? `${base} ${details.join(' ')}` : base;
   }
 

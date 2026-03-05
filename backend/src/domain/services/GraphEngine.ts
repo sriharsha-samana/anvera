@@ -1,9 +1,5 @@
 import type { RelationshipType } from '@prisma/client';
-import type {
-  RelationshipClassification,
-  RelationshipEdge,
-  PersonNode,
-} from '../../shared/types';
+import type { RelationshipClassification, RelationshipEdge, PersonNode } from '../../shared/types';
 
 type AdjacentEdge = {
   from: string;
@@ -20,7 +16,10 @@ type AncestorInfo = {
 };
 
 export class GraphEngine {
-  public buildAdjacencyMap(persons: PersonNode[], relationships: RelationshipEdge[]): Map<string, AdjacentEdge[]> {
+  public buildAdjacencyMap(
+    persons: PersonNode[],
+    relationships: RelationshipEdge[],
+  ): Map<string, AdjacentEdge[]> {
     const map = new Map<string, AdjacentEdge[]>();
     for (const person of persons) {
       map.set(person.id, []);
@@ -177,7 +176,10 @@ export class GraphEngine {
     return best;
   }
 
-  private findDirectEdge(path: string[], relationships: RelationshipEdge[]): RelationshipEdge | null {
+  private findDirectEdge(
+    path: string[],
+    relationships: RelationshipEdge[],
+  ): RelationshipEdge | null {
     if (path.length < 2) return null;
     const from = path[0];
     const to = path[1];
@@ -273,8 +275,10 @@ export class GraphEngine {
       const bc = this.findDirectEdge([b, c], relationships);
 
       const abIsSibling = ab?.type === 'SIBLING';
-      const bcIsParentForward = bc?.type === 'PARENT' && bc.fromPersonId === b && bc.toPersonId === c;
-      const abIsParentReverse = ab?.type === 'PARENT' && ab.fromPersonId === b && ab.toPersonId === a;
+      const bcIsParentForward =
+        bc?.type === 'PARENT' && bc.fromPersonId === b && bc.toPersonId === c;
+      const abIsParentReverse =
+        ab?.type === 'PARENT' && ab.fromPersonId === b && ab.toPersonId === a;
       const bcIsSibling = bc?.type === 'SIBLING';
 
       if (abIsSibling && bcIsParentForward) {
@@ -347,7 +351,10 @@ export class GraphEngine {
 
       if (lca.depthA === 0 && lca.depthB >= 2) {
         return {
-          label: lca.depthB === 2 ? 'Grandparent' : `Great-${'Great-'.repeat(lca.depthB - 3)}Grandparent`,
+          label:
+            lca.depthB === 2
+              ? 'Grandparent'
+              : `Great-${'Great-'.repeat(lca.depthB - 3)}Grandparent`,
           paths,
           multiplePaths,
           cycleDetected,
@@ -357,7 +364,8 @@ export class GraphEngine {
 
       if (lca.depthB === 0 && lca.depthA >= 2) {
         return {
-          label: lca.depthA === 2 ? 'Grandchild' : `Great-${'Great-'.repeat(lca.depthA - 3)}Grandchild`,
+          label:
+            lca.depthA === 2 ? 'Grandchild' : `Great-${'Great-'.repeat(lca.depthA - 3)}Grandchild`,
           paths,
           multiplePaths,
           cycleDetected,

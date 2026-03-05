@@ -9,13 +9,16 @@ describe('GET /relationship culture-aware kinship', () => {
   test('returns kinship payload for culture=te', async () => {
     const unique = Date.now();
     const email = `owner-rel-culture-${unique}@example.com`;
-    const register = await request(app).post('/auth/register').send({
-      givenName: 'Owner',
-      familyName: 'Culture',
-      gender: 'male',
-      email,
-      password: 'owner123',
-    }).expect(201);
+    const register = await request(app)
+      .post('/auth/register')
+      .send({
+        givenName: 'Owner',
+        familyName: 'Culture',
+        gender: 'male',
+        email,
+        password: 'owner123',
+      })
+      .expect(201);
     const ownerToken = register.body.token as string;
 
     const family = await request(app)
@@ -29,31 +32,54 @@ describe('GET /relationship culture-aware kinship', () => {
     const me = await request(app)
       .post(`/families/${familyId}/persons`)
       .set('Authorization', `Bearer ${ownerToken}`)
-      .send({ givenName: 'Me', familyName: 'User', gender: 'male', email: 'me.rel.culture@example.com' })
+      .send({
+        givenName: 'Me',
+        familyName: 'User',
+        gender: 'male',
+        email: 'me.rel.culture@example.com',
+      })
       .expect(201);
 
     const mother = await request(app)
       .post(`/families/${familyId}/persons`)
       .set('Authorization', `Bearer ${ownerToken}`)
-      .send({ givenName: 'Mother', familyName: 'User', gender: 'female', email: 'mother.rel.culture@example.com' })
+      .send({
+        givenName: 'Mother',
+        familyName: 'User',
+        gender: 'female',
+        email: 'mother.rel.culture@example.com',
+      })
       .expect(201);
 
     const mb = await request(app)
       .post(`/families/${familyId}/persons`)
       .set('Authorization', `Bearer ${ownerToken}`)
-      .send({ givenName: 'Maternal', familyName: 'Uncle', gender: 'male', email: 'mb.rel.culture@example.com' })
+      .send({
+        givenName: 'Maternal',
+        familyName: 'Uncle',
+        gender: 'male',
+        email: 'mb.rel.culture@example.com',
+      })
       .expect(201);
 
     await request(app)
       .post(`/families/${familyId}/relationships`)
       .set('Authorization', `Bearer ${ownerToken}`)
-      .send({ fromPersonId: mother.body.id as string, toPersonId: me.body.id as string, type: 'PARENT' })
+      .send({
+        fromPersonId: mother.body.id as string,
+        toPersonId: me.body.id as string,
+        type: 'PARENT',
+      })
       .expect(201);
 
     await request(app)
       .post(`/families/${familyId}/relationships`)
       .set('Authorization', `Bearer ${ownerToken}`)
-      .send({ fromPersonId: mother.body.id as string, toPersonId: mb.body.id as string, type: 'SIBLING' })
+      .send({
+        fromPersonId: mother.body.id as string,
+        toPersonId: mb.body.id as string,
+        type: 'SIBLING',
+      })
       .expect(201);
 
     const response = await request(app)
@@ -100,17 +126,32 @@ describe('GET /relationship culture-aware kinship', () => {
     const me = await request(app)
       .post(`/families/${familyId}/persons`)
       .set('Authorization', `Bearer ${ownerToken}`)
-      .send({ givenName: 'Me', familyName: 'Fallback', gender: 'unknown', email: `me-${unique}@example.com` })
+      .send({
+        givenName: 'Me',
+        familyName: 'Fallback',
+        gender: 'unknown',
+        email: `me-${unique}@example.com`,
+      })
       .expect(201);
     const x = await request(app)
       .post(`/families/${familyId}/persons`)
       .set('Authorization', `Bearer ${ownerToken}`)
-      .send({ givenName: 'X', familyName: 'Fallback', gender: 'unknown', email: `x-${unique}@example.com` })
+      .send({
+        givenName: 'X',
+        familyName: 'Fallback',
+        gender: 'unknown',
+        email: `x-${unique}@example.com`,
+      })
       .expect(201);
     const y = await request(app)
       .post(`/families/${familyId}/persons`)
       .set('Authorization', `Bearer ${ownerToken}`)
-      .send({ givenName: 'Y', familyName: 'Fallback', gender: 'unknown', email: `y-${unique}@example.com` })
+      .send({
+        givenName: 'Y',
+        familyName: 'Fallback',
+        gender: 'unknown',
+        email: `y-${unique}@example.com`,
+      })
       .expect(201);
 
     await request(app)

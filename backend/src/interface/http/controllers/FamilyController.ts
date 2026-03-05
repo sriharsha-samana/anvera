@@ -4,9 +4,13 @@ import { FamilyService } from '../../../application/services/FamilyService';
 const familyService = new FamilyService();
 
 const paramAsString = (value: string | string[] | undefined): string =>
-  Array.isArray(value) ? value[0] ?? '' : (value ?? '');
+  Array.isArray(value) ? (value[0] ?? '') : (value ?? '');
 
-export const listFamilies = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+export const listFamilies = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+): Promise<void> => {
   try {
     const families = await familyService.listFamilies(req.auth!.userId);
     res.json(families);
@@ -15,7 +19,11 @@ export const listFamilies = async (req: Request, res: Response, next: NextFuncti
   }
 };
 
-export const createFamily = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+export const createFamily = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+): Promise<void> => {
   try {
     const { name } = req.body as { name: string };
     const family = await familyService.createFamily(name, req.auth!.userId);
@@ -25,7 +33,11 @@ export const createFamily = async (req: Request, res: Response, next: NextFuncti
   }
 };
 
-export const updateFamily = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+export const updateFamily = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+): Promise<void> => {
   try {
     const familyId = paramAsString(req.params.id);
     const { name } = req.body as { name: string };
@@ -36,7 +48,11 @@ export const updateFamily = async (req: Request, res: Response, next: NextFuncti
   }
 };
 
-export const deleteFamily = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+export const deleteFamily = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+): Promise<void> => {
   try {
     const familyId = paramAsString(req.params.id);
     await familyService.deleteFamily(familyId, req.auth!.userId);
@@ -46,7 +62,11 @@ export const deleteFamily = async (req: Request, res: Response, next: NextFuncti
   }
 };
 
-export const cloneFamily = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+export const cloneFamily = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+): Promise<void> => {
   try {
     const familyId = paramAsString(req.params.id);
     const { name } = (req.body ?? {}) as { name?: string };
@@ -57,7 +77,11 @@ export const cloneFamily = async (req: Request, res: Response, next: NextFunctio
   }
 };
 
-export const listPersons = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+export const listPersons = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+): Promise<void> => {
   try {
     const familyId = paramAsString(req.params.id);
     const persons = await familyService.listPersons(familyId, req.auth!.userId);
@@ -67,7 +91,11 @@ export const listPersons = async (req: Request, res: Response, next: NextFunctio
   }
 };
 
-export const listRelationships = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+export const listRelationships = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+): Promise<void> => {
   try {
     const familyId = paramAsString(req.params.id);
     const relationships = await familyService.listRelationships(familyId, req.auth!.userId);
@@ -87,7 +115,11 @@ export const addPerson = async (req: Request, res: Response, next: NextFunction)
   }
 };
 
-export const addRelationship = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+export const addRelationship = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+): Promise<void> => {
   try {
     const familyId = paramAsString(req.params.id);
     const relationship = await familyService.addRelationship(familyId, req.auth!.userId, req.body);
@@ -97,7 +129,11 @@ export const addRelationship = async (req: Request, res: Response, next: NextFun
   }
 };
 
-export const updatePerson = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+export const updatePerson = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+): Promise<void> => {
   try {
     const familyId = paramAsString(req.params.id);
     const personId = paramAsString(req.params.personId);
@@ -108,7 +144,11 @@ export const updatePerson = async (req: Request, res: Response, next: NextFuncti
   }
 };
 
-export const deletePerson = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+export const deletePerson = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+): Promise<void> => {
   try {
     const familyId = paramAsString(req.params.id);
     const personId = paramAsString(req.params.personId);
@@ -119,18 +159,31 @@ export const deletePerson = async (req: Request, res: Response, next: NextFuncti
   }
 };
 
-export const updateRelationship = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+export const updateRelationship = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+): Promise<void> => {
   try {
     const familyId = paramAsString(req.params.id);
     const relationshipId = paramAsString(req.params.relationshipId);
-    const relationship = await familyService.updateRelationship(familyId, relationshipId, req.auth!.userId, req.body);
+    const relationship = await familyService.updateRelationship(
+      familyId,
+      relationshipId,
+      req.auth!.userId,
+      req.body,
+    );
     res.json(relationship);
   } catch (error) {
     next(error);
   }
 };
 
-export const deleteRelationship = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+export const deleteRelationship = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+): Promise<void> => {
   try {
     const familyId = paramAsString(req.params.id);
     const relationshipId = paramAsString(req.params.relationshipId);

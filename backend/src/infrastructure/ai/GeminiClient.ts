@@ -80,7 +80,10 @@ export class GeminiClient implements AiClient {
       }
 
       const body = (await response.json()) as GeminiResponse;
-      const text = body.candidates?.[0]?.content?.parts?.map((p) => p.text ?? '').join('').trim();
+      const text = body.candidates?.[0]?.content?.parts
+        ?.map((p) => p.text ?? '')
+        .join('')
+        .trim();
       if (!text) {
         throw new AppError('Gemini returned empty response', 503);
       }
@@ -91,4 +94,3 @@ export class GeminiClient implements AiClient {
     }
   }
 }
-

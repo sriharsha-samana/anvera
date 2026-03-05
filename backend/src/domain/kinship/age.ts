@@ -8,7 +8,10 @@ const parseDate = (value: string | null | undefined): number | null => {
   return Number.isNaN(t) ? null : t;
 };
 
-export const compareAge = (personX?: Pick<PersonNode, 'dateOfBirth'> | null, personY?: Pick<PersonNode, 'dateOfBirth'> | null): AgeOrder => {
+export const compareAge = (
+  personX?: Pick<PersonNode, 'dateOfBirth'> | null,
+  personY?: Pick<PersonNode, 'dateOfBirth'> | null,
+): AgeOrder => {
   const x = parseDate(personX?.dateOfBirth);
   const y = parseDate(personY?.dateOfBirth);
   if (x === null || y === null) return 'unknown';

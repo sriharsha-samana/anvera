@@ -55,7 +55,8 @@ const minConfidence = (...values: Array<'high' | 'medium' | 'low'>): 'high' | 'm
   return sorted[0] ?? 'low';
 };
 
-const personById = (persons: PersonNode[], personId: string): PersonNode | undefined => persons.find((p) => p.id === personId);
+const personById = (persons: PersonNode[], personId: string): PersonNode | undefined =>
+  persons.find((p) => p.id === personId);
 
 const safeConfidence = (value: string | undefined): 'high' | 'medium' | 'low' => {
   if (value === 'high' || value === 'medium' || value === 'low') return value;
@@ -154,7 +155,13 @@ export class KinshipResolverV2 {
       }
 
       const hops = Array.isArray(built.debug?.hops) ? (built.debug?.hops as HopDebug[]) : [];
-      const order = pickAgeOrderForCode(code, input.persons, input.personAId, input.personBId, hops);
+      const order = pickAgeOrderForCode(
+        code,
+        input.persons,
+        input.personAId,
+        input.personBId,
+        hops,
+      );
       const termTe = selectVariant(entry.te, order);
 
       const debug: Record<string, unknown> = {

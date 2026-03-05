@@ -1,5 +1,9 @@
 import { TeluguKinshipResolver } from '../../src/domain/services/TeluguKinshipResolver';
-import type { PersonNode, RelationshipClassification, RelationshipEdge } from '../../src/shared/types';
+import type {
+  PersonNode,
+  RelationshipClassification,
+  RelationshipEdge,
+} from '../../src/shared/types';
 
 const resolver = new TeluguKinshipResolver();
 
@@ -12,7 +16,12 @@ const person = (id: string, gender: string, dateOfBirth: string | null): PersonN
   metadataJson: '{}',
 });
 
-const edge = (id: string, fromPersonId: string, toPersonId: string, type: RelationshipEdge['type']): RelationshipEdge => ({
+const edge = (
+  id: string,
+  fromPersonId: string,
+  toPersonId: string,
+  type: RelationshipEdge['type'],
+): RelationshipEdge => ({
   id,
   familyId: 'f1',
   fromPersonId,
@@ -224,22 +233,112 @@ describe('TeluguKinshipResolver v2', () => {
     ];
 
     const cases: Array<{ classification: RelationshipClassification; personBId: string }> = [
-      { classification: { label: 'Self', paths: [['a']], multiplePaths: false, cycleDetected: false }, personBId: 'a' },
-      { classification: { label: 'Unrelated', paths: [['a', 'x']], multiplePaths: false, cycleDetected: false }, personBId: 'x' },
-      { classification: { label: 'Spouse', paths: [['a', 'w']], multiplePaths: false, cycleDetected: false }, personBId: 'w' },
-      { classification: { label: 'Parent', paths: [['a', 'c']], multiplePaths: false, cycleDetected: false }, personBId: 'c' },
-      { classification: { label: 'Child', paths: [['a', 'f']], multiplePaths: false, cycleDetected: false }, personBId: 'f' },
-      { classification: { label: 'Sibling', paths: [['a', 'b']], multiplePaths: false, cycleDetected: false }, personBId: 'b' },
-      { classification: { label: 'Uncle/Aunt', paths: [['a', 'm', 'b']], multiplePaths: false, cycleDetected: false }, personBId: 'b' },
-      { classification: { label: 'Niece/Nephew', paths: [['a', 'b', 'c']], multiplePaths: false, cycleDetected: false }, personBId: 'c' },
-      { classification: { label: 'Grandparent', paths: [['a', 'f', 'm']], multiplePaths: false, cycleDetected: false }, personBId: 'm' },
       {
-        classification: { label: 'Great-Grandparent', paths: [['a', 'f', 'm', 'b']], multiplePaths: false, cycleDetected: false },
+        classification: {
+          label: 'Self',
+          paths: [['a']],
+          multiplePaths: false,
+          cycleDetected: false,
+        },
+        personBId: 'a',
+      },
+      {
+        classification: {
+          label: 'Unrelated',
+          paths: [['a', 'x']],
+          multiplePaths: false,
+          cycleDetected: false,
+        },
+        personBId: 'x',
+      },
+      {
+        classification: {
+          label: 'Spouse',
+          paths: [['a', 'w']],
+          multiplePaths: false,
+          cycleDetected: false,
+        },
+        personBId: 'w',
+      },
+      {
+        classification: {
+          label: 'Parent',
+          paths: [['a', 'c']],
+          multiplePaths: false,
+          cycleDetected: false,
+        },
+        personBId: 'c',
+      },
+      {
+        classification: {
+          label: 'Child',
+          paths: [['a', 'f']],
+          multiplePaths: false,
+          cycleDetected: false,
+        },
+        personBId: 'f',
+      },
+      {
+        classification: {
+          label: 'Sibling',
+          paths: [['a', 'b']],
+          multiplePaths: false,
+          cycleDetected: false,
+        },
         personBId: 'b',
       },
-      { classification: { label: 'Grandchild', paths: [['a', 'c', 'x']], multiplePaths: false, cycleDetected: false }, personBId: 'x' },
       {
-        classification: { label: 'Great-Great-Grandchild', paths: [['a', 'c', 'x', 'z']], multiplePaths: false, cycleDetected: false },
+        classification: {
+          label: 'Uncle/Aunt',
+          paths: [['a', 'm', 'b']],
+          multiplePaths: false,
+          cycleDetected: false,
+        },
+        personBId: 'b',
+      },
+      {
+        classification: {
+          label: 'Niece/Nephew',
+          paths: [['a', 'b', 'c']],
+          multiplePaths: false,
+          cycleDetected: false,
+        },
+        personBId: 'c',
+      },
+      {
+        classification: {
+          label: 'Grandparent',
+          paths: [['a', 'f', 'm']],
+          multiplePaths: false,
+          cycleDetected: false,
+        },
+        personBId: 'm',
+      },
+      {
+        classification: {
+          label: 'Great-Grandparent',
+          paths: [['a', 'f', 'm', 'b']],
+          multiplePaths: false,
+          cycleDetected: false,
+        },
+        personBId: 'b',
+      },
+      {
+        classification: {
+          label: 'Grandchild',
+          paths: [['a', 'c', 'x']],
+          multiplePaths: false,
+          cycleDetected: false,
+        },
+        personBId: 'x',
+      },
+      {
+        classification: {
+          label: 'Great-Great-Grandchild',
+          paths: [['a', 'c', 'x', 'z']],
+          multiplePaths: false,
+          cycleDetected: false,
+        },
         personBId: 'z',
       },
       {
@@ -253,12 +352,34 @@ describe('TeluguKinshipResolver v2', () => {
         },
         personBId: 'b',
       },
-      { classification: { label: 'In-law', paths: [['a', 'w', 'x']], multiplePaths: false, cycleDetected: false }, personBId: 'x' },
-      { classification: { label: 'Relative', paths: [['a', 'b', 'z']], multiplePaths: false, cycleDetected: false }, personBId: 'z' },
+      {
+        classification: {
+          label: 'In-law',
+          paths: [['a', 'w', 'x']],
+          multiplePaths: false,
+          cycleDetected: false,
+        },
+        personBId: 'x',
+      },
+      {
+        classification: {
+          label: 'Relative',
+          paths: [['a', 'b', 'z']],
+          multiplePaths: false,
+          cycleDetected: false,
+        },
+        personBId: 'z',
+      },
     ];
 
     for (const testCase of cases) {
-      const term = resolve('a', testCase.personBId, persons, relationships, testCase.classification);
+      const term = resolve(
+        'a',
+        testCase.personBId,
+        persons,
+        relationships,
+        testCase.classification,
+      );
       expect(term).toBeTruthy();
       expect(term.code.length).toBeGreaterThan(0);
       expect(term.termKey.length).toBeGreaterThan(0);

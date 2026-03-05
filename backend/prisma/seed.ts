@@ -1,5 +1,11 @@
 import bcrypt from 'bcryptjs';
-import { PrismaClient, ProposalType, RelationshipType, UserRole, VersionSourceType } from '@prisma/client';
+import {
+  PrismaClient,
+  ProposalType,
+  RelationshipType,
+  UserRole,
+  VersionSourceType,
+} from '@prisma/client';
 
 const prisma = new PrismaClient();
 

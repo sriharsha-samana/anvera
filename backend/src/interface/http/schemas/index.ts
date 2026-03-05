@@ -10,25 +10,39 @@ const normalizeOptionalString = (value: unknown): unknown => {
 const optionalTrimmedString = (max: number) =>
   z.preprocess((value) => normalizeOptionalString(value), z.string().max(max).optional());
 
-const optionalPhoneE164 = z.preprocess((value) => normalizeOptionalString(value), z.string().optional()).transform((value) => {
-  if (!value) return undefined;
-  const normalized = value.replace(/[\s\-()]/g, '');
-  return normalized;
-}).refine((value) => {
-  if (!value) return true;
-  return /^\+[1-9]\d{7,14}$/.test(value);
-}, 'phone must be in international format, e.g. +919876543210');
+const optionalPhoneE164 = z
+  .preprocess((value) => normalizeOptionalString(value), z.string().optional())
+  .transform((value) => {
+    if (!value) return undefined;
+    const normalized = value.replace(/[\s\-()]/g, '');
+    return normalized;
+  })
+  .refine((value) => {
+    if (!value) return true;
+    return /^\+[1-9]\d{7,14}$/.test(value);
+  }, 'phone must be in international format, e.g. +919876543210');
 
-const optionalProfilePicture = z.preprocess((value) => normalizeOptionalString(value), z.string().optional()).refine((value) => {
-  if (!value) return true;
-  if (value.startsWith('data:image/')) {
-    return /^data:image\/(png|jpe?g|webp|gif);base64,[A-Za-z0-9+/=]+$/.test(value) && value.length <= 2_000_000;
-  }
-  return /^https?:\/\/[^\s]+$/i.test(value);
-}, 'profile picture must be an image URL or image data URL');
+const optionalProfilePicture = z
+  .preprocess((value) => normalizeOptionalString(value), z.string().optional())
+  .refine((value) => {
+    if (!value) return true;
+    if (value.startsWith('data:image/')) {
+      return (
+        /^data:image\/(png|jpe?g|webp|gif);base64,[A-Za-z0-9+/=]+$/.test(value) &&
+        value.length <= 2_000_000
+      );
+    }
+    return /^https?:\/\/[^\s]+$/i.test(value);
+  }, 'profile picture must be an image URL or image data URL');
 
 const optionalDateYmd = z
-  .preprocess((value) => normalizeOptionalString(value), z.string().regex(/^\d{4}-\d{2}-\d{2}$/).optional())
+  .preprocess(
+    (value) => normalizeOptionalString(value),
+    z
+      .string()
+      .regex(/^\d{4}-\d{2}-\d{2}$/)
+      .optional(),
+  )
   .refine((value) => {
     if (!value) return true;
     const date = new Date(`${value}T00:00:00.000Z`);
@@ -63,7 +77,10 @@ export const createFamilySchema = z.object({
 });
 
 export const cloneFamilySchema = z.object({
-  name: z.preprocess((value) => normalizeOptionalString(value), z.string().min(1).max(120).optional()),
+  name: z.preprocess(
+    (value) => normalizeOptionalString(value),
+    z.string().min(1).max(120).optional(),
+  ),
 });
 
 export const updateFamilySchema = z.object({

@@ -37,22 +37,34 @@ describe('Rollback integrity', () => {
 
     const workflow = new ProposalWorkflowService();
 
-    const proposal1 = await workflow.submitProposal(family.id, member.id, UserRole.MEMBER, ProposalType.ADD_PERSON, {
-      name: 'P1',
-      givenName: 'P',
-      familyName: 'One',
-      gender: 'male',
-      email: 'p1@example.com',
-    });
+    const proposal1 = await workflow.submitProposal(
+      family.id,
+      member.id,
+      UserRole.MEMBER,
+      ProposalType.ADD_PERSON,
+      {
+        name: 'P1',
+        givenName: 'P',
+        familyName: 'One',
+        gender: 'male',
+        email: 'p1@example.com',
+      },
+    );
     await workflow.approveProposal(proposal1.id, owner.id);
 
-    const proposal2 = await workflow.submitProposal(family.id, member.id, UserRole.MEMBER, ProposalType.ADD_PERSON, {
-      name: 'P2',
-      givenName: 'P',
-      familyName: 'Two',
-      gender: 'female',
-      email: 'p2@example.com',
-    });
+    const proposal2 = await workflow.submitProposal(
+      family.id,
+      member.id,
+      UserRole.MEMBER,
+      ProposalType.ADD_PERSON,
+      {
+        name: 'P2',
+        givenName: 'P',
+        familyName: 'Two',
+        gender: 'female',
+        email: 'p2@example.com',
+      },
+    );
     await workflow.approveProposal(proposal2.id, owner.id);
 
     const versionService = new VersionService();
@@ -64,7 +76,10 @@ describe('Rollback integrity', () => {
     const p2 = await prisma.proposal.findUnique({ where: { id: proposal2.id } });
     expect(p2?.overriddenByVersionNumber).toBe(4);
 
-    const persons = await prisma.person.findMany({ where: { familyId: family.id }, orderBy: { name: 'asc' } });
+    const persons = await prisma.person.findMany({
+      where: { familyId: family.id },
+      orderBy: { name: 'asc' },
+    });
     expect(persons.map((p) => p.name)).toEqual(['P1']);
   });
 });
