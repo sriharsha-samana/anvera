@@ -106,7 +106,6 @@
                     :key="person.id"
                     size="small"
                     :variant="person.id === focusPersonId ? 'flat' : 'tonal'"
-                    :color="person.id === focusPersonId ? '#d9e8ee' : '#e8f0f4'"
                     :class="person.id === focusPersonId ? 'timeline-chip timeline-chip--focus' : 'timeline-chip'"
                     @click="onSelect(person.id)"
                   >
@@ -647,11 +646,16 @@ const emit = defineEmits<{
 }
 
 .timeline-chip {
-  color: #1b6f86;
+  color: #1f4f5f !important;
+  background-color: #e9f1f5 !important;
+  border: 1px solid #d2e2e9 !important;
+  opacity: 1 !important;
 }
 
 .timeline-chip--focus {
-  color: #174e5f;
+  color: #0f2530 !important;
+  background-color: #c9deea !important;
+  border-color: #a8c4d3 !important;
   font-weight: 600;
 }
 </style>
