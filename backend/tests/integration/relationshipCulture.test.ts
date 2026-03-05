@@ -71,7 +71,76 @@ describe('GET /relationship culture-aware kinship', () => {
     expect(response.body.kinship).toBeTruthy();
     expect(response.body.kinship.culture).toBe('te');
     expect(response.body.kinship.code).toBe('MB');
+    expect(response.body.kinship.termKey).toBe('MB');
     expect(typeof response.body.kinship.confidence).toBe('string');
     expect(response.body.kinship.termTe).toBe('మామ');
+  });
+
+  test('returns non-empty Telugu fallback for unmapped kinship code', async () => {
+    const unique = `${Date.now()}-fallback`;
+    const register = await request(app)
+      .post('/auth/register')
+      .send({
+        givenName: 'Owner',
+        familyName: 'Fallback',
+        gender: 'male',
+        email: `owner-rel-culture-${unique}@example.com`,
+        password: 'owner123',
+      })
+      .expect(201);
+    const ownerToken = register.body.token as string;
+
+    const family = await request(app)
+      .post('/families')
+      .set('Authorization', `Bearer ${ownerToken}`)
+      .send({ name: 'Culture Family Fallback' })
+      .expect(201);
+    const familyId = family.body.id as string;
+
+    const me = await request(app)
+      .post(`/families/${familyId}/persons`)
+      .set('Authorization', `Bearer ${ownerToken}`)
+      .send({ givenName: 'Me', familyName: 'Fallback', gender: 'unknown', email: `me-${unique}@example.com` })
+      .expect(201);
+    const x = await request(app)
+      .post(`/families/${familyId}/persons`)
+      .set('Authorization', `Bearer ${ownerToken}`)
+      .send({ givenName: 'X', familyName: 'Fallback', gender: 'unknown', email: `x-${unique}@example.com` })
+      .expect(201);
+    const y = await request(app)
+      .post(`/families/${familyId}/persons`)
+      .set('Authorization', `Bearer ${ownerToken}`)
+      .send({ givenName: 'Y', familyName: 'Fallback', gender: 'unknown', email: `y-${unique}@example.com` })
+      .expect(201);
+
+    await request(app)
+      .post(`/families/${familyId}/relationships`)
+      .set('Authorization', `Bearer ${ownerToken}`)
+      .send({ fromPersonId: me.body.id as string, toPersonId: x.body.id as string, type: 'INLAW' })
+      .expect(201);
+    await request(app)
+      .post(`/families/${familyId}/relationships`)
+      .set('Authorization', `Bearer ${ownerToken}`)
+      .send({ fromPersonId: x.body.id as string, toPersonId: y.body.id as string, type: 'INLAW' })
+      .expect(201);
+
+    const response = await request(app)
+      .get('/relationship')
+      .query({
+        familyId,
+        personA: me.body.id,
+        personB: y.body.id,
+        culture: 'te',
+      })
+      .set('Authorization', `Bearer ${ownerToken}`)
+      .expect(200);
+
+    expect(response.body.kinship).toBeTruthy();
+    expect(response.body.kinship.code).toBe('II');
+    expect(response.body.kinship.termKey).toBe('II');
+    expect(response.body.kinship.confidence).toBe('low');
+    expect(typeof response.body.kinship.termTe).toBe('string');
+    expect(response.body.kinship.termTe.trim().length).toBeGreaterThan(0);
+    expect(String(response.body.kinship.debug?.reason ?? '')).toContain('FALLBACK');
   });
 });

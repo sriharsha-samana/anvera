@@ -5,8 +5,9 @@ import type { PersonNode, RelationshipEdge } from '../../shared/types';
 
 export type KinshipPayload = {
   culture: 'te';
-  termTe: string | null;
+  termTe: string;
   code: string | null;
+  termKey: string;
   confidence: 'high' | 'medium' | 'low';
   debug?: Record<string, unknown>;
 };
@@ -66,6 +67,11 @@ const selectVariant = (value: string | Record<AgeOrder, string>, order: AgeOrder
   return value[order] ?? value.unknown ?? Object.values(value)[0] ?? 'సంబంధం';
 };
 
+const normalizedTermTe = (value?: string | null): string => {
+  const normalized = (value ?? '').trim();
+  return normalized.length > 0 ? normalized : 'సంబంధం';
+};
+
 const defaultAgeOrder = (persons: PersonNode[], personAId: string, personBId: string): AgeOrder =>
   compareAge(personById(persons, personBId), personById(persons, personAId));
 
@@ -107,8 +113,9 @@ export class KinshipResolverV2 {
       if (!input.primaryPath || input.primaryPath.length === 0) {
         return {
           culture: 'te',
-          termTe: null,
+          termTe: 'సంబంధం',
           code: null,
+          termKey: 'FALLBACK',
           confidence: 'low',
           debug: { reason: 'EMPTY_PATH' },
         };
@@ -126,10 +133,11 @@ export class KinshipResolverV2 {
       if (!code) {
         return {
           culture: 'te',
-          termTe: null,
+          termTe: normalizedTermTe(built.descriptiveTe),
           code: null,
+          termKey: 'FALLBACK',
           confidence: 'low',
-          debug: { reason: 'NO_CODE', build: built },
+          debug: { reason: 'NO_CODE_FALLBACK', build: built },
         };
       }
 
@@ -137,10 +145,11 @@ export class KinshipResolverV2 {
       if (!entry || !entry.te) {
         return {
           culture: 'te',
-          termTe: null,
+          termTe: normalizedTermTe(built.descriptiveTe),
           code,
+          termKey: code,
           confidence: 'low',
-          debug: { reason: 'NO_MAPPING', build: built },
+          debug: { reason: 'NO_MAPPING_FALLBACK', build: built },
         };
       }
 
@@ -161,19 +170,21 @@ export class KinshipResolverV2 {
 
       return {
         culture: 'te',
-        termTe,
+        termTe: normalizedTermTe(termTe),
         code,
+        termKey: code,
         confidence: minConfidence(safeConfidence(entry.confidence), built.confidence),
         debug,
       };
     } catch (error) {
       return {
         culture: 'te',
-        termTe: null,
+        termTe: 'సంబంధం',
         code: null,
+        termKey: 'FALLBACK',
         confidence: 'low',
         debug: {
-          reason: 'KINSHIP_RESOLUTION_FAILED',
+          reason: 'KINSHIP_RESOLUTION_FAILED_FALLBACK',
           message: error instanceof Error ? error.message : 'Unknown error',
         },
       };

@@ -1,3 +1,4 @@
+import { buildKinshipCode } from '../../src/domain/kinship/KinshipCodeBuilder';
 import { KinshipResolverV2 } from '../../src/domain/kinship/KinshipResolverV2';
 import type { PersonNode, RelationshipEdge } from '../../src/shared/types';
 
@@ -89,21 +90,25 @@ describe('KinshipResolverV2', () => {
     expect(result.termTe).toBe('వదిన');
   });
 
-  test('fallback returns code + low confidence when mapping missing/ambiguous', () => {
+  test('fallback returns descriptive Telugu chain + low confidence when mapping missing/ambiguous', () => {
     const persons = [person('a', 'unknown', null), person('x', 'unknown', null), person('y', 'unknown', null)];
     const relationships = [edge('r1', 'a', 'x', 'INLAW'), edge('r2', 'x', 'y', 'INLAW')];
+    const primaryPath = ['a', 'x', 'y'];
+    const built = buildKinshipCode({ personAId: 'a', personBId: 'y', persons, relationships, primaryPath });
 
     const result = resolver.resolve({
       personAId: 'a',
       personBId: 'y',
       persons,
       relationships,
-      primaryPath: ['a', 'x', 'y'],
+      primaryPath,
     });
 
     expect(result.code).toBe('II');
-    expect(result.termTe).toBeNull();
+    expect(result.termTe).toBe(built.descriptiveTe);
     expect(result.confidence).toBe('low');
-    expect(result.debug?.reason).toBe('NO_MAPPING');
+    expect(result.termKey).toBe('II');
+    expect(result.debug?.reason).toBe('NO_MAPPING_FALLBACK');
+    expect(result.termTe.trim().length).toBeGreaterThan(0);
   });
 });

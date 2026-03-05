@@ -80,7 +80,7 @@ const codeFromHop = (hopType: HopType, toGender: NormalizedGender): Pick<HopInfo
     return { codeLetter: 'I', confidenceHint: 'medium', descriptiveTePart: 'పెళ్లి సంబంధం' };
   }
 
-  return { codeLetter: 'X', confidenceHint: 'low', descriptiveTePart: 'తెలియని సంబంధం' };
+  return { codeLetter: 'X', confidenceHint: 'low', descriptiveTePart: 'బంధువు' };
 };
 
 export const buildKinshipCode = ({ primaryPath, persons, relationships }: BuildInput): BuildResult => {
@@ -113,7 +113,7 @@ export const buildKinshipCode = ({ primaryPath, persons, relationships }: BuildI
   }
 
   const code = hops.map((h) => h.codeLetter).join('');
-  const descriptiveTe = hops.map((h) => h.descriptiveTePart).join(' → ');
+  const descriptiveTe = hops.map((h) => h.descriptiveTePart).join(' → ').trim() || 'సంబంధం';
 
   const confidence: BuildResult['confidence'] = hops.some((h) => h.confidenceHint === 'low')
     ? 'low'
