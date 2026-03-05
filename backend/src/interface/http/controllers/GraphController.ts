@@ -12,8 +12,9 @@ export const getRelationship = async (req: Request, res: Response, next: NextFun
     const personB = String(req.query.personB ?? '');
     const culture = typeof req.query.culture === 'string' ? req.query.culture : undefined;
     const locale = typeof req.query.locale === 'string' ? req.query.locale : undefined;
+    const language = typeof req.query.language === 'string' ? req.query.language : undefined;
     await familyService.ensureFamilyMembership(familyId, req.auth!.userId);
-    const result = await relationshipService.getRelationship(familyId, personA, personB, { culture, locale });
+    const result = await relationshipService.getRelationship(familyId, personA, personB, { culture, locale, language });
     res.json(result);
   } catch (error) {
     next(error);

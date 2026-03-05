@@ -46,7 +46,8 @@ Clean Architecture + DDD layers:
 - `GET /families/:id/versions`
 - `POST /families/:id/rollback/:versionNumber`
 - `GET /relationship?familyId=&personA=&personB=`
-  - Optional: `culture=te` or `locale=te-IN` adds Telugu v2 kinship output in `kinship` (plus backward-compatible `kinshipTerm` and `term`) with `{ code, termKey, en, te, addressTe?, confidence, note? }`
+  - Optional: `culture=te` (or `telugu`) or `language=te` adds `kinship` payload:
+    `{ culture: "te", termTe: string | null, code: string | null, confidence: "high"|"medium"|"low", debug?: object }`
 - `POST /ai/explain`
 - `POST /ai/ask`
 
