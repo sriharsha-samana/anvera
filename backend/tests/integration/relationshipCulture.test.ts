@@ -102,6 +102,72 @@ describe('GET /relationship culture-aware kinship', () => {
     expect(response.body.kinship.termTe).toBe('మామ');
   });
 
+  test('returns kinship payload when language=te is used', async () => {
+    const unique = `${Date.now()}-language`;
+    const register = await request(app)
+      .post('/auth/register')
+      .send({
+        givenName: 'Owner',
+        familyName: 'Language',
+        gender: 'male',
+        email: `owner-rel-lang-${unique}@example.com`,
+        password: 'owner123',
+      })
+      .expect(201);
+    const ownerToken = register.body.token as string;
+
+    const family = await request(app)
+      .post('/families')
+      .set('Authorization', `Bearer ${ownerToken}`)
+      .send({ name: 'Language Family' })
+      .expect(201);
+    const familyId = family.body.id as string;
+
+    const me = await request(app)
+      .post(`/families/${familyId}/persons`)
+      .set('Authorization', `Bearer ${ownerToken}`)
+      .send({
+        givenName: 'Me',
+        familyName: 'Language',
+        gender: 'male',
+        email: `me-lang-${unique}@example.com`,
+      })
+      .expect(201);
+
+    const mother = await request(app)
+      .post(`/families/${familyId}/persons`)
+      .set('Authorization', `Bearer ${ownerToken}`)
+      .send({
+        givenName: 'Mother',
+        familyName: 'Language',
+        gender: 'female',
+        email: `mother-lang-${unique}@example.com`,
+      })
+      .expect(201);
+
+    await request(app)
+      .post(`/families/${familyId}/relationships`)
+      .set('Authorization', `Bearer ${ownerToken}`)
+      .send({ fromPersonId: mother.body.id as string, toPersonId: me.body.id as string, type: 'PARENT' })
+      .expect(201);
+
+    const response = await request(app)
+      .get('/relationship')
+      .query({
+        familyId,
+        personA: me.body.id,
+        personB: mother.body.id,
+        language: 'te',
+      })
+      .set('Authorization', `Bearer ${ownerToken}`)
+      .expect(200);
+
+    expect(response.body.kinship).toBeTruthy();
+    expect(response.body.kinship.culture).toBe('te');
+    expect(typeof response.body.kinship.termTe).toBe('string');
+    expect(response.body.kinship.termTe.trim().length).toBeGreaterThan(0);
+  });
+
   test('returns non-empty Telugu fallback for unmapped kinship code', async () => {
     const unique = `${Date.now()}-fallback`;
     const register = await request(app)

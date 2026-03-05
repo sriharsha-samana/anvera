@@ -14,9 +14,9 @@ export const getRelationship = async (
     const familyId = String(req.query.familyId ?? '');
     const personA = String(req.query.personA ?? '');
     const personB = String(req.query.personB ?? '');
-    const culture = typeof req.query.culture === 'string' ? req.query.culture : undefined;
-    const locale = typeof req.query.locale === 'string' ? req.query.locale : undefined;
-    const language = typeof req.query.language === 'string' ? req.query.language : undefined;
+    const culture = typeof req.query.culture === 'string' ? req.query.culture : '';
+    const locale = typeof req.query.locale === 'string' ? req.query.locale : '';
+    const language = typeof req.query.language === 'string' ? req.query.language : '';
     await familyService.ensureFamilyMembership(familyId, req.auth!.userId);
     const result = await relationshipService.getRelationship(familyId, personA, personB, {
       culture,

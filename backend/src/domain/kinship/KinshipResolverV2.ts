@@ -1,7 +1,7 @@
 import teluguMapJson from './telugu-kinship-map.v2.json';
 import { compareAge, type AgeOrder } from './age';
 import { buildKinshipCode } from './KinshipCodeBuilder';
-import type { PersonNode, RelationshipEdge } from '../../shared/types';
+import type { PersonNode, RelationshipClassification, RelationshipEdge } from '../../shared/types';
 
 export type KinshipPayload = {
   culture: 'te';
@@ -28,6 +28,7 @@ type ResolveInput = {
   persons: PersonNode[];
   relationships: RelationshipEdge[];
   primaryPath: string[];
+  classification?: RelationshipClassification;
 };
 
 type HopDebug = {

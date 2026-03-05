@@ -44,16 +44,22 @@ export class RelationshipService {
       persons,
       relationships,
       primaryPath,
+      classification,
     });
 
     return { ...classification, kinship };
   }
 
   private isTeluguRequested(culture?: string, locale?: string, language?: string): boolean {
-    const values = [culture, locale, language].filter((value): value is string => Boolean(value));
-    return values.some((value) => {
-      const normalized = value.trim().toLowerCase();
-      return normalized === 'telugu' || normalized.startsWith('te');
-    });
+    const normalizedCulture = (culture ?? '').trim().toLowerCase();
+    const normalizedLocale = (locale ?? '').trim().toLowerCase();
+    const normalizedLanguage = (language ?? '').trim().toLowerCase();
+
+    return (
+      normalizedCulture === 'te' ||
+      normalizedCulture === 'telugu' ||
+      normalizedLocale.startsWith('te') ||
+      normalizedLanguage === 'te'
+    );
   }
 }
