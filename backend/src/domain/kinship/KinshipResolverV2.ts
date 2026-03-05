@@ -5,8 +5,8 @@ import type { PersonNode, RelationshipClassification, RelationshipEdge } from '.
 
 type Confidence = 'high' | 'medium' | 'low';
 type AgeKey = 'older' | 'younger' | 'unknown';
-type AgeVariant = Record<AgeKey, string>;
-export type KinshipDebug = Record<string, unknown>;
+type AgeVariant = { [K in AgeKey]: string };
+export type KinshipDebug = { [key: string]: unknown };
 
 export type KinshipPayload = {
   culture: 'te';
@@ -45,9 +45,9 @@ type HopDebug = {
   descriptiveTePart: string;
 };
 
-const kinshipMap: Record<string, KinshipMapEntry> =
+const kinshipMap: { [code: string]: KinshipMapEntry } =
   typeof teluguMapJson === 'object' && teluguMapJson
-    ? (teluguMapJson as unknown as Record<string, KinshipMapEntry>)
+    ? (teluguMapJson as unknown as { [code: string]: KinshipMapEntry })
     : {};
 
 const confidenceRank: { [K in Confidence]: number } = {

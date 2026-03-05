@@ -9,7 +9,7 @@
     "start": "node dist/server.js",
     "lint": "eslint \"src/**/*.ts\" \"tests/**/*.ts\"",
     "pretest": "DATABASE_URL=file:./dev.db prisma migrate deploy",
-    "test": "JWT_SECRET=test-jwt-secret DATABASE_URL=file:./dev.db jest --coverage",
+    "test": "JWT_SECRET=test-jwt-secret DATABASE_URL=file:./dev.db jest --coverage --runInBand --coverage=false",
     "test:watch": "JWT_SECRET=test-jwt-secret DATABASE_URL=file:./dev.db jest --watch",
     "prisma:generate": "prisma generate",
     "prisma:migrate": "prisma migrate dev",
