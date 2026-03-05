@@ -1,14 +1,19 @@
 export type AgeOrder = 'older' | 'younger' | 'unknown';
 
-type PersonDOB = { dateOfBirth?: string | null };
+type PersonDOB = {
+  dateOfBirth?: string | null;
+};
 
 const parseDate = (value: string | null | undefined): number | null => {
   if (!value) return null;
-  const t = new Date(value).getTime();
-  return Number.isNaN(t) ? null : t;
+  const time = new Date(value).getTime();
+  return Number.isNaN(time) ? null : time;
 };
 
-export const compareAge = (personX?: PersonDOB | null, personY?: PersonDOB | null): AgeOrder => {
+export const compareAge = (
+  personX?: PersonDOB | null,
+  personY?: PersonDOB | null,
+): AgeOrder => {
   const x = parseDate(personX?.dateOfBirth);
   const y = parseDate(personY?.dateOfBirth);
 
