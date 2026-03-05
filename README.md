@@ -47,7 +47,7 @@ Clean Architecture + DDD layers:
 - `POST /families/:id/rollback/:versionNumber`
 - `GET /relationship?familyId=&personA=&personB=`
   - Optional: `culture=te` (or `telugu`) or `language=te` adds `kinship` payload:
-    `{ culture: "te", termTe: string | null, code: string | null, confidence: "high"|"medium"|"low", debug?: object }`
+    `{ culture: "te", termTe: string, code: string | null, confidence: "high"|"medium"|"low", debug?: object }`
 - `POST /ai/explain`
 - `POST /ai/ask`
 
