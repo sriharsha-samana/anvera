@@ -11,6 +11,7 @@ const parseDate = (value: string | null | undefined): number | null => {
 export const compareAge = (personX?: PersonDOB | null, personY?: PersonDOB | null): AgeOrder => {
   const x = parseDate(personX?.dateOfBirth);
   const y = parseDate(personY?.dateOfBirth);
+
   if (x === null || y === null) return 'unknown';
   if (x < y) return 'older';
   if (x > y) return 'younger';
