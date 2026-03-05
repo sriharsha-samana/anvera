@@ -4,7 +4,7 @@ import { prisma } from '../../infrastructure/db/prisma';
 import { NotFoundError } from '../../shared/errors';
 import type { RelationshipClassification } from '../../shared/types';
 
-type RelationshipResult = RelationshipClassification & { term?: KinshipTerm };
+type RelationshipResult = RelationshipClassification & { term?: KinshipTerm; kinshipTerm?: KinshipTerm };
 
 export class RelationshipService {
   private readonly graphEngine = new GraphEngine();
@@ -39,7 +39,7 @@ export class RelationshipService {
       classification,
     });
 
-    return term ? { ...classification, term } : classification;
+    return term ? { ...classification, term, kinshipTerm: term } : classification;
   }
 
   private isTeluguRequested(culture?: string, locale?: string): boolean {

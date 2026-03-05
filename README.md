@@ -46,7 +46,7 @@ Clean Architecture + DDD layers:
 - `GET /families/:id/versions`
 - `POST /families/:id/rollback/:versionNumber`
 - `GET /relationship?familyId=&personA=&personB=`
-  - Optional: `culture=te` or `locale=te-IN` adds `term` in response with `{ termKey, en, te, confidence }`
+  - Optional: `culture=te` or `locale=te-IN` adds `kinshipTerm` (and legacy `term`) in response with `{ termKey, en, te, confidence }`
 - `POST /ai/explain`
 - `POST /ai/ask`
 
