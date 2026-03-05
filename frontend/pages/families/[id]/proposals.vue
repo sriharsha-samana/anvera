@@ -1,12 +1,13 @@
 <template>
-  <div class="page-shell">
+  <div>
     <div class="d-flex flex-wrap align-center justify-space-between mb-4">
       <div>
         <h1 class="page-title">Proposal Management</h1>
         <p class="page-subtitle">Members submit change requests. Owner approves or rejects with full auditability.</p>
       </div>
-      <v-btn variant="outlined" @click="goBack">Back to Family</v-btn>
+      <v-btn variant="outlined" @click="goBack">Back to Overview</v-btn>
     </div>
+    <v-alert v-if="operationSuccess" type="success" variant="tonal" class="mb-4">{{ operationSuccess }}</v-alert>
     <v-alert v-if="operationError" type="error" variant="tonal" class="mb-4">{{ operationError }}</v-alert>
 
     <ProposalManagement
@@ -37,17 +38,21 @@
 </template>
 
 <script setup lang="ts">
-import { useQuery } from '@tanstack/vue-query';
+definePageMeta({ layout: 'app' });
+
+import { useQuery, useQueryClient } from '@tanstack/vue-query';
 import type { Family, Person, Proposal } from '@/types/api';
 
 const route = useRoute();
 const router = useRouter();
 const familyId = route.params.id as string;
 const { client } = useApi();
+const queryClient = useQueryClient();
 const rejectDialog = ref(false);
 const rejectReason = ref('Not aligned with governance rules');
 const rejectingProposalId = ref('');
 const operationError = ref('');
+const operationSuccess = ref('');
 
 const query = useQuery({
   queryKey: ['proposals', familyId],
@@ -79,24 +84,36 @@ const families = computed(() => familiesQuery.data.value ?? []);
 const submitProposal = async (payload: unknown): Promise<void> => {
   try {
     operationError.value = '';
+    operationSuccess.value = '';
     await client.post(`/families/${familyId}/proposals`, payload);
-    await query.refetch();
+    await Promise.all([
+      query.refetch(),
+      queryClient.invalidateQueries({ queryKey: ['shell-proposals', familyId] }),
+    ]);
+    operationSuccess.value = 'Proposal submitted successfully.';
   } catch (error: unknown) {
     operationError.value =
       (error as { response?: { data?: { message?: string } } }).response?.data?.message ??
       'Could not submit proposal.';
+    operationSuccess.value = '';
   }
 };
 
 const approve = async (id: string): Promise<void> => {
   try {
     operationError.value = '';
+    operationSuccess.value = '';
     await client.post(`/proposals/${id}/approve`);
-    await query.refetch();
+    await Promise.all([
+      query.refetch(),
+      queryClient.invalidateQueries({ queryKey: ['shell-proposals', familyId] }),
+    ]);
+    operationSuccess.value = 'Proposal approved successfully.';
   } catch (error: unknown) {
     operationError.value =
       (error as { response?: { data?: { message?: string } } }).response?.data?.message ??
       'Could not approve proposal.';
+    operationSuccess.value = '';
   }
 };
 
@@ -108,13 +125,19 @@ const openReject = (id: string): void => {
 const reject = async (): Promise<void> => {
   try {
     operationError.value = '';
+    operationSuccess.value = '';
     await client.post(`/proposals/${rejectingProposalId.value}/reject`, { reason: rejectReason.value });
     rejectDialog.value = false;
-    await query.refetch();
+    await Promise.all([
+      query.refetch(),
+      queryClient.invalidateQueries({ queryKey: ['shell-proposals', familyId] }),
+    ]);
+    operationSuccess.value = 'Proposal rejected successfully.';
   } catch (error: unknown) {
     operationError.value =
       (error as { response?: { data?: { message?: string } } }).response?.data?.message ??
       'Could not reject proposal.';
+    operationSuccess.value = '';
   }
 };
 

@@ -75,28 +75,12 @@
           <v-text-field v-model="editGivenName" label="Given Name" density="comfortable" />
           <v-text-field v-model="editFamilyName" label="Family Name" density="comfortable" />
           <v-select v-model="editGender" :items="genderOptions" label="Gender" density="comfortable" />
-          <v-text-field
+          <DateInputField
             v-model="editDateOfBirth"
             label="Date of Birth"
-            readonly
             density="comfortable"
-            placeholder="YYYY-MM-DD"
-            @click="editDobMenu = true"
+            persistent-hint
           />
-          <v-dialog v-model="editDobMenu" max-width="360">
-            <v-card title="Select Date of Birth">
-              <v-card-text>
-                <v-date-picker
-                  :model-value="editDateOfBirth || null"
-                  @update:model-value="onEditDobPick"
-                />
-              </v-card-text>
-              <v-card-actions>
-                <v-spacer />
-                <v-btn variant="text" @click="editDobMenu = false">Close</v-btn>
-              </v-card-actions>
-            </v-card>
-          </v-dialog>
           <v-text-field v-model="editPhone" label="Phone" density="comfortable" />
           <v-text-field v-model="editEmail" label="Email" density="comfortable" />
           <v-text-field v-model="editPlaceOfBirth" label="Place of Birth" density="comfortable" />
@@ -129,6 +113,8 @@
 </template>
 
 <script setup lang="ts">
+definePageMeta({ layout: 'app' });
+
 import { useQuery } from '@tanstack/vue-query';
 import type { Family, Person } from '@/types/api';
 
@@ -144,7 +130,6 @@ const editGivenName = ref('');
 const editFamilyName = ref('');
 const editGender = ref<'male' | 'female' | 'other' | 'unknown'>('unknown');
 const editDateOfBirth = ref('');
-const editDobMenu = ref(false);
 const editEmail = ref('');
 const editPhone = ref('');
 const editPlaceOfBirth = ref('');
@@ -232,19 +217,6 @@ const normalizeOptional = (value: string): string | undefined => {
 const isValidEmail = (value: string): boolean => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
 const normalizePhone = (value: string): string => value.replace(/[\s\-()]/g, '');
 const isValidPhone = (value: string): boolean => /^\+[1-9]\d{7,14}$/.test(normalizePhone(value));
-const toLocalYmd = (date: Date): string => {
-  const year = date.getFullYear();
-  const month = String(date.getMonth() + 1).padStart(2, '0');
-  const day = String(date.getDate()).padStart(2, '0');
-  return `${year}-${month}-${day}`;
-};
-const formatDateValue = (raw: unknown): string => {
-  if (!raw) return '';
-  if (Array.isArray(raw)) return formatDateValue(raw[0]);
-  if (typeof raw === 'string') return raw.slice(0, 10);
-  if (raw instanceof Date && !Number.isNaN(raw.getTime())) return toLocalYmd(raw);
-  return '';
-};
 const isFutureDate = (value: string): boolean => {
   if (!value) return false;
   const date = new Date(`${value}T00:00:00.000Z`);
@@ -264,9 +236,6 @@ const extractFirstFile = (value: File | File[] | null): File | null => {
   if (!value) return null;
   if (Array.isArray(value)) return value[0] ?? null;
   return value;
-};
-const onEditDobPick = (value: unknown): void => {
-  editDateOfBirth.value = formatDateValue(value);
 };
 const onEditProfilePhotoSelected = async (): Promise<void> => {
   const file = extractFirstFile(editPhotoFile.value);

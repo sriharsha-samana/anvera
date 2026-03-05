@@ -1,52 +1,67 @@
 <template>
-  <div class="page-shell">
+  <div>
     <div class="d-flex flex-wrap align-center justify-space-between mb-4">
       <div>
-        <h1 class="page-title">Graph View</h1>
-        <p class="page-subtitle">Hierarchical tree with couple nodes and parent-child connectors.</p>
+        <h1 class="page-title">{{ pageTitle }}</h1>
+        <p class="page-subtitle">{{ pageSubtitle }}</p>
       </div>
-      <v-btn variant="outlined" @click="goBack">Back to Family</v-btn>
+      <v-btn variant="outlined" @click="goBack">Back to Overview</v-btn>
     </div>
 
-    <v-card class="surface-card mb-4" variant="flat" title="Focus Mode">
-      <v-card-text>
-        <v-row>
-          <v-col cols="12" md="8">
-            <v-select
-              v-model="focusPersonId"
-              :items="focusOptions"
-              item-title="title"
-              item-value="value"
-              label="Focus on person"
-              clearable
-              @click:clear="onFocusClear"
-              density="comfortable"
-              hint="Shows selected person and 2-hop neighborhood; everything else is dimmed."
-              persistent-hint
-            />
-          </v-col>
-        </v-row>
-      </v-card-text>
-    </v-card>
-
-    <GraphVisualization
-      :persons="persons"
-      :relationships="relationships"
-      :focus-person-id="focusPersonId ?? undefined"
-      @select-person="openPerson"
+    <GraphToolbar
+      :layout-mode="layoutMode"
+      :focus-person-id="focusPersonId"
+      v-model:depth="focusDepth"
+      v-model:edge-scope="edgeScope"
+      v-model:parental-side="parentalSide"
+      :focus-options="focusOptions"
+      :disable-export="persons.length === 0 || downloading || layoutMode === 'radial' || layoutMode === 'timeline'"
+      @update:focus-person-id="onFocusPersonUpdate"
+      @download="downloadGraphImage"
     />
 
+    <GraphCanvas
+      ref="graphCanvasRef"
+      :persons="persons"
+      :relationships="relationships"
+      :layout-mode="layoutMode"
+      :focus-person-id="focusPersonId"
+      :depth="focusDepth"
+      :edge-scope="edgeScope"
+      :parental-side="parentalSide"
+      @select-person="openPerson"
+    />
   </div>
 </template>
 
 <script setup lang="ts">
 import { useQuery } from '@tanstack/vue-query';
+import { useUiStore } from '@/stores/ui';
 import type { Person } from '@/types/api';
+
+definePageMeta({ layout: 'app' });
+
+type GraphCanvasHandle = { downloadAsImage: (fileName?: string) => Promise<void> };
+type GraphLayoutMode = 'generations' | 'radial' | 'timeline';
 
 const route = useRoute();
 const router = useRouter();
 const familyId = route.params.id as string;
 const { client, authStore } = useApi();
+const ui = useUiStore();
+
+const graphCanvasRef = ref<GraphCanvasHandle | null>(null);
+const coerceLayoutMode = (value: unknown): GraphLayoutMode =>
+  value === 'radial' || value === 'timeline' ? value : 'generations';
+
+const layoutMode = ref<GraphLayoutMode>(coerceLayoutMode(route.query.layout));
+const focusPersonId = ref<string | null>(null);
+const autoFocusResolved = ref(false);
+const focusClearedByUser = ref(false);
+const focusDepth = ref(2);
+const edgeScope = ref<'all' | 'blood' | 'marriage'>('all');
+const parentalSide = ref<'all' | 'maternal' | 'paternal'>('all');
+const downloading = ref(false);
 
 const personQuery = useQuery({
   queryKey: ['graph-persons', familyId],
@@ -63,8 +78,17 @@ const relationshipQuery = useQuery({
 
 const persons = computed(() => personQuery.data.value ?? []);
 const relationships = computed(() => relationshipQuery.data.value ?? []);
-const focusPersonId = ref<string | null>(null);
-const focusManuallyCleared = ref(false);
+const pageTitle = computed(() => {
+  if (layoutMode.value === 'radial') return 'Radial Family Layout';
+  if (layoutMode.value === 'timeline') return 'Timeline Lineage View';
+  return 'Generational Band Layout';
+});
+
+const pageSubtitle = computed(() => {
+  if (layoutMode.value === 'radial') return 'Explore family members distributed around generation rings.';
+  if (layoutMode.value === 'timeline') return 'Review lineage by generation as a clean chronological sequence.';
+  return 'Review family structure grouped by generations with scoped depth filtering.';
+});
 
 const focusOptions = computed(() =>
   persons.value
@@ -76,10 +100,24 @@ const focusOptions = computed(() =>
 );
 
 watch(
+  () => route.query.layout,
+  (value) => {
+    const next = coerceLayoutMode(value);
+    if (next !== layoutMode.value) layoutMode.value = next;
+  },
+  { immediate: true },
+);
+
+watch(layoutMode, async (value) => {
+  const nextQuery = { ...route.query, layout: value };
+  if (route.query.layout === value) return;
+  await router.replace({ query: nextQuery });
+});
+
+watch(
   () => [persons.value, authStore.email, authStore.phone, authStore.username, focusPersonId.value] as const,
   () => {
-    if (focusManuallyCleared.value) return;
-    if (focusPersonId.value) return;
+    if (focusPersonId.value || autoFocusResolved.value || focusClearedByUser.value) return;
     const normalizePhone = (value: string): string => value.replace(/[\s\-()]/g, '');
     const authEmail = authStore.email?.trim().toLowerCase();
     const authPhone = authStore.phone ? normalizePhone(authStore.phone) : null;
@@ -101,27 +139,37 @@ watch(
     }
     if (match) {
       focusPersonId.value = match.id;
+      autoFocusResolved.value = true;
     }
   },
   { immediate: true, deep: true },
 );
 
-const onFocusClear = (): void => {
-  focusManuallyCleared.value = true;
-  focusPersonId.value = null;
-};
-
-watch(focusPersonId, (value) => {
+const onFocusPersonUpdate = (value: string | null): void => {
+  focusPersonId.value = value;
   if (value) {
-    focusManuallyCleared.value = false;
+    autoFocusResolved.value = true;
+    focusClearedByUser.value = false;
+    return;
   }
-});
+  focusClearedByUser.value = true;
+};
 
 const goBack = async (): Promise<void> => {
   await router.push(`/families/${familyId}`);
 };
 
-const openPerson = async (personId: string): Promise<void> => {
-  await router.push(`/families/${familyId}/persons/${personId}`);
+const openPerson = (personId: string): void => {
+  ui.openPerson(personId);
+};
+
+const downloadGraphImage = async (): Promise<void> => {
+  if (!graphCanvasRef.value) return;
+  try {
+    downloading.value = true;
+    await graphCanvasRef.value.downloadAsImage(`anvera-graph-${new Date().toISOString().slice(0, 10)}.png`);
+  } finally {
+    downloading.value = false;
+  }
 };
 </script>

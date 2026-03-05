@@ -7,7 +7,7 @@
         <p class="page-subtitle">Owner-only family settings and irreversible actions.</p>
       </div>
       <div class="d-flex ga-2">
-        <v-btn variant="outlined" @click="goOverview">Back to Family</v-btn>
+        <v-btn variant="outlined" @click="goOverview">Back to Overview</v-btn>
       </div>
     </div>
 
@@ -86,6 +86,8 @@
 </template>
 
 <script setup lang="ts">
+definePageMeta({ layout: 'app' });
+
 import { useQuery } from '@tanstack/vue-query';
 import type { Family } from '@/types/api';
 

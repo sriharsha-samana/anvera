@@ -115,25 +115,13 @@
                       <v-select v-model="registerGender" :items="genderOptions" label="Gender" density="comfortable" />
                     </v-col>
                     <v-col cols="12" md="6">
-                      <v-text-field
+                      <DateInputField
                         v-model="registerDateOfBirth"
                         label="Date of Birth"
-                        readonly
                         density="comfortable"
-                        placeholder="YYYY-MM-DD"
-                        @click="registerDobDialog = true"
+                        :max="todayDate"
+                        persistent-hint
                       />
-                      <v-dialog v-model="registerDobDialog" max-width="360">
-                        <v-card title="Select Date of Birth">
-                          <v-card-text>
-                            <v-date-picker :model-value="registerDateOfBirth || null" @update:model-value="onRegisterDobPick" />
-                          </v-card-text>
-                          <v-card-actions>
-                            <v-spacer />
-                            <v-btn variant="text" @click="registerDobDialog = false">Close</v-btn>
-                          </v-card-actions>
-                        </v-card>
-                      </v-dialog>
                     </v-col>
                   </v-row>
 
@@ -183,7 +171,6 @@ const registerGivenName = ref('');
 const registerFamilyName = ref('');
 const registerGender = ref<'male' | 'female' | 'other' | 'unknown'>('unknown');
 const registerDateOfBirth = ref('');
-const registerDobDialog = ref(false);
 const registerEmail = ref('');
 const registerPhone = ref('');
 const showLoginPassword = ref(false);
@@ -198,6 +185,8 @@ const { client, applyToken } = useApi();
 
 const normalizePhone = (value: string): string => value.replace(/[\s\-()]/g, '');
 const isValidPhone = (value: string): boolean => /^\+[1-9]\d{7,14}$/.test(normalizePhone(value));
+const now = new Date();
+const todayDate = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
 const isFutureDate = (value: string): boolean => {
   if (!value) return false;
   const date = new Date(`${value}T00:00:00.000Z`);
@@ -205,19 +194,6 @@ const isFutureDate = (value: string): boolean => {
   const now = new Date();
   const todayUtc = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate()));
   return date.getTime() > todayUtc.getTime();
-};
-const toLocalYmd = (date: Date): string => {
-  const year = date.getFullYear();
-  const month = String(date.getMonth() + 1).padStart(2, '0');
-  const day = String(date.getDate()).padStart(2, '0');
-  return `${year}-${month}-${day}`;
-};
-const formatDateValue = (raw: unknown): string => {
-  if (!raw) return '';
-  if (Array.isArray(raw)) return formatDateValue(raw[0]);
-  if (typeof raw === 'string') return raw.slice(0, 10);
-  if (raw instanceof Date && !Number.isNaN(raw.getTime())) return toLocalYmd(raw);
-  return '';
 };
 const normalizeOptional = (value: string): string | undefined => {
   const trimmed = value.trim();
@@ -234,10 +210,6 @@ const canRegister = computed(() => {
     registerPassword.value.length >= 6
   );
 });
-
-const onRegisterDobPick = (value: unknown): void => {
-  registerDateOfBirth.value = formatDateValue(value);
-};
 
 const onLogin = async (): Promise<void> => {
   if (!canLogin.value || submittingLogin.value) return;

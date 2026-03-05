@@ -59,6 +59,8 @@
 </template>
 
 <script setup lang="ts">
+definePageMeta({ layout: 'app' });
+
 import type { Family, Person } from '@/types/api';
 
 const router = useRouter();

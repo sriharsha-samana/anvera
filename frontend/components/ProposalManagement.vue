@@ -1,6 +1,29 @@
 <template>
   <v-card title="Proposal Management" class="mb-4">
     <v-card-text>
+      <div class="mb-4">
+        <div class="d-flex align-center justify-space-between mb-2">
+          <p class="text-subtitle-1 mb-0">Proposals</p>
+          <v-chip size="small" variant="tonal">{{ proposals.length }}</v-chip>
+        </div>
+        <v-alert v-if="proposals.length === 0" variant="tonal" type="info" density="compact">
+          No proposals yet for this family.
+        </v-alert>
+        <ProposalCard v-for="proposal in proposals" :key="proposal.id" :proposal="proposal" @open="openProposalDetail" />
+      </div>
+
+      <ProposalDetailDrawer
+        :model-value="detailDrawerOpen"
+        :proposal="selectedDetailProposal"
+        :show-actions="Boolean(isOwner && selectedDetailProposal?.status === 'PENDING')"
+        @close="detailDrawerOpen = false"
+        @approve="approveFromDrawer"
+        @reject="rejectFromDrawer"
+        @preview="openPreview"
+      />
+
+      <v-divider class="my-4" />
+
       <v-row>
         <v-col cols="12" md="5">
           <v-select v-model="type" :items="proposalTypes" label="Proposal Type" />
@@ -8,53 +31,16 @@
       </v-row>
 
       <v-row v-if="type === 'ADD_PERSON'">
-        <v-col cols="12" md="4"><v-text-field v-model="personGivenName" label="Given Name" /></v-col>
-        <v-col cols="12" md="3"><v-text-field v-model="personFamilyName" label="Family Name" /></v-col>
-        <v-col cols="12" md="2"><v-select v-model="personGender" :items="genderOptions" label="Gender" /></v-col>
-        <v-col cols="12" md="3">
-          <v-text-field
-            v-model="personDateOfBirth"
-            label="Date of Birth"
-            readonly
-            placeholder="YYYY-MM-DD"
-            @click="personDobMenu = true"
-          />
-          <v-dialog v-model="personDobMenu" max-width="360">
-            <v-card title="Select Date of Birth">
-              <v-card-text>
-                <v-date-picker
-                  :model-value="personDateOfBirth || null"
-                  @update:model-value="onProposalDobPick"
-                />
-              </v-card-text>
-              <v-card-actions>
-                <v-spacer />
-                <v-btn variant="text" @click="personDobMenu = false">Close</v-btn>
-              </v-card-actions>
-            </v-card>
-          </v-dialog>
-        </v-col>
-        <v-col cols="12" md="3"><v-text-field v-model="personPhone" label="Phone (+country code)" /></v-col>
-        <v-col cols="12" md="4"><v-text-field v-model="personEmail" label="Email (required)" /></v-col>
-        <v-col cols="12" md="4"><v-text-field v-model="personPlaceOfBirth" label="Place of Birth" /></v-col>
-        <v-col cols="12" md="4"><v-text-field v-model="personOccupation" label="Occupation" /></v-col>
         <v-col cols="12">
-          <v-file-input
-            v-model="personPhotoFile"
-            label="Profile Picture"
-            accept="image/png,image/jpeg,image/webp,image/gif"
-            prepend-icon="mdi-camera"
-            show-size
-            @update:model-value="onProposalProfilePhotoSelected"
-          />
-          <div v-if="personProfilePictureDataUrl" class="d-flex align-center ga-2 mt-2">
-            <v-avatar size="52">
-              <v-img :src="personProfilePictureDataUrl" alt="profile preview" />
-            </v-avatar>
-            <v-btn size="small" variant="text" color="error" @click="clearProposalProfilePhoto">Remove photo</v-btn>
+          <div class="d-flex flex-wrap align-center ga-2">
+            <v-btn color="primary" variant="outlined" prepend-icon="mdi-account-plus-outline" @click="addPersonDialog = true">
+              Open Add Member Form
+            </v-btn>
           </div>
+          <p class="text-caption text-medium-emphasis mt-2 mb-0">
+            Fill member details and submit directly from the dialog.
+          </p>
         </v-col>
-        <v-col cols="12"><v-textarea v-model="personNotes" label="Notes" rows="2" auto-grow /></v-col>
       </v-row>
 
       <v-row v-else-if="type === 'ADD_RELATIONSHIP'">
@@ -108,6 +94,13 @@
               v-if="row.field === 'gender'"
               v-model="row.value"
               :items="genderOptions"
+              label="Value"
+              :hint="editPersonCurrentHint(row.field)"
+              persistent-hint
+            />
+            <DateInputField
+              v-else-if="row.field === 'dateOfBirth'"
+              v-model="row.value"
               label="Value"
               :hint="editPersonCurrentHint(row.field)"
               persistent-hint
@@ -181,8 +174,53 @@
         </v-col>
       </v-row>
 
-      <v-btn color="primary" @click="submitProposal">Submit Proposal</v-btn>
+      <v-btn v-if="type !== 'ADD_PERSON'" color="primary" class="mt-3" @click="submitProposal">Submit Proposal</v-btn>
       <v-alert v-if="formError" type="error" variant="tonal" class="mt-3">{{ formError }}</v-alert>
+
+      <v-dialog v-model="addPersonDialog" max-width="880">
+        <v-card class="surface-card" title="Add Member (Proposal)">
+          <v-card-text>
+            <v-row>
+              <v-col cols="12" md="4"><v-text-field v-model="personGivenName" label="Given Name" /></v-col>
+              <v-col cols="12" md="3"><v-text-field v-model="personFamilyName" label="Family Name" /></v-col>
+              <v-col cols="12" md="2"><v-select v-model="personGender" :items="genderOptions" label="Gender" /></v-col>
+              <v-col cols="12" md="3">
+                <DateInputField
+                  v-model="personDateOfBirth"
+                  label="Date of Birth"
+                  persistent-hint
+                />
+              </v-col>
+              <v-col cols="12" md="3"><v-text-field v-model="personPhone" label="Phone (+country code)" /></v-col>
+              <v-col cols="12" md="4"><v-text-field v-model="personEmail" label="Email (required)" /></v-col>
+              <v-col cols="12" md="4"><v-text-field v-model="personPlaceOfBirth" label="Place of Birth" /></v-col>
+              <v-col cols="12" md="4"><v-text-field v-model="personOccupation" label="Occupation" /></v-col>
+              <v-col cols="12">
+                <v-file-input
+                  v-model="personPhotoFile"
+                  label="Profile Picture"
+                  accept="image/png,image/jpeg,image/webp,image/gif"
+                  prepend-icon="mdi-camera"
+                  show-size
+                  @update:model-value="onProposalProfilePhotoSelected"
+                />
+                <div v-if="personProfilePictureDataUrl" class="d-flex align-center ga-2 mt-2">
+                  <v-avatar size="52">
+                    <v-img :src="personProfilePictureDataUrl" alt="profile preview" />
+                  </v-avatar>
+                  <v-btn size="small" variant="text" color="error" @click="clearProposalProfilePhoto">Remove photo</v-btn>
+                </div>
+              </v-col>
+              <v-col cols="12"><v-textarea v-model="personNotes" label="Notes" rows="2" auto-grow /></v-col>
+            </v-row>
+          </v-card-text>
+          <v-card-actions>
+            <v-spacer />
+            <v-btn color="primary" @click="submitProposal">Submit Proposal</v-btn>
+            <v-btn @click="addPersonDialog = false">Done</v-btn>
+          </v-card-actions>
+        </v-card>
+      </v-dialog>
 
       <v-dialog v-model="showPreview" max-width="1200">
         <v-card title="Proposal Preview">
@@ -307,44 +345,6 @@
         </v-card>
       </v-dialog>
 
-      <v-divider class="my-4" />
-
-      <v-list>
-        <v-list-item v-for="proposal in proposals" :key="proposal.id">
-          <template #title>
-            {{ proposal.type }} - {{ proposal.status }}
-          </template>
-          <template #subtitle>
-            <span v-if="proposal.status === 'REJECTED' && proposal.reviewReason">
-              Rejected: {{ proposal.reviewReason }}
-            </span>
-            <span v-else-if="proposal.status === 'REJECTED'">Rejected</span>
-            <span v-else-if="proposal.overriddenByVersionNumber">Overridden in v{{ proposal.overriddenByVersionNumber }}</span>
-            <span v-else>Created {{ new Date(proposal.createdAt).toLocaleString() }}</span>
-          </template>
-          <template #append>
-            <div class="proposal-actions">
-              <v-btn
-                v-if="isOwner && proposal.status === 'PENDING'"
-                size="small"
-                color="success"
-                @click="$emit('approve', proposal.id)"
-              >
-                Approve
-              </v-btn>
-              <v-btn
-                v-if="isOwner && proposal.status === 'PENDING'"
-                size="small"
-                color="error"
-                @click="$emit('reject', proposal.id)"
-              >
-                Reject
-              </v-btn>
-              <v-btn size="small" @click="openPreview(proposal)">Preview</v-btn>
-            </div>
-          </template>
-        </v-list-item>
-      </v-list>
     </v-card-text>
   </v-card>
 </template>
@@ -490,7 +490,7 @@ const personGivenName = ref('');
 const personFamilyName = ref('');
 const personGender = ref<'male' | 'female' | 'other' | 'unknown'>('unknown');
 const personDateOfBirth = ref('');
-const personDobMenu = ref(false);
+const addPersonDialog = ref(false);
 const personEmail = ref('');
 const personPhone = ref('');
 const personPlaceOfBirth = ref('');
@@ -509,6 +509,8 @@ const importSourceFamilyId = ref('');
 const importIncludeRelationships = ref(true);
 const showPreview = ref(false);
 const selectedProposalSummary = ref<ProposalSummary | null>(null);
+const detailDrawerOpen = ref(false);
+const selectedDetailProposal = ref<Proposal | null>(null);
 const formError = ref('');
 const personOptions = computed(() =>
   props.persons
@@ -593,19 +595,6 @@ const normalizeOptional = (value: string): string | undefined => {
   const trimmed = value.trim();
   return trimmed.length > 0 ? trimmed : undefined;
 };
-const toLocalYmd = (date: Date): string => {
-  const year = date.getFullYear();
-  const month = String(date.getMonth() + 1).padStart(2, '0');
-  const day = String(date.getDate()).padStart(2, '0');
-  return `${year}-${month}-${day}`;
-};
-const formatDateValue = (raw: unknown): string => {
-  if (!raw) return '';
-  if (Array.isArray(raw)) return formatDateValue(raw[0]);
-  if (typeof raw === 'string') return raw.slice(0, 10);
-  if (raw instanceof Date && !Number.isNaN(raw.getTime())) return toLocalYmd(raw);
-  return '';
-};
 const isFutureDate = (value: string): boolean => {
   if (!value) return false;
   const date = new Date(`${value}T00:00:00.000Z`);
@@ -626,9 +615,6 @@ const extractFirstFile = (value: File | File[] | null): File | null => {
   if (Array.isArray(value)) return value[0] ?? null;
   return value;
 };
-const onProposalDobPick = (value: unknown): void => {
-  personDateOfBirth.value = formatDateValue(value);
-};
 const onProposalProfilePhotoSelected = async (): Promise<void> => {
   const file = extractFirstFile(personPhotoFile.value);
   if (!file) {
@@ -647,6 +633,23 @@ const onProposalProfilePhotoSelected = async (): Promise<void> => {
 const clearProposalProfilePhoto = (): void => {
   personPhotoFile.value = null;
   personProfilePictureDataUrl.value = '';
+};
+
+const openProposalDetail = (proposal: Proposal): void => {
+  selectedDetailProposal.value = proposal;
+  detailDrawerOpen.value = true;
+};
+
+const approveFromDrawer = (proposalId: string): void => {
+  detailDrawerOpen.value = false;
+  selectedDetailProposal.value = null;
+  emit('approve', proposalId);
+};
+
+const rejectFromDrawer = (proposalId: string): void => {
+  detailDrawerOpen.value = false;
+  selectedDetailProposal.value = null;
+  emit('reject', proposalId);
 };
 
 const submitProposal = (): void => {
@@ -688,6 +691,7 @@ const submitProposal = (): void => {
         profilePictureDataUrl: normalizeOptional(personProfilePictureDataUrl.value),
       },
     });
+    addPersonDialog.value = false;
     return;
   }
 
@@ -1107,25 +1111,9 @@ void props;
   color: #1f2937;
 }
 
-.proposal-actions {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-  justify-content: flex-end;
-}
-
 @media (max-width: 680px) {
   .preview-grid {
     grid-template-columns: 1fr;
-  }
-
-  .proposal-actions {
-    width: 100%;
-    justify-content: stretch;
-  }
-
-  .proposal-actions :deep(.v-btn) {
-    flex: 1 1 100%;
   }
 }
 </style>

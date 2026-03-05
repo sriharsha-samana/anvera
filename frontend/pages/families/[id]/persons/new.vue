@@ -22,15 +22,11 @@
           </v-col>
 
           <v-col cols="12" md="4">
-            <v-text-field
+            <DateInputField
               v-model="dateOfBirth"
               label="Date of Birth"
-              type="date"
               density="comfortable"
-              placeholder="YYYY-MM-DD"
               :max="todayDate"
-              clearable
-              hint="Use calendar or type YYYY-MM-DD"
               persistent-hint
             />
           </v-col>
@@ -83,6 +79,8 @@
 </template>
 
 <script setup lang="ts">
+definePageMeta({ layout: 'app' });
+
 import { useQuery } from '@tanstack/vue-query';
 import type { Family } from '@/types/api';
 

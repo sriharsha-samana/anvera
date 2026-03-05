@@ -70,6 +70,8 @@
 </template>
 
 <script setup lang="ts">
+definePageMeta({ layout: 'app' });
+
 import { useQuery } from '@tanstack/vue-query';
 import type { Family } from '@/types/api';
 

@@ -226,6 +226,15 @@ export class GraphEngine {
     relationships: RelationshipEdge[],
     depthLimit = 8,
   ): RelationshipClassification {
+    if (personA === personB) {
+      return {
+        label: 'Self',
+        paths: [[personA]],
+        multiplePaths: false,
+        cycleDetected: this.detectParentCycle(relationships),
+      };
+    }
+
     const adjacency = this.buildAdjacencyMap(persons, relationships);
     const paths = this.bfsAllShortestPaths(adjacency, personA, personB, depthLimit);
     const multiplePaths = this.detectMultiplePaths(paths);
@@ -252,6 +261,29 @@ export class GraphEngine {
         return { label: 'Parent', paths, multiplePaths, cycleDetected };
       }
       return { label: 'Child', paths, multiplePaths, cycleDetected };
+    }
+
+    // Fallback for datasets that model avuncular links via SIBLING + PARENT
+    // but do not include complete shared-parent lineage for both siblings.
+    if (shortestPath.length === 3) {
+      const a = shortestPath[0];
+      const b = shortestPath[1];
+      const c = shortestPath[2];
+      const ab = this.findDirectEdge([a, b], relationships);
+      const bc = this.findDirectEdge([b, c], relationships);
+
+      const abIsSibling = ab?.type === 'SIBLING';
+      const bcIsParentForward = bc?.type === 'PARENT' && bc.fromPersonId === b && bc.toPersonId === c;
+      const abIsParentReverse = ab?.type === 'PARENT' && ab.fromPersonId === b && ab.toPersonId === a;
+      const bcIsSibling = bc?.type === 'SIBLING';
+
+      if (abIsSibling && bcIsParentForward) {
+        return { label: 'Uncle/Aunt', paths, multiplePaths, cycleDetected };
+      }
+
+      if (abIsParentReverse && bcIsSibling) {
+        return { label: 'Niece/Nephew', paths, multiplePaths, cycleDetected };
+      }
     }
 
     const lca = this.computeLowestCommonAncestor(personA, personB, relationships, depthLimit);
