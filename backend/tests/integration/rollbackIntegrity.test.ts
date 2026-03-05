@@ -80,6 +80,6 @@ describe('Rollback integrity', () => {
       where: { familyId: family.id },
       orderBy: { name: 'asc' },
     });
-    expect(persons.map((p) => p.name)).toEqual(['P1']);
+    expect(persons.map((p) => p.name)).toEqual(['P One']);
   });
 });

@@ -3,27 +3,41 @@ import { compareAge, type AgeOrder } from './age';
 import { buildKinshipCode } from './KinshipCodeBuilder';
 import type { PersonNode, RelationshipClassification, RelationshipEdge } from '../../shared/types';
 
+type Confidence = 'high' | 'medium' | 'low';
+type AgeKey = 'older' | 'younger' | 'unknown';
+type AgeVariant = { [K in AgeKey]: string };
+type KinshipDebug = { [key: string]: unknown };
+
 export type KinshipPayload = {
   culture: 'te';
   termTe: string;
   code: string | null;
   termKey: string;
-  confidence: 'high' | 'medium' | 'low';
-  debug?: Record<string, unknown>;
+  confidence: Confidence;
+  debug?: KinshipDebug;
 };
 
-type AgeVariant = Record<'older' | 'younger' | 'unknown', string>;
-
-type KinshipMapEntry = {
+export type KinshipMapEntry = {
   en: string;
   te: string | AgeVariant;
-  confidence: 'high' | 'medium' | 'low';
+  confidence: Confidence;
   note?: string;
   address?: {
     ageAware?: AgeVariant;
     [k: string]: unknown;
   };
   tags?: string[];
+};
+
+export type KinshipV2Result = {
+  code: string | null;
+  termKey: string;
+  termTe: string;
+  en?: string;
+  confidence: Confidence;
+  note?: string;
+  addressTe?: string;
+  debug?: KinshipDebug;
 };
 
 type ResolveInput = {
@@ -44,18 +58,18 @@ type HopDebug = {
   descriptiveTePart: string;
 };
 
-const kinshipMap: Record<string, KinshipMapEntry> =
+const kinshipMap: { [code: string]: KinshipMapEntry } =
   typeof teluguMapJson === 'object' && teluguMapJson
-    ? (teluguMapJson as Record<string, KinshipMapEntry>)
+    ? (teluguMapJson as { [code: string]: KinshipMapEntry })
     : {};
 
-const confidenceRank: Record<'high' | 'medium' | 'low', number> = {
+const confidenceRank: { [K in Confidence]: number } = {
   high: 3,
   medium: 2,
   low: 1,
 };
 
-const minConfidence = (...values: Array<'high' | 'medium' | 'low'>): 'high' | 'medium' | 'low' => {
+const minConfidence = (...values: Confidence[]): Confidence => {
   const sorted = [...values].sort((a, b) => confidenceRank[a] - confidenceRank[b]);
   return sorted[0] ?? 'low';
 };
@@ -63,7 +77,7 @@ const minConfidence = (...values: Array<'high' | 'medium' | 'low'>): 'high' | 'm
 const personById = (persons: PersonNode[], personId: string): PersonNode | undefined =>
   persons.find((p) => p.id === personId);
 
-const safeConfidence = (value: string): 'high' | 'medium' | 'low' => {
+const safeConfidence = (value: string): Confidence => {
   if (value === 'high' || value === 'medium' || value === 'low') return value;
   return 'low';
 };
@@ -169,7 +183,7 @@ export class KinshipResolverV2 {
       );
       const termTe = selectVariant(entry.te, order);
 
-      const debug: Record<string, unknown> = {
+      const debug: KinshipDebug = {
         code,
         order,
       };

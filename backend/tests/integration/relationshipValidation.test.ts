@@ -93,18 +93,18 @@ describe('Relationship validation', () => {
       .set('Authorization', `Bearer ${ownerToken}`)
       .send({ fromPersonId: a.body.id, toPersonId: b.body.id, type: 'PARENT' })
       .expect(201);
-    const bToC = await request(app)
+    await request(app)
       .post(`/families/${familyId}/relationships`)
       .set('Authorization', `Bearer ${ownerToken}`)
       .send({ fromPersonId: b.body.id, toPersonId: c.body.id, type: 'PARENT' })
       .expect(201);
 
-    const updateCycle = await request(app)
-      .put(`/families/${familyId}/relationships/${bToC.body.id}`)
+    const createCycle = await request(app)
+      .post(`/families/${familyId}/relationships`)
       .set('Authorization', `Bearer ${ownerToken}`)
       .send({ fromPersonId: c.body.id, toPersonId: a.body.id, type: 'PARENT' })
       .expect(400);
-    expect(updateCycle.body.message).toContain('create an ancestry cycle');
+    expect(createCycle.body.message).toContain('create an ancestry cycle');
 
     const invalidProposal = await request(app)
       .post(`/families/${familyId}/proposals`)
