@@ -48,6 +48,7 @@ Clean Architecture + DDD layers:
 - `GET /relationship?familyId=&personA=&personB=`
   - Optional: `culture=te` (or `telugu`) or `language=te` adds `kinship` payload:
     `{ culture: "te", termTe: string, code: string | null, termKey: string, confidence: "high"|"medium"|"low", debug?: object }`
+  - Fallback behavior: when a direct v2 Telugu map match is unavailable, API still returns non-empty `termTe` (descriptive Telugu chain or `సంబంధం`) with `confidence: "low"`.
 - `POST /ai/explain`
 - `POST /ai/ask`
 

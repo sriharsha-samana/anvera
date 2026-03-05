@@ -12,14 +12,18 @@ export type KinshipPayload = {
   debug?: Record<string, unknown>;
 };
 
+type AgeVariant = Record<'older' | 'younger' | 'unknown', string>;
+
 type KinshipMapEntry = {
-  en?: string;
-  te?: string | Record<AgeOrder, string>;
-  confidence?: 'high' | 'medium' | 'low';
+  en: string;
+  te: string | AgeVariant;
+  confidence: 'high' | 'medium' | 'low';
   note?: string;
   address?: {
-    ageAware?: Record<AgeOrder, string>;
+    ageAware?: AgeVariant;
+    [k: string]: unknown;
   };
+  tags?: string[];
 };
 
 type ResolveInput = {
@@ -59,12 +63,12 @@ const minConfidence = (...values: Array<'high' | 'medium' | 'low'>): 'high' | 'm
 const personById = (persons: PersonNode[], personId: string): PersonNode | undefined =>
   persons.find((p) => p.id === personId);
 
-const safeConfidence = (value: string | undefined): 'high' | 'medium' | 'low' => {
+const safeConfidence = (value: string): 'high' | 'medium' | 'low' => {
   if (value === 'high' || value === 'medium' || value === 'low') return value;
   return 'low';
 };
 
-const selectVariant = (value: string | Record<AgeOrder, string>, order: AgeOrder): string => {
+const selectVariant = (value: string | AgeVariant, order: AgeOrder): string => {
   if (typeof value === 'string') return value;
   return value[order] ?? value.unknown ?? Object.values(value)[0] ?? 'సంబంధం';
 };
