@@ -1,0 +1,5072 @@
+{
+  "SELF": {
+    "en": "self",
+    "te": "నేను",
+    "confidence": "high",
+    "tags": [
+      "atomic"
+    ]
+  },
+  "H": {
+    "en": "husband",
+    "te": "భర్త",
+    "confidence": "high",
+    "tags": [
+      "atomic"
+    ]
+  },
+  "W": {
+    "en": "wife",
+    "te": "భార్య",
+    "confidence": "high",
+    "tags": [
+      "atomic"
+    ]
+  },
+  "F": {
+    "en": "father",
+    "te": "తండ్రి / నాన్న",
+    "confidence": "high",
+    "tags": [
+      "atomic"
+    ]
+  },
+  "M": {
+    "en": "mother",
+    "te": "తల్లి / అమ్మ",
+    "confidence": "high",
+    "tags": [
+      "atomic"
+    ]
+  },
+  "S": {
+    "en": "son",
+    "te": "కొడుకు",
+    "confidence": "high",
+    "tags": [
+      "atomic"
+    ]
+  },
+  "D": {
+    "en": "daughter",
+    "te": "కూతురు",
+    "confidence": "high",
+    "tags": [
+      "atomic"
+    ]
+  },
+  "B": {
+    "en": "brother",
+    "te": "సోదరుడు",
+    "confidence": "medium",
+    "note": "If age known: అన్న (elder) / తమ్ముడు (younger).",
+    "tags": [
+      "atomic"
+    ]
+  },
+  "Z": {
+    "en": "sister",
+    "te": "సోదరి",
+    "confidence": "medium",
+    "note": "If age known: అక్క (elder) / చెల్లి (younger).",
+    "tags": [
+      "atomic"
+    ]
+  },
+  "WS": {
+    "en": "wife's son",
+    "te": "భార్య → కొడుకు",
+    "confidence": "low",
+    "note": "Descriptive (step/previous marriage)."
+  },
+  "WD": {
+    "en": "wife's daughter",
+    "te": "భార్య → కూతురు",
+    "confidence": "low",
+    "note": "Descriptive (step/previous marriage)."
+  },
+  "HS": {
+    "en": "husband's son",
+    "te": "భర్త → కొడుకు",
+    "confidence": "low",
+    "note": "Descriptive (step/previous marriage)."
+  },
+  "HD": {
+    "en": "husband's daughter",
+    "te": "భర్త → కూతురు",
+    "confidence": "low",
+    "note": "Descriptive (step/previous marriage)."
+  },
+  "FF": {
+    "en": "paternal grandfather",
+    "te": "తాత",
+    "confidence": "high"
+  },
+  "FM": {
+    "en": "paternal grandmother",
+    "te": "నానమ్మ / అమ్మమ్మ",
+    "confidence": "medium",
+    "note": "Term varies by dialect/family."
+  },
+  "MF": {
+    "en": "maternal grandfather",
+    "te": "తాత / తాతయ్య",
+    "confidence": "medium",
+    "note": "Term varies by dialect/family."
+  },
+  "MM": {
+    "en": "maternal grandmother",
+    "te": "అమ్మమ్మ",
+    "confidence": "high"
+  },
+  "SS": {
+    "en": "grandson",
+    "te": "మనవడు",
+    "confidence": "high"
+  },
+  "SD": {
+    "en": "granddaughter",
+    "te": "మనవరాలు",
+    "confidence": "high"
+  },
+  "DS": {
+    "en": "grandson",
+    "te": "మనవడు",
+    "confidence": "high"
+  },
+  "DD": {
+    "en": "granddaughter",
+    "te": "మనవరాలు",
+    "confidence": "high"
+  },
+  "FFF": {
+    "en": "great-grandfather",
+    "te": "ముత్తాత",
+    "confidence": "medium"
+  },
+  "FFM": {
+    "en": "great-grandmother",
+    "te": "ముత్తమ్మ",
+    "confidence": "medium"
+  },
+  "MFF": {
+    "en": "great-grandfather",
+    "te": "ముత్తాత",
+    "confidence": "medium"
+  },
+  "MMM": {
+    "en": "great-grandmother",
+    "te": "ముత్తమ్మ",
+    "confidence": "medium"
+  },
+  "SSS": {
+    "en": "great-grandson",
+    "te": "ముత్త మనవడు",
+    "confidence": "medium"
+  },
+  "SSD": {
+    "en": "great-granddaughter",
+    "te": "ముత్త మనవరాలు",
+    "confidence": "medium"
+  },
+  "DDS": {
+    "en": "great-grandson",
+    "te": "ముత్త మనవడు",
+    "confidence": "medium"
+  },
+  "DDD": {
+    "en": "great-granddaughter",
+    "te": "ముత్త మనవరాలు",
+    "confidence": "medium"
+  },
+  "FB": {
+    "en": "father's brother (paternal uncle)",
+    "te": "బాబాయి",
+    "confidence": "high",
+    "note": "If age known: పెద్ద నాన్న (elder), చిన్న నాన్న/బాబాయి (younger)."
+  },
+  "FBe": {
+    "en": "father's elder brother",
+    "te": "పెద్ద నాన్న",
+    "confidence": "high"
+  },
+  "FBY": {
+    "en": "father's younger brother",
+    "te": "చిన్న నాన్న / బాబాయి",
+    "confidence": "high"
+  },
+  "FZ": {
+    "en": "father's sister (paternal aunt)",
+    "te": "అత్త",
+    "confidence": "high"
+  },
+  "MB": {
+    "en": "mother's brother (maternal uncle)",
+    "te": "మామ",
+    "confidence": "high"
+  },
+  "MZ": {
+    "en": "mother's sister (maternal aunt)",
+    "te": "పిన్ని",
+    "confidence": "high"
+  },
+  "MBW": {
+    "en": "mother's brother's wife",
+    "te": "మామి",
+    "confidence": "medium",
+    "note": "Common term; some families also use 'అత్త' politely."
+  },
+  "MZH": {
+    "en": "mother's sister's husband",
+    "te": "మామ",
+    "confidence": "medium",
+    "note": "Often addressed as 'మామ' in many families."
+  },
+  "FBW": {
+    "en": "father's brother's wife",
+    "te": "పిన్నీ / అత్త",
+    "confidence": "low",
+    "note": "Often addressed like an aunt; term varies."
+  },
+  "FZH": {
+    "en": "father's sister's husband",
+    "te": "మామయ్య",
+    "confidence": "low",
+    "note": "Term varies; often treated like 'మామయ్య'."
+  },
+  "ZS": {
+    "en": "sister's son",
+    "te": "మేనల్లుడు",
+    "confidence": "high"
+  },
+  "ZD": {
+    "en": "sister's daughter",
+    "te": "మేనకోడలు",
+    "confidence": "high"
+  },
+  "BS": {
+    "en": "brother's son",
+    "te": "అల్లుడు పిల్ల / మేనల్లుడు (varies)",
+    "confidence": "low",
+    "note": "Usage varies by which side (paternal/maternal) and speaker; recommend descriptive fallback if unsure."
+  },
+  "BD": {
+    "en": "brother's daughter",
+    "te": "మేనకోడలు (varies)",
+    "confidence": "low",
+    "note": "Usage varies; recommend descriptive fallback if unsure."
+  },
+  "WF": {
+    "en": "wife's father",
+    "te": "మామయ్య",
+    "confidence": "high"
+  },
+  "WM": {
+    "en": "wife's mother",
+    "te": "అత్త",
+    "confidence": "high"
+  },
+  "WB": {
+    "en": "wife's brother",
+    "te": "మరిది",
+    "confidence": "high"
+  },
+  "WZ": {
+    "en": "wife's sister",
+    "te": "మరదలు",
+    "confidence": "high"
+  },
+  "HF": {
+    "en": "husband's father",
+    "te": "మామయ్య",
+    "confidence": "high"
+  },
+  "HM": {
+    "en": "husband's mother",
+    "te": "అత్త",
+    "confidence": "high"
+  },
+  "HB": {
+    "en": "husband's brother",
+    "te": "బావమరిది",
+    "confidence": "medium",
+    "note": "Often used for husband's younger brother; term varies."
+  },
+  "HZ": {
+    "en": "husband's sister",
+    "te": "ఆడపడుచు",
+    "confidence": "high"
+  },
+  "BW": {
+    "en": "brother's wife",
+    "te": "వదిన / మరదలు",
+    "confidence": "medium",
+    "note": "Elder brother's wife: వదిన; younger brother's wife: మరదలు."
+  },
+  "ZH": {
+    "en": "sister's husband",
+    "te": "బావ",
+    "confidence": "high"
+  },
+  "SW": {
+    "en": "son's wife",
+    "te": "కోడలు",
+    "confidence": "high"
+  },
+  "DH": {
+    "en": "daughter's husband",
+    "te": "అల్లుడు",
+    "confidence": "high"
+  },
+  "WBW": {
+    "en": "wife's brother's wife",
+    "te": "వదిన",
+    "confidence": "medium",
+    "note": "Often culturally addressed as అక్క/చెల్లి based on age.",
+    "address": {
+      "common": "అక్క / చెల్లి (age-based)"
+    }
+  },
+  "WZH": {
+    "en": "wife's sister's husband",
+    "te": "బావ",
+    "confidence": "medium"
+  },
+  "HBW": {
+    "en": "husband's brother's wife",
+    "te": "వదిన (varies)",
+    "confidence": "low",
+    "note": "Varies; often addressed as 'వదిన' if appropriate."
+  },
+  "HZH": {
+    "en": "husband's sister's husband",
+    "te": "బావ",
+    "confidence": "medium"
+  },
+  "C": {
+    "en": "cousin (generic)",
+    "te": "బంధువు (కజిన్)",
+    "confidence": "medium",
+    "note": "Telugu has more precise cousin terms; use side+age if available."
+  },
+  "FBS": {
+    "en": "father's brother's son (cousin)",
+    "te": "బంధువు (కజిన్)",
+    "confidence": "medium"
+  },
+  "FBD": {
+    "en": "father's brother's daughter (cousin)",
+    "te": "బంధువు (కజిన్)",
+    "confidence": "medium"
+  },
+  "FZS": {
+    "en": "father's sister's son (cousin)",
+    "te": "బంధువు (కజిన్)",
+    "confidence": "medium"
+  },
+  "FZD": {
+    "en": "father's sister's daughter (cousin)",
+    "te": "బంధువు (కజిన్)",
+    "confidence": "medium"
+  },
+  "MBS": {
+    "en": "mother's brother's son (cousin)",
+    "te": "బంధువు (కజిన్)",
+    "confidence": "medium"
+  },
+  "MBD": {
+    "en": "mother's brother's daughter (cousin)",
+    "te": "బంధువు (కజిన్)",
+    "confidence": "medium"
+  },
+  "MZS": {
+    "en": "mother's sister's son (cousin)",
+    "te": "బంధువు (కజిన్)",
+    "confidence": "medium"
+  },
+  "MZD": {
+    "en": "mother's sister's daughter (cousin)",
+    "te": "బంధువు (కజిన్)",
+    "confidence": "medium"
+  },
+  "FS": {
+    "en": "father's son",
+    "te": "తండ్రి → కొడుకు",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "FD": {
+    "en": "father's daughter",
+    "te": "తండ్రి → కూతురు",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "FH": {
+    "en": "father's husband",
+    "te": "తండ్రి → భర్త",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "FW": {
+    "en": "father's wife",
+    "te": "తండ్రి → భార్య",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "MS": {
+    "en": "mother's son",
+    "te": "తల్లి → కొడుకు",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "MD": {
+    "en": "mother's daughter",
+    "te": "తల్లి → కూతురు",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "MH": {
+    "en": "mother's husband",
+    "te": "తల్లి → భర్త",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "MW": {
+    "en": "mother's wife",
+    "te": "తల్లి → భార్య",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "BF": {
+    "en": "brother's father",
+    "te": "సోదరుడు → తండ్రి",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "BM": {
+    "en": "brother's mother",
+    "te": "సోదరుడు → తల్లి",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "BB": {
+    "en": "brother's brother",
+    "te": "సోదరుడు → సోదరుడు",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "BZ": {
+    "en": "brother's sister",
+    "te": "సోదరుడు → సోదరి",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "BH": {
+    "en": "brother's husband",
+    "te": "సోదరుడు → భర్త",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "ZF": {
+    "en": "sister's father",
+    "te": "సోదరి → తండ్రి",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "ZM": {
+    "en": "sister's mother",
+    "te": "సోదరి → తల్లి",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "ZB": {
+    "en": "sister's brother",
+    "te": "సోదరి → సోదరుడు",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "ZZ": {
+    "en": "sister's sister",
+    "te": "సోదరి → సోదరి",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "ZW": {
+    "en": "sister's wife",
+    "te": "సోదరి → భార్య",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "SF": {
+    "en": "son's father",
+    "te": "కొడుకు → తండ్రి",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "SM": {
+    "en": "son's mother",
+    "te": "కొడుకు → తల్లి",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "SB": {
+    "en": "son's brother",
+    "te": "కొడుకు → సోదరుడు",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "SZ": {
+    "en": "son's sister",
+    "te": "కొడుకు → సోదరి",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "SH": {
+    "en": "son's husband",
+    "te": "కొడుకు → భర్త",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "DF": {
+    "en": "daughter's father",
+    "te": "కూతురు → తండ్రి",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "DM": {
+    "en": "daughter's mother",
+    "te": "కూతురు → తల్లి",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "DB": {
+    "en": "daughter's brother",
+    "te": "కూతురు → సోదరుడు",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "DZ": {
+    "en": "daughter's sister",
+    "te": "కూతురు → సోదరి",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "DW": {
+    "en": "daughter's wife",
+    "te": "కూతురు → భార్య",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "HH": {
+    "en": "husband's husband",
+    "te": "భర్త → భర్త",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "HW": {
+    "en": "husband's wife",
+    "te": "భర్త → భార్య",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "WH": {
+    "en": "wife's husband",
+    "te": "భార్య → భర్త",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "WW": {
+    "en": "wife's wife",
+    "te": "భార్య → భార్య",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "FFB": {
+    "en": "father's father's brother",
+    "te": "తండ్రి → తండ్రి → సోదరుడు",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "FFZ": {
+    "en": "father's father's sister",
+    "te": "తండ్రి → తండ్రి → సోదరి",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "FFS": {
+    "en": "father's father's son",
+    "te": "తండ్రి → తండ్రి → కొడుకు",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "FFD": {
+    "en": "father's father's daughter",
+    "te": "తండ్రి → తండ్రి → కూతురు",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "FFH": {
+    "en": "father's father's husband",
+    "te": "తండ్రి → తండ్రి → భర్త",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "FFW": {
+    "en": "father's father's wife",
+    "te": "తండ్రి → తండ్రి → భార్య",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "FMF": {
+    "en": "father's mother's father",
+    "te": "తండ్రి → తల్లి → తండ్రి",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "FMM": {
+    "en": "father's mother's mother",
+    "te": "తండ్రి → తల్లి → తల్లి",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "FMB": {
+    "en": "father's mother's brother",
+    "te": "తండ్రి → తల్లి → సోదరుడు",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "FMZ": {
+    "en": "father's mother's sister",
+    "te": "తండ్రి → తల్లి → సోదరి",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "FMS": {
+    "en": "father's mother's son",
+    "te": "తండ్రి → తల్లి → కొడుకు",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "FMD": {
+    "en": "father's mother's daughter",
+    "te": "తండ్రి → తల్లి → కూతురు",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "FMH": {
+    "en": "father's mother's husband",
+    "te": "తండ్రి → తల్లి → భర్త",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "FMW": {
+    "en": "father's mother's wife",
+    "te": "తండ్రి → తల్లి → భార్య",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "FBF": {
+    "en": "father's brother's father",
+    "te": "తండ్రి → సోదరుడు → తండ్రి",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "FBM": {
+    "en": "father's brother's mother",
+    "te": "తండ్రి → సోదరుడు → తల్లి",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "FBB": {
+    "en": "father's brother's brother",
+    "te": "తండ్రి → సోదరుడు → సోదరుడు",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "FBZ": {
+    "en": "father's brother's sister",
+    "te": "తండ్రి → సోదరుడు → సోదరి",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "FBH": {
+    "en": "father's brother's husband",
+    "te": "తండ్రి → సోదరుడు → భర్త",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "FZF": {
+    "en": "father's sister's father",
+    "te": "తండ్రి → సోదరి → తండ్రి",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "FZM": {
+    "en": "father's sister's mother",
+    "te": "తండ్రి → సోదరి → తల్లి",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "FZB": {
+    "en": "father's sister's brother",
+    "te": "తండ్రి → సోదరి → సోదరుడు",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "FZZ": {
+    "en": "father's sister's sister",
+    "te": "తండ్రి → సోదరి → సోదరి",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "FZW": {
+    "en": "father's sister's wife",
+    "te": "తండ్రి → సోదరి → భార్య",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "FSF": {
+    "en": "father's son's father",
+    "te": "తండ్రి → కొడుకు → తండ్రి",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "FSM": {
+    "en": "father's son's mother",
+    "te": "తండ్రి → కొడుకు → తల్లి",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "FSB": {
+    "en": "father's son's brother",
+    "te": "తండ్రి → కొడుకు → సోదరుడు",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "FSZ": {
+    "en": "father's son's sister",
+    "te": "తండ్రి → కొడుకు → సోదరి",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "FSS": {
+    "en": "father's son's son",
+    "te": "తండ్రి → కొడుకు → కొడుకు",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "FSD": {
+    "en": "father's son's daughter",
+    "te": "తండ్రి → కొడుకు → కూతురు",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "FSH": {
+    "en": "father's son's husband",
+    "te": "తండ్రి → కొడుకు → భర్త",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "FSW": {
+    "en": "father's son's wife",
+    "te": "తండ్రి → కొడుకు → భార్య",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "FDF": {
+    "en": "father's daughter's father",
+    "te": "తండ్రి → కూతురు → తండ్రి",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "FDM": {
+    "en": "father's daughter's mother",
+    "te": "తండ్రి → కూతురు → తల్లి",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "FDB": {
+    "en": "father's daughter's brother",
+    "te": "తండ్రి → కూతురు → సోదరుడు",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "FDZ": {
+    "en": "father's daughter's sister",
+    "te": "తండ్రి → కూతురు → సోదరి",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "FDS": {
+    "en": "father's daughter's son",
+    "te": "తండ్రి → కూతురు → కొడుకు",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "FDD": {
+    "en": "father's daughter's daughter",
+    "te": "తండ్రి → కూతురు → కూతురు",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "FDH": {
+    "en": "father's daughter's husband",
+    "te": "తండ్రి → కూతురు → భర్త",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "FDW": {
+    "en": "father's daughter's wife",
+    "te": "తండ్రి → కూతురు → భార్య",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "FHF": {
+    "en": "father's husband's father",
+    "te": "తండ్రి → భర్త → తండ్రి",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "FHM": {
+    "en": "father's husband's mother",
+    "te": "తండ్రి → భర్త → తల్లి",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "FHB": {
+    "en": "father's husband's brother",
+    "te": "తండ్రి → భర్త → సోదరుడు",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "FHZ": {
+    "en": "father's husband's sister",
+    "te": "తండ్రి → భర్త → సోదరి",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "FHS": {
+    "en": "father's husband's son",
+    "te": "తండ్రి → భర్త → కొడుకు",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "FHD": {
+    "en": "father's husband's daughter",
+    "te": "తండ్రి → భర్త → కూతురు",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "FHH": {
+    "en": "father's husband's husband",
+    "te": "తండ్రి → భర్త → భర్త",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "FHW": {
+    "en": "father's husband's wife",
+    "te": "తండ్రి → భర్త → భార్య",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "FWF": {
+    "en": "father's wife's father",
+    "te": "తండ్రి → భార్య → తండ్రి",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "FWM": {
+    "en": "father's wife's mother",
+    "te": "తండ్రి → భార్య → తల్లి",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "FWB": {
+    "en": "father's wife's brother",
+    "te": "తండ్రి → భార్య → సోదరుడు",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "FWZ": {
+    "en": "father's wife's sister",
+    "te": "తండ్రి → భార్య → సోదరి",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "FWS": {
+    "en": "father's wife's son",
+    "te": "తండ్రి → భార్య → కొడుకు",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "FWD": {
+    "en": "father's wife's daughter",
+    "te": "తండ్రి → భార్య → కూతురు",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "FWH": {
+    "en": "father's wife's husband",
+    "te": "తండ్రి → భార్య → భర్త",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "FWW": {
+    "en": "father's wife's wife",
+    "te": "తండ్రి → భార్య → భార్య",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "MFM": {
+    "en": "mother's father's mother",
+    "te": "తల్లి → తండ్రి → తల్లి",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "MFB": {
+    "en": "mother's father's brother",
+    "te": "తల్లి → తండ్రి → సోదరుడు",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "MFZ": {
+    "en": "mother's father's sister",
+    "te": "తల్లి → తండ్రి → సోదరి",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "MFS": {
+    "en": "mother's father's son",
+    "te": "తల్లి → తండ్రి → కొడుకు",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "MFD": {
+    "en": "mother's father's daughter",
+    "te": "తల్లి → తండ్రి → కూతురు",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "MFH": {
+    "en": "mother's father's husband",
+    "te": "తల్లి → తండ్రి → భర్త",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "MFW": {
+    "en": "mother's father's wife",
+    "te": "తల్లి → తండ్రి → భార్య",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "MMF": {
+    "en": "mother's mother's father",
+    "te": "తల్లి → తల్లి → తండ్రి",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "MMB": {
+    "en": "mother's mother's brother",
+    "te": "తల్లి → తల్లి → సోదరుడు",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "MMZ": {
+    "en": "mother's mother's sister",
+    "te": "తల్లి → తల్లి → సోదరి",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "MMS": {
+    "en": "mother's mother's son",
+    "te": "తల్లి → తల్లి → కొడుకు",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "MMD": {
+    "en": "mother's mother's daughter",
+    "te": "తల్లి → తల్లి → కూతురు",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "MMH": {
+    "en": "mother's mother's husband",
+    "te": "తల్లి → తల్లి → భర్త",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "MMW": {
+    "en": "mother's mother's wife",
+    "te": "తల్లి → తల్లి → భార్య",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "MBF": {
+    "en": "mother's brother's father",
+    "te": "తల్లి → సోదరుడు → తండ్రి",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "MBM": {
+    "en": "mother's brother's mother",
+    "te": "తల్లి → సోదరుడు → తల్లి",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "MBB": {
+    "en": "mother's brother's brother",
+    "te": "తల్లి → సోదరుడు → సోదరుడు",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "MBZ": {
+    "en": "mother's brother's sister",
+    "te": "తల్లి → సోదరుడు → సోదరి",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "MBH": {
+    "en": "mother's brother's husband",
+    "te": "తల్లి → సోదరుడు → భర్త",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "MZF": {
+    "en": "mother's sister's father",
+    "te": "తల్లి → సోదరి → తండ్రి",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "MZM": {
+    "en": "mother's sister's mother",
+    "te": "తల్లి → సోదరి → తల్లి",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "MZB": {
+    "en": "mother's sister's brother",
+    "te": "తల్లి → సోదరి → సోదరుడు",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "MZZ": {
+    "en": "mother's sister's sister",
+    "te": "తల్లి → సోదరి → సోదరి",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "MZW": {
+    "en": "mother's sister's wife",
+    "te": "తల్లి → సోదరి → భార్య",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "MSF": {
+    "en": "mother's son's father",
+    "te": "తల్లి → కొడుకు → తండ్రి",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "MSM": {
+    "en": "mother's son's mother",
+    "te": "తల్లి → కొడుకు → తల్లి",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "MSB": {
+    "en": "mother's son's brother",
+    "te": "తల్లి → కొడుకు → సోదరుడు",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "MSZ": {
+    "en": "mother's son's sister",
+    "te": "తల్లి → కొడుకు → సోదరి",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "MSS": {
+    "en": "mother's son's son",
+    "te": "తల్లి → కొడుకు → కొడుకు",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "MSD": {
+    "en": "mother's son's daughter",
+    "te": "తల్లి → కొడుకు → కూతురు",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "MSH": {
+    "en": "mother's son's husband",
+    "te": "తల్లి → కొడుకు → భర్త",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "MSW": {
+    "en": "mother's son's wife",
+    "te": "తల్లి → కొడుకు → భార్య",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "MDF": {
+    "en": "mother's daughter's father",
+    "te": "తల్లి → కూతురు → తండ్రి",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "MDM": {
+    "en": "mother's daughter's mother",
+    "te": "తల్లి → కూతురు → తల్లి",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "MDB": {
+    "en": "mother's daughter's brother",
+    "te": "తల్లి → కూతురు → సోదరుడు",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "MDZ": {
+    "en": "mother's daughter's sister",
+    "te": "తల్లి → కూతురు → సోదరి",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "MDS": {
+    "en": "mother's daughter's son",
+    "te": "తల్లి → కూతురు → కొడుకు",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "MDD": {
+    "en": "mother's daughter's daughter",
+    "te": "తల్లి → కూతురు → కూతురు",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "MDH": {
+    "en": "mother's daughter's husband",
+    "te": "తల్లి → కూతురు → భర్త",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "MDW": {
+    "en": "mother's daughter's wife",
+    "te": "తల్లి → కూతురు → భార్య",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "MHF": {
+    "en": "mother's husband's father",
+    "te": "తల్లి → భర్త → తండ్రి",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "MHM": {
+    "en": "mother's husband's mother",
+    "te": "తల్లి → భర్త → తల్లి",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "MHB": {
+    "en": "mother's husband's brother",
+    "te": "తల్లి → భర్త → సోదరుడు",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "MHZ": {
+    "en": "mother's husband's sister",
+    "te": "తల్లి → భర్త → సోదరి",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "MHS": {
+    "en": "mother's husband's son",
+    "te": "తల్లి → భర్త → కొడుకు",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "MHD": {
+    "en": "mother's husband's daughter",
+    "te": "తల్లి → భర్త → కూతురు",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "MHH": {
+    "en": "mother's husband's husband",
+    "te": "తల్లి → భర్త → భర్త",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "MHW": {
+    "en": "mother's husband's wife",
+    "te": "తల్లి → భర్త → భార్య",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "MWF": {
+    "en": "mother's wife's father",
+    "te": "తల్లి → భార్య → తండ్రి",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "MWM": {
+    "en": "mother's wife's mother",
+    "te": "తల్లి → భార్య → తల్లి",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "MWB": {
+    "en": "mother's wife's brother",
+    "te": "తల్లి → భార్య → సోదరుడు",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "MWZ": {
+    "en": "mother's wife's sister",
+    "te": "తల్లి → భార్య → సోదరి",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "MWS": {
+    "en": "mother's wife's son",
+    "te": "తల్లి → భార్య → కొడుకు",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "MWD": {
+    "en": "mother's wife's daughter",
+    "te": "తల్లి → భార్య → కూతురు",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "MWH": {
+    "en": "mother's wife's husband",
+    "te": "తల్లి → భార్య → భర్త",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "MWW": {
+    "en": "mother's wife's wife",
+    "te": "తల్లి → భార్య → భార్య",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "BFF": {
+    "en": "brother's father's father",
+    "te": "సోదరుడు → తండ్రి → తండ్రి",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "BFM": {
+    "en": "brother's father's mother",
+    "te": "సోదరుడు → తండ్రి → తల్లి",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "BFB": {
+    "en": "brother's father's brother",
+    "te": "సోదరుడు → తండ్రి → సోదరుడు",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "BFZ": {
+    "en": "brother's father's sister",
+    "te": "సోదరుడు → తండ్రి → సోదరి",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "BFS": {
+    "en": "brother's father's son",
+    "te": "సోదరుడు → తండ్రి → కొడుకు",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "BFD": {
+    "en": "brother's father's daughter",
+    "te": "సోదరుడు → తండ్రి → కూతురు",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "BFH": {
+    "en": "brother's father's husband",
+    "te": "సోదరుడు → తండ్రి → భర్త",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "BFW": {
+    "en": "brother's father's wife",
+    "te": "సోదరుడు → తండ్రి → భార్య",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "BMF": {
+    "en": "brother's mother's father",
+    "te": "సోదరుడు → తల్లి → తండ్రి",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "BMM": {
+    "en": "brother's mother's mother",
+    "te": "సోదరుడు → తల్లి → తల్లి",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "BMB": {
+    "en": "brother's mother's brother",
+    "te": "సోదరుడు → తల్లి → సోదరుడు",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "BMZ": {
+    "en": "brother's mother's sister",
+    "te": "సోదరుడు → తల్లి → సోదరి",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "BMS": {
+    "en": "brother's mother's son",
+    "te": "సోదరుడు → తల్లి → కొడుకు",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "BMD": {
+    "en": "brother's mother's daughter",
+    "te": "సోదరుడు → తల్లి → కూతురు",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "BMH": {
+    "en": "brother's mother's husband",
+    "te": "సోదరుడు → తల్లి → భర్త",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "BMW": {
+    "en": "brother's mother's wife",
+    "te": "సోదరుడు → తల్లి → భార్య",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "BBF": {
+    "en": "brother's brother's father",
+    "te": "సోదరుడు → సోదరుడు → తండ్రి",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "BBM": {
+    "en": "brother's brother's mother",
+    "te": "సోదరుడు → సోదరుడు → తల్లి",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "BBB": {
+    "en": "brother's brother's brother",
+    "te": "సోదరుడు → సోదరుడు → సోదరుడు",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "BBZ": {
+    "en": "brother's brother's sister",
+    "te": "సోదరుడు → సోదరుడు → సోదరి",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "BBS": {
+    "en": "brother's brother's son",
+    "te": "సోదరుడు → సోదరుడు → కొడుకు",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "BBD": {
+    "en": "brother's brother's daughter",
+    "te": "సోదరుడు → సోదరుడు → కూతురు",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "BBH": {
+    "en": "brother's brother's husband",
+    "te": "సోదరుడు → సోదరుడు → భర్త",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "BBW": {
+    "en": "brother's brother's wife",
+    "te": "సోదరుడు → సోదరుడు → భార్య",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "BZF": {
+    "en": "brother's sister's father",
+    "te": "సోదరుడు → సోదరి → తండ్రి",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "BZM": {
+    "en": "brother's sister's mother",
+    "te": "సోదరుడు → సోదరి → తల్లి",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "BZB": {
+    "en": "brother's sister's brother",
+    "te": "సోదరుడు → సోదరి → సోదరుడు",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "BZZ": {
+    "en": "brother's sister's sister",
+    "te": "సోదరుడు → సోదరి → సోదరి",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "BZS": {
+    "en": "brother's sister's son",
+    "te": "సోదరుడు → సోదరి → కొడుకు",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "BZD": {
+    "en": "brother's sister's daughter",
+    "te": "సోదరుడు → సోదరి → కూతురు",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "BZH": {
+    "en": "brother's sister's husband",
+    "te": "సోదరుడు → సోదరి → భర్త",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "BZW": {
+    "en": "brother's sister's wife",
+    "te": "సోదరుడు → సోదరి → భార్య",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "BSF": {
+    "en": "brother's son's father",
+    "te": "సోదరుడు → కొడుకు → తండ్రి",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "BSM": {
+    "en": "brother's son's mother",
+    "te": "సోదరుడు → కొడుకు → తల్లి",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "BSB": {
+    "en": "brother's son's brother",
+    "te": "సోదరుడు → కొడుకు → సోదరుడు",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "BSZ": {
+    "en": "brother's son's sister",
+    "te": "సోదరుడు → కొడుకు → సోదరి",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "BSS": {
+    "en": "brother's son's son",
+    "te": "సోదరుడు → కొడుకు → కొడుకు",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "BSD": {
+    "en": "brother's son's daughter",
+    "te": "సోదరుడు → కొడుకు → కూతురు",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "BSH": {
+    "en": "brother's son's husband",
+    "te": "సోదరుడు → కొడుకు → భర్త",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "BSW": {
+    "en": "brother's son's wife",
+    "te": "సోదరుడు → కొడుకు → భార్య",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "BDF": {
+    "en": "brother's daughter's father",
+    "te": "సోదరుడు → కూతురు → తండ్రి",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "BDM": {
+    "en": "brother's daughter's mother",
+    "te": "సోదరుడు → కూతురు → తల్లి",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "BDB": {
+    "en": "brother's daughter's brother",
+    "te": "సోదరుడు → కూతురు → సోదరుడు",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "BDZ": {
+    "en": "brother's daughter's sister",
+    "te": "సోదరుడు → కూతురు → సోదరి",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "BDS": {
+    "en": "brother's daughter's son",
+    "te": "సోదరుడు → కూతురు → కొడుకు",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "BDD": {
+    "en": "brother's daughter's daughter",
+    "te": "సోదరుడు → కూతురు → కూతురు",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "BDH": {
+    "en": "brother's daughter's husband",
+    "te": "సోదరుడు → కూతురు → భర్త",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "BDW": {
+    "en": "brother's daughter's wife",
+    "te": "సోదరుడు → కూతురు → భార్య",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "BHF": {
+    "en": "brother's husband's father",
+    "te": "సోదరుడు → భర్త → తండ్రి",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "BHM": {
+    "en": "brother's husband's mother",
+    "te": "సోదరుడు → భర్త → తల్లి",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "BHB": {
+    "en": "brother's husband's brother",
+    "te": "సోదరుడు → భర్త → సోదరుడు",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "BHZ": {
+    "en": "brother's husband's sister",
+    "te": "సోదరుడు → భర్త → సోదరి",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "BHS": {
+    "en": "brother's husband's son",
+    "te": "సోదరుడు → భర్త → కొడుకు",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "BHD": {
+    "en": "brother's husband's daughter",
+    "te": "సోదరుడు → భర్త → కూతురు",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "BHH": {
+    "en": "brother's husband's husband",
+    "te": "సోదరుడు → భర్త → భర్త",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "BHW": {
+    "en": "brother's husband's wife",
+    "te": "సోదరుడు → భర్త → భార్య",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "BWF": {
+    "en": "brother's wife's father",
+    "te": "సోదరుడు → భార్య → తండ్రి",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "BWM": {
+    "en": "brother's wife's mother",
+    "te": "సోదరుడు → భార్య → తల్లి",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "BWB": {
+    "en": "brother's wife's brother",
+    "te": "సోదరుడు → భార్య → సోదరుడు",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "BWZ": {
+    "en": "brother's wife's sister",
+    "te": "సోదరుడు → భార్య → సోదరి",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "BWS": {
+    "en": "brother's wife's son",
+    "te": "సోదరుడు → భార్య → కొడుకు",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "BWD": {
+    "en": "brother's wife's daughter",
+    "te": "సోదరుడు → భార్య → కూతురు",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "BWH": {
+    "en": "brother's wife's husband",
+    "te": "సోదరుడు → భార్య → భర్త",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "BWW": {
+    "en": "brother's wife's wife",
+    "te": "సోదరుడు → భార్య → భార్య",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "ZFF": {
+    "en": "sister's father's father",
+    "te": "సోదరి → తండ్రి → తండ్రి",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "ZFM": {
+    "en": "sister's father's mother",
+    "te": "సోదరి → తండ్రి → తల్లి",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "ZFB": {
+    "en": "sister's father's brother",
+    "te": "సోదరి → తండ్రి → సోదరుడు",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "ZFZ": {
+    "en": "sister's father's sister",
+    "te": "సోదరి → తండ్రి → సోదరి",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "ZFS": {
+    "en": "sister's father's son",
+    "te": "సోదరి → తండ్రి → కొడుకు",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "ZFD": {
+    "en": "sister's father's daughter",
+    "te": "సోదరి → తండ్రి → కూతురు",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "ZFH": {
+    "en": "sister's father's husband",
+    "te": "సోదరి → తండ్రి → భర్త",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "ZFW": {
+    "en": "sister's father's wife",
+    "te": "సోదరి → తండ్రి → భార్య",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "ZMF": {
+    "en": "sister's mother's father",
+    "te": "సోదరి → తల్లి → తండ్రి",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "ZMM": {
+    "en": "sister's mother's mother",
+    "te": "సోదరి → తల్లి → తల్లి",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "ZMB": {
+    "en": "sister's mother's brother",
+    "te": "సోదరి → తల్లి → సోదరుడు",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "ZMZ": {
+    "en": "sister's mother's sister",
+    "te": "సోదరి → తల్లి → సోదరి",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "ZMS": {
+    "en": "sister's mother's son",
+    "te": "సోదరి → తల్లి → కొడుకు",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "ZMD": {
+    "en": "sister's mother's daughter",
+    "te": "సోదరి → తల్లి → కూతురు",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "ZMH": {
+    "en": "sister's mother's husband",
+    "te": "సోదరి → తల్లి → భర్త",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "ZMW": {
+    "en": "sister's mother's wife",
+    "te": "సోదరి → తల్లి → భార్య",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "ZBF": {
+    "en": "sister's brother's father",
+    "te": "సోదరి → సోదరుడు → తండ్రి",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "ZBM": {
+    "en": "sister's brother's mother",
+    "te": "సోదరి → సోదరుడు → తల్లి",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "ZBB": {
+    "en": "sister's brother's brother",
+    "te": "సోదరి → సోదరుడు → సోదరుడు",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "ZBZ": {
+    "en": "sister's brother's sister",
+    "te": "సోదరి → సోదరుడు → సోదరి",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "ZBS": {
+    "en": "sister's brother's son",
+    "te": "సోదరి → సోదరుడు → కొడుకు",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "ZBD": {
+    "en": "sister's brother's daughter",
+    "te": "సోదరి → సోదరుడు → కూతురు",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "ZBH": {
+    "en": "sister's brother's husband",
+    "te": "సోదరి → సోదరుడు → భర్త",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "ZBW": {
+    "en": "sister's brother's wife",
+    "te": "సోదరి → సోదరుడు → భార్య",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "ZZF": {
+    "en": "sister's sister's father",
+    "te": "సోదరి → సోదరి → తండ్రి",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "ZZM": {
+    "en": "sister's sister's mother",
+    "te": "సోదరి → సోదరి → తల్లి",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "ZZB": {
+    "en": "sister's sister's brother",
+    "te": "సోదరి → సోదరి → సోదరుడు",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "ZZZ": {
+    "en": "sister's sister's sister",
+    "te": "సోదరి → సోదరి → సోదరి",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "ZZS": {
+    "en": "sister's sister's son",
+    "te": "సోదరి → సోదరి → కొడుకు",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "ZZD": {
+    "en": "sister's sister's daughter",
+    "te": "సోదరి → సోదరి → కూతురు",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "ZZH": {
+    "en": "sister's sister's husband",
+    "te": "సోదరి → సోదరి → భర్త",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "ZZW": {
+    "en": "sister's sister's wife",
+    "te": "సోదరి → సోదరి → భార్య",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "ZSF": {
+    "en": "sister's son's father",
+    "te": "సోదరి → కొడుకు → తండ్రి",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "ZSM": {
+    "en": "sister's son's mother",
+    "te": "సోదరి → కొడుకు → తల్లి",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "ZSB": {
+    "en": "sister's son's brother",
+    "te": "సోదరి → కొడుకు → సోదరుడు",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "ZSZ": {
+    "en": "sister's son's sister",
+    "te": "సోదరి → కొడుకు → సోదరి",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "ZSS": {
+    "en": "sister's son's son",
+    "te": "సోదరి → కొడుకు → కొడుకు",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "ZSD": {
+    "en": "sister's son's daughter",
+    "te": "సోదరి → కొడుకు → కూతురు",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "ZSH": {
+    "en": "sister's son's husband",
+    "te": "సోదరి → కొడుకు → భర్త",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "ZSW": {
+    "en": "sister's son's wife",
+    "te": "సోదరి → కొడుకు → భార్య",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "ZDF": {
+    "en": "sister's daughter's father",
+    "te": "సోదరి → కూతురు → తండ్రి",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "ZDM": {
+    "en": "sister's daughter's mother",
+    "te": "సోదరి → కూతురు → తల్లి",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "ZDB": {
+    "en": "sister's daughter's brother",
+    "te": "సోదరి → కూతురు → సోదరుడు",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "ZDZ": {
+    "en": "sister's daughter's sister",
+    "te": "సోదరి → కూతురు → సోదరి",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "ZDS": {
+    "en": "sister's daughter's son",
+    "te": "సోదరి → కూతురు → కొడుకు",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "ZDD": {
+    "en": "sister's daughter's daughter",
+    "te": "సోదరి → కూతురు → కూతురు",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "ZDH": {
+    "en": "sister's daughter's husband",
+    "te": "సోదరి → కూతురు → భర్త",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "ZDW": {
+    "en": "sister's daughter's wife",
+    "te": "సోదరి → కూతురు → భార్య",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "ZHF": {
+    "en": "sister's husband's father",
+    "te": "సోదరి → భర్త → తండ్రి",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "ZHM": {
+    "en": "sister's husband's mother",
+    "te": "సోదరి → భర్త → తల్లి",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "ZHB": {
+    "en": "sister's husband's brother",
+    "te": "సోదరి → భర్త → సోదరుడు",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "ZHZ": {
+    "en": "sister's husband's sister",
+    "te": "సోదరి → భర్త → సోదరి",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "ZHS": {
+    "en": "sister's husband's son",
+    "te": "సోదరి → భర్త → కొడుకు",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "ZHD": {
+    "en": "sister's husband's daughter",
+    "te": "సోదరి → భర్త → కూతురు",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "ZHH": {
+    "en": "sister's husband's husband",
+    "te": "సోదరి → భర్త → భర్త",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "ZHW": {
+    "en": "sister's husband's wife",
+    "te": "సోదరి → భర్త → భార్య",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "ZWF": {
+    "en": "sister's wife's father",
+    "te": "సోదరి → భార్య → తండ్రి",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "ZWM": {
+    "en": "sister's wife's mother",
+    "te": "సోదరి → భార్య → తల్లి",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "ZWB": {
+    "en": "sister's wife's brother",
+    "te": "సోదరి → భార్య → సోదరుడు",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "ZWZ": {
+    "en": "sister's wife's sister",
+    "te": "సోదరి → భార్య → సోదరి",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "ZWS": {
+    "en": "sister's wife's son",
+    "te": "సోదరి → భార్య → కొడుకు",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "ZWD": {
+    "en": "sister's wife's daughter",
+    "te": "సోదరి → భార్య → కూతురు",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "ZWH": {
+    "en": "sister's wife's husband",
+    "te": "సోదరి → భార్య → భర్త",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "ZWW": {
+    "en": "sister's wife's wife",
+    "te": "సోదరి → భార్య → భార్య",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "SFF": {
+    "en": "son's father's father",
+    "te": "కొడుకు → తండ్రి → తండ్రి",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "SFM": {
+    "en": "son's father's mother",
+    "te": "కొడుకు → తండ్రి → తల్లి",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "SFB": {
+    "en": "son's father's brother",
+    "te": "కొడుకు → తండ్రి → సోదరుడు",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "SFZ": {
+    "en": "son's father's sister",
+    "te": "కొడుకు → తండ్రి → సోదరి",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "SFS": {
+    "en": "son's father's son",
+    "te": "కొడుకు → తండ్రి → కొడుకు",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "SFD": {
+    "en": "son's father's daughter",
+    "te": "కొడుకు → తండ్రి → కూతురు",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "SFH": {
+    "en": "son's father's husband",
+    "te": "కొడుకు → తండ్రి → భర్త",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "SFW": {
+    "en": "son's father's wife",
+    "te": "కొడుకు → తండ్రి → భార్య",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "SMF": {
+    "en": "son's mother's father",
+    "te": "కొడుకు → తల్లి → తండ్రి",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "SMM": {
+    "en": "son's mother's mother",
+    "te": "కొడుకు → తల్లి → తల్లి",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "SMB": {
+    "en": "son's mother's brother",
+    "te": "కొడుకు → తల్లి → సోదరుడు",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "SMZ": {
+    "en": "son's mother's sister",
+    "te": "కొడుకు → తల్లి → సోదరి",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "SMS": {
+    "en": "son's mother's son",
+    "te": "కొడుకు → తల్లి → కొడుకు",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "SMD": {
+    "en": "son's mother's daughter",
+    "te": "కొడుకు → తల్లి → కూతురు",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "SMH": {
+    "en": "son's mother's husband",
+    "te": "కొడుకు → తల్లి → భర్త",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "SMW": {
+    "en": "son's mother's wife",
+    "te": "కొడుకు → తల్లి → భార్య",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "SBF": {
+    "en": "son's brother's father",
+    "te": "కొడుకు → సోదరుడు → తండ్రి",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "SBM": {
+    "en": "son's brother's mother",
+    "te": "కొడుకు → సోదరుడు → తల్లి",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "SBB": {
+    "en": "son's brother's brother",
+    "te": "కొడుకు → సోదరుడు → సోదరుడు",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "SBZ": {
+    "en": "son's brother's sister",
+    "te": "కొడుకు → సోదరుడు → సోదరి",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "SBS": {
+    "en": "son's brother's son",
+    "te": "కొడుకు → సోదరుడు → కొడుకు",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "SBD": {
+    "en": "son's brother's daughter",
+    "te": "కొడుకు → సోదరుడు → కూతురు",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "SBH": {
+    "en": "son's brother's husband",
+    "te": "కొడుకు → సోదరుడు → భర్త",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "SBW": {
+    "en": "son's brother's wife",
+    "te": "కొడుకు → సోదరుడు → భార్య",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "SZF": {
+    "en": "son's sister's father",
+    "te": "కొడుకు → సోదరి → తండ్రి",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "SZM": {
+    "en": "son's sister's mother",
+    "te": "కొడుకు → సోదరి → తల్లి",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "SZB": {
+    "en": "son's sister's brother",
+    "te": "కొడుకు → సోదరి → సోదరుడు",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "SZZ": {
+    "en": "son's sister's sister",
+    "te": "కొడుకు → సోదరి → సోదరి",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "SZS": {
+    "en": "son's sister's son",
+    "te": "కొడుకు → సోదరి → కొడుకు",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "SZD": {
+    "en": "son's sister's daughter",
+    "te": "కొడుకు → సోదరి → కూతురు",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "SZH": {
+    "en": "son's sister's husband",
+    "te": "కొడుకు → సోదరి → భర్త",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "SZW": {
+    "en": "son's sister's wife",
+    "te": "కొడుకు → సోదరి → భార్య",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "SSF": {
+    "en": "son's son's father",
+    "te": "కొడుకు → కొడుకు → తండ్రి",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "SSM": {
+    "en": "son's son's mother",
+    "te": "కొడుకు → కొడుకు → తల్లి",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "SSB": {
+    "en": "son's son's brother",
+    "te": "కొడుకు → కొడుకు → సోదరుడు",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "SSZ": {
+    "en": "son's son's sister",
+    "te": "కొడుకు → కొడుకు → సోదరి",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "SSH": {
+    "en": "son's son's husband",
+    "te": "కొడుకు → కొడుకు → భర్త",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "SSW": {
+    "en": "son's son's wife",
+    "te": "కొడుకు → కొడుకు → భార్య",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "SDF": {
+    "en": "son's daughter's father",
+    "te": "కొడుకు → కూతురు → తండ్రి",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "SDM": {
+    "en": "son's daughter's mother",
+    "te": "కొడుకు → కూతురు → తల్లి",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "SDB": {
+    "en": "son's daughter's brother",
+    "te": "కొడుకు → కూతురు → సోదరుడు",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "SDZ": {
+    "en": "son's daughter's sister",
+    "te": "కొడుకు → కూతురు → సోదరి",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "SDS": {
+    "en": "son's daughter's son",
+    "te": "కొడుకు → కూతురు → కొడుకు",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "SDD": {
+    "en": "son's daughter's daughter",
+    "te": "కొడుకు → కూతురు → కూతురు",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "SDH": {
+    "en": "son's daughter's husband",
+    "te": "కొడుకు → కూతురు → భర్త",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "SDW": {
+    "en": "son's daughter's wife",
+    "te": "కొడుకు → కూతురు → భార్య",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "SHF": {
+    "en": "son's husband's father",
+    "te": "కొడుకు → భర్త → తండ్రి",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "SHM": {
+    "en": "son's husband's mother",
+    "te": "కొడుకు → భర్త → తల్లి",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "SHB": {
+    "en": "son's husband's brother",
+    "te": "కొడుకు → భర్త → సోదరుడు",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "SHZ": {
+    "en": "son's husband's sister",
+    "te": "కొడుకు → భర్త → సోదరి",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "SHS": {
+    "en": "son's husband's son",
+    "te": "కొడుకు → భర్త → కొడుకు",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "SHD": {
+    "en": "son's husband's daughter",
+    "te": "కొడుకు → భర్త → కూతురు",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "SHH": {
+    "en": "son's husband's husband",
+    "te": "కొడుకు → భర్త → భర్త",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "SHW": {
+    "en": "son's husband's wife",
+    "te": "కొడుకు → భర్త → భార్య",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "SWF": {
+    "en": "son's wife's father",
+    "te": "కొడుకు → భార్య → తండ్రి",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "SWM": {
+    "en": "son's wife's mother",
+    "te": "కొడుకు → భార్య → తల్లి",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "SWB": {
+    "en": "son's wife's brother",
+    "te": "కొడుకు → భార్య → సోదరుడు",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "SWZ": {
+    "en": "son's wife's sister",
+    "te": "కొడుకు → భార్య → సోదరి",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "SWS": {
+    "en": "son's wife's son",
+    "te": "కొడుకు → భార్య → కొడుకు",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "SWD": {
+    "en": "son's wife's daughter",
+    "te": "కొడుకు → భార్య → కూతురు",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "SWH": {
+    "en": "son's wife's husband",
+    "te": "కొడుకు → భార్య → భర్త",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "SWW": {
+    "en": "son's wife's wife",
+    "te": "కొడుకు → భార్య → భార్య",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "DFF": {
+    "en": "daughter's father's father",
+    "te": "కూతురు → తండ్రి → తండ్రి",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "DFM": {
+    "en": "daughter's father's mother",
+    "te": "కూతురు → తండ్రి → తల్లి",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "DFB": {
+    "en": "daughter's father's brother",
+    "te": "కూతురు → తండ్రి → సోదరుడు",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "DFZ": {
+    "en": "daughter's father's sister",
+    "te": "కూతురు → తండ్రి → సోదరి",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "DFS": {
+    "en": "daughter's father's son",
+    "te": "కూతురు → తండ్రి → కొడుకు",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "DFD": {
+    "en": "daughter's father's daughter",
+    "te": "కూతురు → తండ్రి → కూతురు",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "DFH": {
+    "en": "daughter's father's husband",
+    "te": "కూతురు → తండ్రి → భర్త",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "DFW": {
+    "en": "daughter's father's wife",
+    "te": "కూతురు → తండ్రి → భార్య",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "DMF": {
+    "en": "daughter's mother's father",
+    "te": "కూతురు → తల్లి → తండ్రి",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "DMM": {
+    "en": "daughter's mother's mother",
+    "te": "కూతురు → తల్లి → తల్లి",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "DMB": {
+    "en": "daughter's mother's brother",
+    "te": "కూతురు → తల్లి → సోదరుడు",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "DMZ": {
+    "en": "daughter's mother's sister",
+    "te": "కూతురు → తల్లి → సోదరి",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "DMS": {
+    "en": "daughter's mother's son",
+    "te": "కూతురు → తల్లి → కొడుకు",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "DMD": {
+    "en": "daughter's mother's daughter",
+    "te": "కూతురు → తల్లి → కూతురు",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "DMH": {
+    "en": "daughter's mother's husband",
+    "te": "కూతురు → తల్లి → భర్త",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "DMW": {
+    "en": "daughter's mother's wife",
+    "te": "కూతురు → తల్లి → భార్య",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "DBF": {
+    "en": "daughter's brother's father",
+    "te": "కూతురు → సోదరుడు → తండ్రి",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "DBM": {
+    "en": "daughter's brother's mother",
+    "te": "కూతురు → సోదరుడు → తల్లి",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "DBB": {
+    "en": "daughter's brother's brother",
+    "te": "కూతురు → సోదరుడు → సోదరుడు",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "DBZ": {
+    "en": "daughter's brother's sister",
+    "te": "కూతురు → సోదరుడు → సోదరి",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "DBS": {
+    "en": "daughter's brother's son",
+    "te": "కూతురు → సోదరుడు → కొడుకు",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "DBD": {
+    "en": "daughter's brother's daughter",
+    "te": "కూతురు → సోదరుడు → కూతురు",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "DBH": {
+    "en": "daughter's brother's husband",
+    "te": "కూతురు → సోదరుడు → భర్త",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "DBW": {
+    "en": "daughter's brother's wife",
+    "te": "కూతురు → సోదరుడు → భార్య",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "DZF": {
+    "en": "daughter's sister's father",
+    "te": "కూతురు → సోదరి → తండ్రి",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "DZM": {
+    "en": "daughter's sister's mother",
+    "te": "కూతురు → సోదరి → తల్లి",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "DZB": {
+    "en": "daughter's sister's brother",
+    "te": "కూతురు → సోదరి → సోదరుడు",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "DZZ": {
+    "en": "daughter's sister's sister",
+    "te": "కూతురు → సోదరి → సోదరి",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "DZS": {
+    "en": "daughter's sister's son",
+    "te": "కూతురు → సోదరి → కొడుకు",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "DZD": {
+    "en": "daughter's sister's daughter",
+    "te": "కూతురు → సోదరి → కూతురు",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "DZH": {
+    "en": "daughter's sister's husband",
+    "te": "కూతురు → సోదరి → భర్త",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "DZW": {
+    "en": "daughter's sister's wife",
+    "te": "కూతురు → సోదరి → భార్య",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "DSF": {
+    "en": "daughter's son's father",
+    "te": "కూతురు → కొడుకు → తండ్రి",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "DSM": {
+    "en": "daughter's son's mother",
+    "te": "కూతురు → కొడుకు → తల్లి",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "DSB": {
+    "en": "daughter's son's brother",
+    "te": "కూతురు → కొడుకు → సోదరుడు",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "DSZ": {
+    "en": "daughter's son's sister",
+    "te": "కూతురు → కొడుకు → సోదరి",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "DSS": {
+    "en": "daughter's son's son",
+    "te": "కూతురు → కొడుకు → కొడుకు",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "DSD": {
+    "en": "daughter's son's daughter",
+    "te": "కూతురు → కొడుకు → కూతురు",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "DSH": {
+    "en": "daughter's son's husband",
+    "te": "కూతురు → కొడుకు → భర్త",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "DSW": {
+    "en": "daughter's son's wife",
+    "te": "కూతురు → కొడుకు → భార్య",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "DDF": {
+    "en": "daughter's daughter's father",
+    "te": "కూతురు → కూతురు → తండ్రి",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "DDM": {
+    "en": "daughter's daughter's mother",
+    "te": "కూతురు → కూతురు → తల్లి",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "DDB": {
+    "en": "daughter's daughter's brother",
+    "te": "కూతురు → కూతురు → సోదరుడు",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "DDZ": {
+    "en": "daughter's daughter's sister",
+    "te": "కూతురు → కూతురు → సోదరి",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "DDH": {
+    "en": "daughter's daughter's husband",
+    "te": "కూతురు → కూతురు → భర్త",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "DDW": {
+    "en": "daughter's daughter's wife",
+    "te": "కూతురు → కూతురు → భార్య",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "DHF": {
+    "en": "daughter's husband's father",
+    "te": "కూతురు → భర్త → తండ్రి",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "DHM": {
+    "en": "daughter's husband's mother",
+    "te": "కూతురు → భర్త → తల్లి",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "DHB": {
+    "en": "daughter's husband's brother",
+    "te": "కూతురు → భర్త → సోదరుడు",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "DHZ": {
+    "en": "daughter's husband's sister",
+    "te": "కూతురు → భర్త → సోదరి",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "DHS": {
+    "en": "daughter's husband's son",
+    "te": "కూతురు → భర్త → కొడుకు",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "DHD": {
+    "en": "daughter's husband's daughter",
+    "te": "కూతురు → భర్త → కూతురు",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "DHH": {
+    "en": "daughter's husband's husband",
+    "te": "కూతురు → భర్త → భర్త",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "DHW": {
+    "en": "daughter's husband's wife",
+    "te": "కూతురు → భర్త → భార్య",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "DWF": {
+    "en": "daughter's wife's father",
+    "te": "కూతురు → భార్య → తండ్రి",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "DWM": {
+    "en": "daughter's wife's mother",
+    "te": "కూతురు → భార్య → తల్లి",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "DWB": {
+    "en": "daughter's wife's brother",
+    "te": "కూతురు → భార్య → సోదరుడు",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "DWZ": {
+    "en": "daughter's wife's sister",
+    "te": "కూతురు → భార్య → సోదరి",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "DWS": {
+    "en": "daughter's wife's son",
+    "te": "కూతురు → భార్య → కొడుకు",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "DWD": {
+    "en": "daughter's wife's daughter",
+    "te": "కూతురు → భార్య → కూతురు",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "DWH": {
+    "en": "daughter's wife's husband",
+    "te": "కూతురు → భార్య → భర్త",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "DWW": {
+    "en": "daughter's wife's wife",
+    "te": "కూతురు → భార్య → భార్య",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "HFF": {
+    "en": "husband's father's father",
+    "te": "భర్త → తండ్రి → తండ్రి",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "HFM": {
+    "en": "husband's father's mother",
+    "te": "భర్త → తండ్రి → తల్లి",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "HFB": {
+    "en": "husband's father's brother",
+    "te": "భర్త → తండ్రి → సోదరుడు",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "HFZ": {
+    "en": "husband's father's sister",
+    "te": "భర్త → తండ్రి → సోదరి",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "HFS": {
+    "en": "husband's father's son",
+    "te": "భర్త → తండ్రి → కొడుకు",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "HFD": {
+    "en": "husband's father's daughter",
+    "te": "భర్త → తండ్రి → కూతురు",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "HFH": {
+    "en": "husband's father's husband",
+    "te": "భర్త → తండ్రి → భర్త",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "HFW": {
+    "en": "husband's father's wife",
+    "te": "భర్త → తండ్రి → భార్య",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "HMF": {
+    "en": "husband's mother's father",
+    "te": "భర్త → తల్లి → తండ్రి",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "HMM": {
+    "en": "husband's mother's mother",
+    "te": "భర్త → తల్లి → తల్లి",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "HMB": {
+    "en": "husband's mother's brother",
+    "te": "భర్త → తల్లి → సోదరుడు",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "HMZ": {
+    "en": "husband's mother's sister",
+    "te": "భర్త → తల్లి → సోదరి",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "HMS": {
+    "en": "husband's mother's son",
+    "te": "భర్త → తల్లి → కొడుకు",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "HMD": {
+    "en": "husband's mother's daughter",
+    "te": "భర్త → తల్లి → కూతురు",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "HMH": {
+    "en": "husband's mother's husband",
+    "te": "భర్త → తల్లి → భర్త",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "HMW": {
+    "en": "husband's mother's wife",
+    "te": "భర్త → తల్లి → భార్య",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "HBF": {
+    "en": "husband's brother's father",
+    "te": "భర్త → సోదరుడు → తండ్రి",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "HBM": {
+    "en": "husband's brother's mother",
+    "te": "భర్త → సోదరుడు → తల్లి",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "HBB": {
+    "en": "husband's brother's brother",
+    "te": "భర్త → సోదరుడు → సోదరుడు",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "HBZ": {
+    "en": "husband's brother's sister",
+    "te": "భర్త → సోదరుడు → సోదరి",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "HBS": {
+    "en": "husband's brother's son",
+    "te": "భర్త → సోదరుడు → కొడుకు",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "HBD": {
+    "en": "husband's brother's daughter",
+    "te": "భర్త → సోదరుడు → కూతురు",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "HBH": {
+    "en": "husband's brother's husband",
+    "te": "భర్త → సోదరుడు → భర్త",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "HZF": {
+    "en": "husband's sister's father",
+    "te": "భర్త → సోదరి → తండ్రి",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "HZM": {
+    "en": "husband's sister's mother",
+    "te": "భర్త → సోదరి → తల్లి",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "HZB": {
+    "en": "husband's sister's brother",
+    "te": "భర్త → సోదరి → సోదరుడు",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "HZZ": {
+    "en": "husband's sister's sister",
+    "te": "భర్త → సోదరి → సోదరి",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "HZS": {
+    "en": "husband's sister's son",
+    "te": "భర్త → సోదరి → కొడుకు",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "HZD": {
+    "en": "husband's sister's daughter",
+    "te": "భర్త → సోదరి → కూతురు",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "HZW": {
+    "en": "husband's sister's wife",
+    "te": "భర్త → సోదరి → భార్య",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "HSF": {
+    "en": "husband's son's father",
+    "te": "భర్త → కొడుకు → తండ్రి",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "HSM": {
+    "en": "husband's son's mother",
+    "te": "భర్త → కొడుకు → తల్లి",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "HSB": {
+    "en": "husband's son's brother",
+    "te": "భర్త → కొడుకు → సోదరుడు",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "HSZ": {
+    "en": "husband's son's sister",
+    "te": "భర్త → కొడుకు → సోదరి",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "HSS": {
+    "en": "husband's son's son",
+    "te": "భర్త → కొడుకు → కొడుకు",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "HSD": {
+    "en": "husband's son's daughter",
+    "te": "భర్త → కొడుకు → కూతురు",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "HSH": {
+    "en": "husband's son's husband",
+    "te": "భర్త → కొడుకు → భర్త",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "HSW": {
+    "en": "husband's son's wife",
+    "te": "భర్త → కొడుకు → భార్య",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "HDF": {
+    "en": "husband's daughter's father",
+    "te": "భర్త → కూతురు → తండ్రి",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "HDM": {
+    "en": "husband's daughter's mother",
+    "te": "భర్త → కూతురు → తల్లి",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "HDB": {
+    "en": "husband's daughter's brother",
+    "te": "భర్త → కూతురు → సోదరుడు",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "HDZ": {
+    "en": "husband's daughter's sister",
+    "te": "భర్త → కూతురు → సోదరి",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "HDS": {
+    "en": "husband's daughter's son",
+    "te": "భర్త → కూతురు → కొడుకు",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "HDD": {
+    "en": "husband's daughter's daughter",
+    "te": "భర్త → కూతురు → కూతురు",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "HDH": {
+    "en": "husband's daughter's husband",
+    "te": "భర్త → కూతురు → భర్త",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "HDW": {
+    "en": "husband's daughter's wife",
+    "te": "భర్త → కూతురు → భార్య",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "HHF": {
+    "en": "husband's husband's father",
+    "te": "భర్త → భర్త → తండ్రి",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "HHM": {
+    "en": "husband's husband's mother",
+    "te": "భర్త → భర్త → తల్లి",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "HHB": {
+    "en": "husband's husband's brother",
+    "te": "భర్త → భర్త → సోదరుడు",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "HHZ": {
+    "en": "husband's husband's sister",
+    "te": "భర్త → భర్త → సోదరి",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "HHS": {
+    "en": "husband's husband's son",
+    "te": "భర్త → భర్త → కొడుకు",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "HHD": {
+    "en": "husband's husband's daughter",
+    "te": "భర్త → భర్త → కూతురు",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "HHH": {
+    "en": "husband's husband's husband",
+    "te": "భర్త → భర్త → భర్త",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "HHW": {
+    "en": "husband's husband's wife",
+    "te": "భర్త → భర్త → భార్య",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "HWF": {
+    "en": "husband's wife's father",
+    "te": "భర్త → భార్య → తండ్రి",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "HWM": {
+    "en": "husband's wife's mother",
+    "te": "భర్త → భార్య → తల్లి",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "HWB": {
+    "en": "husband's wife's brother",
+    "te": "భర్త → భార్య → సోదరుడు",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "HWZ": {
+    "en": "husband's wife's sister",
+    "te": "భర్త → భార్య → సోదరి",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "HWS": {
+    "en": "husband's wife's son",
+    "te": "భర్త → భార్య → కొడుకు",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "HWD": {
+    "en": "husband's wife's daughter",
+    "te": "భర్త → భార్య → కూతురు",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "HWH": {
+    "en": "husband's wife's husband",
+    "te": "భర్త → భార్య → భర్త",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "HWW": {
+    "en": "husband's wife's wife",
+    "te": "భర్త → భార్య → భార్య",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "WFF": {
+    "en": "wife's father's father",
+    "te": "భార్య → తండ్రి → తండ్రి",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "WFM": {
+    "en": "wife's father's mother",
+    "te": "భార్య → తండ్రి → తల్లి",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "WFB": {
+    "en": "wife's father's brother",
+    "te": "భార్య → తండ్రి → సోదరుడు",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "WFZ": {
+    "en": "wife's father's sister",
+    "te": "భార్య → తండ్రి → సోదరి",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "WFS": {
+    "en": "wife's father's son",
+    "te": "భార్య → తండ్రి → కొడుకు",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "WFD": {
+    "en": "wife's father's daughter",
+    "te": "భార్య → తండ్రి → కూతురు",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "WFH": {
+    "en": "wife's father's husband",
+    "te": "భార్య → తండ్రి → భర్త",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "WFW": {
+    "en": "wife's father's wife",
+    "te": "భార్య → తండ్రి → భార్య",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "WMF": {
+    "en": "wife's mother's father",
+    "te": "భార్య → తల్లి → తండ్రి",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "WMM": {
+    "en": "wife's mother's mother",
+    "te": "భార్య → తల్లి → తల్లి",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "WMB": {
+    "en": "wife's mother's brother",
+    "te": "భార్య → తల్లి → సోదరుడు",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "WMZ": {
+    "en": "wife's mother's sister",
+    "te": "భార్య → తల్లి → సోదరి",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "WMS": {
+    "en": "wife's mother's son",
+    "te": "భార్య → తల్లి → కొడుకు",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "WMD": {
+    "en": "wife's mother's daughter",
+    "te": "భార్య → తల్లి → కూతురు",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "WMH": {
+    "en": "wife's mother's husband",
+    "te": "భార్య → తల్లి → భర్త",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "WMW": {
+    "en": "wife's mother's wife",
+    "te": "భార్య → తల్లి → భార్య",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "WBF": {
+    "en": "wife's brother's father",
+    "te": "భార్య → సోదరుడు → తండ్రి",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "WBM": {
+    "en": "wife's brother's mother",
+    "te": "భార్య → సోదరుడు → తల్లి",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "WBB": {
+    "en": "wife's brother's brother",
+    "te": "భార్య → సోదరుడు → సోదరుడు",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "WBZ": {
+    "en": "wife's brother's sister",
+    "te": "భార్య → సోదరుడు → సోదరి",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "WBS": {
+    "en": "wife's brother's son",
+    "te": "భార్య → సోదరుడు → కొడుకు",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "WBD": {
+    "en": "wife's brother's daughter",
+    "te": "భార్య → సోదరుడు → కూతురు",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "WBH": {
+    "en": "wife's brother's husband",
+    "te": "భార్య → సోదరుడు → భర్త",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "WZF": {
+    "en": "wife's sister's father",
+    "te": "భార్య → సోదరి → తండ్రి",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "WZM": {
+    "en": "wife's sister's mother",
+    "te": "భార్య → సోదరి → తల్లి",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "WZB": {
+    "en": "wife's sister's brother",
+    "te": "భార్య → సోదరి → సోదరుడు",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "WZZ": {
+    "en": "wife's sister's sister",
+    "te": "భార్య → సోదరి → సోదరి",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "WZS": {
+    "en": "wife's sister's son",
+    "te": "భార్య → సోదరి → కొడుకు",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "WZD": {
+    "en": "wife's sister's daughter",
+    "te": "భార్య → సోదరి → కూతురు",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "WZW": {
+    "en": "wife's sister's wife",
+    "te": "భార్య → సోదరి → భార్య",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "WSF": {
+    "en": "wife's son's father",
+    "te": "భార్య → కొడుకు → తండ్రి",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "WSM": {
+    "en": "wife's son's mother",
+    "te": "భార్య → కొడుకు → తల్లి",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "WSB": {
+    "en": "wife's son's brother",
+    "te": "భార్య → కొడుకు → సోదరుడు",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "WSZ": {
+    "en": "wife's son's sister",
+    "te": "భార్య → కొడుకు → సోదరి",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "WSS": {
+    "en": "wife's son's son",
+    "te": "భార్య → కొడుకు → కొడుకు",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "WSD": {
+    "en": "wife's son's daughter",
+    "te": "భార్య → కొడుకు → కూతురు",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "WSH": {
+    "en": "wife's son's husband",
+    "te": "భార్య → కొడుకు → భర్త",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "WSW": {
+    "en": "wife's son's wife",
+    "te": "భార్య → కొడుకు → భార్య",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "WDF": {
+    "en": "wife's daughter's father",
+    "te": "భార్య → కూతురు → తండ్రి",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "WDM": {
+    "en": "wife's daughter's mother",
+    "te": "భార్య → కూతురు → తల్లి",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "WDB": {
+    "en": "wife's daughter's brother",
+    "te": "భార్య → కూతురు → సోదరుడు",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "WDZ": {
+    "en": "wife's daughter's sister",
+    "te": "భార్య → కూతురు → సోదరి",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "WDS": {
+    "en": "wife's daughter's son",
+    "te": "భార్య → కూతురు → కొడుకు",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "WDD": {
+    "en": "wife's daughter's daughter",
+    "te": "భార్య → కూతురు → కూతురు",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "WDH": {
+    "en": "wife's daughter's husband",
+    "te": "భార్య → కూతురు → భర్త",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "WDW": {
+    "en": "wife's daughter's wife",
+    "te": "భార్య → కూతురు → భార్య",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "WHF": {
+    "en": "wife's husband's father",
+    "te": "భార్య → భర్త → తండ్రి",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "WHM": {
+    "en": "wife's husband's mother",
+    "te": "భార్య → భర్త → తల్లి",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "WHB": {
+    "en": "wife's husband's brother",
+    "te": "భార్య → భర్త → సోదరుడు",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "WHZ": {
+    "en": "wife's husband's sister",
+    "te": "భార్య → భర్త → సోదరి",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "WHS": {
+    "en": "wife's husband's son",
+    "te": "భార్య → భర్త → కొడుకు",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "WHD": {
+    "en": "wife's husband's daughter",
+    "te": "భార్య → భర్త → కూతురు",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "WHH": {
+    "en": "wife's husband's husband",
+    "te": "భార్య → భర్త → భర్త",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "WHW": {
+    "en": "wife's husband's wife",
+    "te": "భార్య → భర్త → భార్య",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "WWF": {
+    "en": "wife's wife's father",
+    "te": "భార్య → భార్య → తండ్రి",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "WWM": {
+    "en": "wife's wife's mother",
+    "te": "భార్య → భార్య → తల్లి",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "WWB": {
+    "en": "wife's wife's brother",
+    "te": "భార్య → భార్య → సోదరుడు",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "WWZ": {
+    "en": "wife's wife's sister",
+    "te": "భార్య → భార్య → సోదరి",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "WWS": {
+    "en": "wife's wife's son",
+    "te": "భార్య → భార్య → కొడుకు",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "WWD": {
+    "en": "wife's wife's daughter",
+    "te": "భార్య → భార్య → కూతురు",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "WWH": {
+    "en": "wife's wife's husband",
+    "te": "భార్య → భార్య → భర్త",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  },
+  "WWW": {
+    "en": "wife's wife's wife",
+    "te": "భార్య → భార్య → భార్య",
+    "confidence": "low",
+    "note": "Descriptive fallback (not a standard kinship term). Prefer a specific term when available.",
+    "tags": [
+      "fallback"
+    ]
+  }
+}
