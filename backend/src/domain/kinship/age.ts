@@ -10,10 +10,7 @@ const parseDate = (value: string | null | undefined): number | null => {
   return Number.isNaN(time) ? null : time;
 };
 
-export const compareAge = (
-  personX?: PersonDOB | null,
-  personY?: PersonDOB | null,
-): AgeOrder => {
+export const compareAge = (personX?: PersonDOB | null, personY?: PersonDOB | null): AgeOrder => {
   const x = parseDate(personX?.dateOfBirth);
   const y = parseDate(personY?.dateOfBirth);
 
