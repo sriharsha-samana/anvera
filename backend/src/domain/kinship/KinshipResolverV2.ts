@@ -5,8 +5,8 @@ import type { PersonNode, RelationshipClassification, RelationshipEdge } from '.
 
 type Confidence = 'high' | 'medium' | 'low';
 type AgeKey = 'older' | 'younger' | 'unknown';
-type AgeVariant = { [K in AgeKey]: string };
-type KinshipDebug = { [key: string]: unknown };
+type AgeVariant = Record<AgeKey, string>;
+export type KinshipDebug = Record<string, unknown>;
 
 export type KinshipPayload = {
   culture: 'te';
@@ -17,27 +17,14 @@ export type KinshipPayload = {
   debug?: KinshipDebug;
 };
 
-export type KinshipMapEntry = {
-  en: string;
-  te: string | AgeVariant;
-  confidence: Confidence;
+type KinshipMapEntry = {
+  en?: string;
+  te?: string | AgeVariant;
+  confidence?: Confidence;
   note?: string;
   address?: {
     ageAware?: AgeVariant;
-    [k: string]: unknown;
   };
-  tags?: string[];
-};
-
-export type KinshipV2Result = {
-  code: string | null;
-  termKey: string;
-  termTe: string;
-  en?: string;
-  confidence: Confidence;
-  note?: string;
-  addressTe?: string;
-  debug?: KinshipDebug;
 };
 
 type ResolveInput = {
@@ -58,9 +45,9 @@ type HopDebug = {
   descriptiveTePart: string;
 };
 
-const kinshipMap: { [code: string]: KinshipMapEntry } =
+const kinshipMap: Record<string, KinshipMapEntry> =
   typeof teluguMapJson === 'object' && teluguMapJson
-    ? (teluguMapJson as { [code: string]: KinshipMapEntry })
+    ? (teluguMapJson as unknown as Record<string, KinshipMapEntry>)
     : {};
 
 const confidenceRank: { [K in Confidence]: number } = {
@@ -199,7 +186,7 @@ export class KinshipResolverV2 {
         termTe: normalizedTermTe(termTe),
         code,
         termKey: code,
-        confidence: minConfidence(safeConfidence(entry.confidence), built.confidence),
+        confidence: minConfidence(safeConfidence(entry.confidence ?? 'low'), built.confidence),
         debug,
       };
     } catch (error) {
