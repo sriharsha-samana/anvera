@@ -87,6 +87,15 @@ LLM_MODEL=openai/gpt-4o-mini
 ```
 
 ```bash
+# OpenRouter (best-quality kinship explanations)
+AI_PROVIDER=openrouter
+LLM_API_KEY=your_openrouter_key
+LLM_MODEL=openai/gpt-4.1
+OPENROUTER_APP_NAME=anvera
+OPENROUTER_APP_URL=http://localhost:3000
+```
+
+```bash
 # Gemini
 AI_PROVIDER=gemini
 GEMINI_API_KEY=your_gemini_key

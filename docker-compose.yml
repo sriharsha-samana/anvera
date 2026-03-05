@@ -7,10 +7,17 @@ services:
     environment:
       PORT: 4000
       DATABASE_URL: file:/data/dev.db
-      JWT_SECRET: enterprise-secret-key
-      AI_PROVIDER: ollama
-      OLLAMA_URL: http://ollama:11434/api/generate
-      OLLAMA_MODEL: llama3.2:3b
+      JWT_SECRET: ${JWT_SECRET:-enterprise-secret-key}
+      AI_PROVIDER: ${AI_PROVIDER:-ollama}
+      OLLAMA_URL: ${OLLAMA_URL:-http://ollama:11434/api/generate}
+      OLLAMA_MODEL: ${OLLAMA_MODEL:-tinyllama}
+      LLM_API_KEY: ${LLM_API_KEY:-}
+      LLM_BASE_URL: ${LLM_BASE_URL:-}
+      LLM_MODEL: ${LLM_MODEL:-}
+      OPENROUTER_APP_NAME: ${OPENROUTER_APP_NAME:-family-graph-enterprise-platform}
+      OPENROUTER_APP_URL: ${OPENROUTER_APP_URL:-http://localhost:3000}
+      GEMINI_API_KEY: ${GEMINI_API_KEY:-}
+      GEMINI_ENDPOINT: ${GEMINI_ENDPOINT:-https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent}
     volumes:
       - sqlite_data:/data
     ports:
